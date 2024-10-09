@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=cqlbaw2425-125
+      - POSTGRES_DB=clarityquest
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=lbaw24125@db.fe.up.pt
+      - PGADMIN_DEFAULT_PASSWORD=LDs8bc1BwL
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    ports:
+      - "5050"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
