@@ -5,6 +5,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=cqlbaw2425-125
       - POSTGRES_DB=clarityquest
+      - PGDATA=/data/postgres
     volumes:
       - postgres:/data/postgres
     ports:
@@ -20,7 +21,7 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=LDs8bc1BwL
       - PGADMIN_CONFIG_SERVER_MODE=False
     ports:
-      - "5050"
+      - "80:80"
     networks:
       - postgres
     restart: unless-stopped
