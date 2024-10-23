@@ -104,9 +104,11 @@ CREATE TABLE NotificationPost(
 );
 
 CREATE TABLE NotificationUser(
-    notification_id BIGINT NOT NULL REFERENCES Notification(id) ON DELETE CASCADE,
-    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    notification_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
     PRIMARY KEY (notification_id, user_id)
+	FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Edition(
@@ -117,15 +119,19 @@ CREATE TABLE Edition(
 );
 
 CREATE TABLE Vote(
-	user_id BIGINT REFERENCES User(id),
-	post_id BIGINT REFERENCES Post(id),
-	positive BOOLEAN NOT NULL
+	user_id BIGINT NOT NULL,
+	post_id BIGINT NOT NULL,
+	positive BOOLEAN NOT NULL,
+	PRIMARY KEY (user_id, post_id),
+	FOREIGN KEY (user_id) REFERENCES User(id),
+	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
 CREATE TABLE Medals(
-	user_id BIGINT REFERENCES User(id),
+	user_id BIGINT NOT NULL PRIMARY KEY,
 	posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
 	posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
 	questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
-	answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0)
+	answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
+	FOREIGN KEY (user_id) REFERENCES User(id)
 );
