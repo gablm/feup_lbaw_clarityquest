@@ -88,16 +88,19 @@ AS ENUM('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER');
 
 CREATE TABLE Notification(
     id BIGSERIAL PRIMARY KEY,
-    receiver BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    receiver BIGINT NOT NULL,
     description TEXT,
     type NotificationType NOT NULL DEFAULT 'OTHER',
-    sent_at TIMESTAMP DEFAULT NOW()
+    sent_at TIMESTAMP DEFAULT NOW(),
+	FOREIGN KEY (receiver) REFERENCES User(id),
 );
 
 CREATE TABLE NotificationPost(
-    notification_id BIGINT NOT NULL REFERENCES Notification(id) ON DELETE CASCADE,
-    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
+    notification_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
     PRIMARY KEY (notification_id, post_id)
+	FOREIGN KEY REFERENCES Post(id) ON DELETE CASCADE,
+	FOREIGN KEY REFERENCES Notification(id) ON DELETE CASCADE,
 );
 
 CREATE TABLE NotificationUser(
@@ -121,5 +124,8 @@ CREATE TABLE Vote(
 
 CREATE TABLE Medals(
 	user_id BIGINT REFERENCES User(id),
-
+	posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
+	posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
+	questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
+	answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0)
 );
