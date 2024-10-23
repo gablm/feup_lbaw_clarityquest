@@ -10,7 +10,7 @@ CREATE TABLE User(
 	hashed_password TEXT NOT NULL,
 	profile_pic TEXT NOT NULL,
 	bio TEXT NOT NULL,
-	role PERMISSION DEFAULT 'USER'
+	role PERMISSION DEFAULT 'REGULAR'
 );
 
 CREATE TABLE Post(
@@ -18,27 +18,28 @@ CREATE TABLE Post(
     text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     votes INT DEFAULT 0,
-    user_id BIGSERIAL,
-	FOREIGN KEY (user_id) REFERENCES Users(id)
+    user_id BIGINT,
+	FOREIGN KEY (user_id) REFERENCES User(id)
 );
 
 CREATE TABLE Question(
     id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    post_id BIGSERIAL, 
+    post_id BIGINT NOT NULL, 
 	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
 CREATE TABLE Answer(
     id BIGSERIAL PRIMARY KEY,
-    post_id BIGSERIAL, 
-    question_id BIGSERIAL NOT NULL,
+    post_id BIGINT NOT NULL, 
+    question_id BIGINT NOT NULL,
+	FOREIGN KEY (post_id) REFERENCES Post(id),
 	FOREIGN KEY (question_id) REFERENCES Question(id)
 );
 
 CREATE TABLE Comment(
     id BIGSERIAL PRIMARY KEY,
-    post_id BIGSERIAL NOT NULL,
+    post_id BIGINT NOT NULL,
 	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
@@ -46,9 +47,9 @@ CREATE TABLE Report(
     id BIGSERIAL PRIMARY KEY,
     reason VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    user_id BIGSERIAL,
-    post_id BIGSERIAL,
-	FOREIGN KEY (user_id) REFERENCES Users(id),
+    user_id BIGINT,
+    post_id BIGINT,
+	FOREIGN KEY (user_id) REFERENCES User(id),
 	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
@@ -59,8 +60,8 @@ CREATE TABLE Tag(
 );
 
 CREATE TABLE PostTag(
-    post_id BIGSERIAL NOT NULL, 
-    tag_id BIGSERIAL NOT NULL,
+    post_id BIGINT NOT NULL, 
+    tag_id BIGINT NOT NULL,
     PRIMARY KEY (post_id, tag_id),
 	FOREIGN KEY (post_id) REFERENCES Post(id) ON DELETE CASCADE,
 	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE,
@@ -70,14 +71,16 @@ CREATE TABLE FollowTag(
     user_id BIGINT NOT NULL, 
     tag_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, tag_id)
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
 	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE,
 );
 
 CREATE TABLE FollowQuestion(
-    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
-    question_id BIGINT NOT NULL REFERENCES Question(id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, question_id)
+    user_id BIGINT NOT NULL,
+    question_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, question_id),
+	FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+	FOREIGN KEY (question_id) REFERENCES Question(id) ON DELETE CASCADE,
 );
 
 CREATE TYPE NotificationType
