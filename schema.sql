@@ -1,5 +1,8 @@
 pragma foreign_keys = on
 
+
+--TABLES
+
 DROP TABLE IF EXISTS Medals;
 DROP TABLE IF EXISTS Vote;
 DROP TABLE IF EXISTS Edition;
@@ -155,3 +158,86 @@ CREATE TABLE Medals(
 	answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
 	FOREIGN KEY (user_id) REFERENCES User(id)
 );
+
+--TRIGGER FUNCTIONS AND TRIGGERS
+
+--Post(votes)
+CREATE OR REPLACE FUNCTION update_post_votes()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Post
+    SET votes = (SELECT COUNT(*) FROM Vote WHERE post_id = NEW.post_id AND positive = TRUE) -
+                (SELECT COUNT(*) FROM Vote WHERE post_id = NEW.post_id AND positive = FALSE)
+    WHERE id = NEW.post_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_post_votes
+AFTER INSERT OR UPDATE ON Vote
+FOR EACH ROW
+EXECUTE FUNCTION update_post_votes();
+
+--Medals(post_upvotes)
+CREATE OR REPLACE FUNCTION update_medals_posts_upvotes()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Medals
+    SET posts_upvotes = (SELECT COUNT(*) FROM Vote WHERE user_id = NEW.user_id AND positive = TRUE)
+    WHERE user_id = NEW.user_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_medals_posts_upvotes
+AFTER INSERT OR UPDATE ON Vote
+FOR EACH ROW
+EXECUTE FUNCTION update_medals_posts_upvotes();
+
+-- Medals(posts_created)
+CREATE OR REPLACE FUNCTION update_medals_posts_created()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Medals
+    SET posts_created = (SELECT COUNT(*) FROM Post WHERE user_id = NEW.user_id)
+    WHERE user_id = NEW.user_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_medals_posts_created
+AFTER INSERT ON Post
+FOR EACH ROW
+EXECUTE FUNCTION update_medals_posts_created();
+
+-- Medals(questions_created)
+CREATE OR REPLACE FUNCTION update_medals_questions_created()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Medals
+    SET questions_created = (SELECT COUNT(*) FROM Question WHERE post_id IN (SELECT id FROM Post WHERE user_id = NEW.user_id))
+    WHERE user_id = NEW.user_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_medals_questions_created
+AFTER INSERT ON Question
+FOR EACH ROW
+EXECUTE FUNCTION update_medals_questions_created();
+
+-- Medals(answers_posted)
+CREATE OR REPLACE FUNCTION update_medals_answers_posted()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Medals
+    SET answers_posted = (SELECT COUNT(*) FROM Answer WHERE post_id IN (SELECT id FROM Post WHERE user_id = NEW.user_id))
+    WHERE user_id = NEW.user_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_medals_answers_posted
+AFTER INSERT ON Answer
+FOR EACH ROW
+EXECUTE FUNCTION update_medals_answers_posted();
