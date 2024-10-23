@@ -1,27 +1,81 @@
+CREATE TABLE Users (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR NOT NULL
+);
+
 CREATE TABLE Post (
     id BIGSERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     votes INT DEFAULT 0,
-    user_id INT REFERENCES Users(id)
+    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Question (
-    id BIGSERIAL PRIMARY KEY REFERENCES Post(id),
-    title TEXT NOT NULL
+    id BIGSERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Answer (
-    id BIGSERIAL PRIMARY KEY REFERENCES Post(id),
-    question_id BIGSERIAL NOT NULL REFERENCES Question(id)
+    id BIGSERIAL PRIMARY KEY,
+    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
+    question_id BIGINT NOT NULL REFERENCES Question(id) ON DELETE CASCADE
 );
 
-CREATE TABLE CommentToAnswer (
-    id BIGSERIAL PRIMARY KEY REFERENCES Post(id),
-    answer_id BIGSERIAL NOT NULL REFERENCES Answer(id)
+CREATE TABLE Comment (
+    id BIGSERIAL PRIMARY KEY,
+    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE
 );
 
-CREATE TABLE CommentToQuestion (
-    id BIGSERIAL PRIMARY KEY REFERENCES Post(id),
-    question_id BIGSERIAL NOT NULL REFERENCES Question(id)
+CREATE TABLE Report (
+    id BIGSERIAL PRIMARY KEY,
+    reason VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Tag (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE PostTag (
+    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
+    tag_id BIGINT NOT NULL REFERENCES Tag(id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, tag_id)
+);
+
+CREATE TABLE FollowTag (
+    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    tag_id BIGINT NOT NULL REFERENCES Tag(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, tag_id)
+);
+
+CREATE TABLE FollowQuestion (
+    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    question_id BIGINT NOT NULL REFERENCES Question(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, question_id)
+);
+
+CREATE TABLE Notification (
+    id BIGSERIAL PRIMARY KEY,
+    receiver BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    description TEXT,
+    type VARCHAR CHECK (type IN ('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER')),
+    sent_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE NotificationPost (
+    notification_id BIGINT NOT NULL REFERENCES Notification(id) ON DELETE CASCADE,
+    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
+    PRIMARY KEY (notification_id, post_id)
+);
+
+CREATE TABLE NotificationUser (
+    notification_id BIGINT NOT NULL REFERENCES Notification(id) ON DELETE CASCADE,
+    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    PRIMARY KEY (notification_id, user_id)
 );
