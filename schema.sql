@@ -13,79 +13,110 @@ CREATE TABLE User(
 	role PERMISSION DEFAULT 'USER'
 );
 
-CREATE TABLE Post (
+CREATE TABLE Post(
     id BIGSERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     votes INT DEFAULT 0,
-    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE
+    user_id BIGSERIAL,
+	FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
-CREATE TABLE Question (
+CREATE TABLE Question(
     id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE
+    post_id BIGSERIAL, 
+	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Answer (
+CREATE TABLE Answer(
     id BIGSERIAL PRIMARY KEY,
-    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
-    question_id BIGINT NOT NULL REFERENCES Question(id) ON DELETE CASCADE
+    post_id BIGSERIAL, 
+    question_id BIGSERIAL NOT NULL,
+	FOREIGN KEY (question_id) REFERENCES Question(id)
 );
 
-CREATE TABLE Comment (
+CREATE TABLE Comment(
     id BIGSERIAL PRIMARY KEY,
-    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE
+    post_id BIGSERIAL NOT NULL,
+	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Report (
+CREATE TABLE Report(
     id BIGSERIAL PRIMARY KEY,
     reason VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
-    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE
+    user_id BIGSERIAL,
+    post_id BIGSERIAL,
+	FOREIGN KEY (user_id) REFERENCES Users(id),
+	FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Tag (
+CREATE TABLE Tag(
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR NOT NULL,
+    name TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE PostTag (
-    post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
-    tag_id BIGINT NOT NULL REFERENCES Tag(id) ON DELETE CASCADE,
-    PRIMARY KEY (post_id, tag_id)
+CREATE TABLE PostTag(
+    post_id BIGSERIAL NOT NULL, 
+    tag_id BIGSERIAL NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+	FOREIGN KEY (post_id) REFERENCES Post(id) ON DELETE CASCADE,
+	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE,
 );
 
-CREATE TABLE FollowTag (
-    user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
-    tag_id BIGINT NOT NULL REFERENCES Tag(id) ON DELETE CASCADE,
+CREATE TABLE FollowTag(
+    user_id BIGINT NOT NULL, 
+    tag_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, tag_id)
+	FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE,
 );
 
-CREATE TABLE FollowQuestion (
+CREATE TABLE FollowQuestion(
     user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
     question_id BIGINT NOT NULL REFERENCES Question(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, question_id)
 );
 
-CREATE TABLE Notification (
+CREATE TYPE NotificationType
+AS ENUM('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER');
+
+CREATE TABLE Notification(
     id BIGSERIAL PRIMARY KEY,
     receiver BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
     description TEXT,
-    type VARCHAR CHECK (type IN ('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER')),
+    type NotificationType NOT NULL DEFAULT 'OTHER',
     sent_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE NotificationPost (
+CREATE TABLE NotificationPost(
     notification_id BIGINT NOT NULL REFERENCES Notification(id) ON DELETE CASCADE,
     post_id BIGINT NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
     PRIMARY KEY (notification_id, post_id)
 );
 
-CREATE TABLE NotificationUser (
+CREATE TABLE NotificationUser(
     notification_id BIGINT NOT NULL REFERENCES Notification(id) ON DELETE CASCADE,
     user_id BIGINT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
     PRIMARY KEY (notification_id, user_id)
+);
+
+CREATE TABLE Edition(
+	id BIGSERIAL PRIMARY KEY,
+	old TEXT,
+	new TEXT,
+	made_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE Vote(
+	user_id BIGINT REFERENCES User(id),
+	post_id BIGINT REFERENCES Post(id),
+	positive BOOLEAN NOT NULL
+);
+
+CREATE TABLE Medals(
+	user_id BIGINT REFERENCES User(id),
+
 );
