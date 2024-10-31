@@ -241,3 +241,48 @@ CREATE TRIGGER trigger_update_medals_answers_posted
 AFTER INSERT ON Answer
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
+
+--transactions
+
+--add question
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
+
+INSERT INTO Post (text, user_id)
+VALUES ($text, $user_id)
+RETURNING id INTO new_post_id;
+
+INSERT INTO Question (title, post_id)
+VALUES ($title, $new_post_id)
+RETURNING id INTO new_question_id;
+
+COMMIT;
+
+--add answer
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
+
+INSERT INTO Post (text, user_id)
+VALUES ($text, $user_id)
+RETURNING id INTO new_post_id;
+
+INSERT INTO Answer (post_id, question_id)
+VALUES (new_post_id, $question_id); 
+
+COMMIT;
+
+--add comment
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
+
+INSERT INTO Post (text, user_id)
+VALUES ($text, $user_id)
+RETURNING id INTO new_post_id;
+
+INSERT INTO Comment(post_id, question_id)
+VALUES (new_post_id, $question_id); 
+
+COMMIT;
