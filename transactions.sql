@@ -72,25 +72,6 @@ WHERE id = $post_id AND user_id = $user_id;
 
 COMMIT;
 
--- Edit question
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-IF $new_title IS NOT NULL THEN
-    UPDATE Question
-    SET title = $new_title
-    WHERE id = $question_id AND user_id = $user_id;
-END IF;
-
-IF $new_text IS NOT NULL THEN
-    UPDATE Post
-    SET text = $new_text, updated_at = NOW()
-    WHERE id = (SELECT post_id FROM Question WHERE id = $question_id) AND user_id = $user_id;
-END IF;
-
-COMMIT;
-
 -- Delete answer
 BEGIN TRANSACTION;
 
@@ -122,6 +103,7 @@ WHERE id = $post_id AND user_id = $user_id;
 COMMIT;
 
 -- Edit user profile
+--FAZ SENTIDO POSSIBILITAR AQUI O UPDATE DA PASSWORD??
 BEGIN TRANSACTION;
 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
@@ -148,6 +130,49 @@ IF $new_hashed_password IS NOT NULL THEN
     UPDATE Users
     SET hashed_password = $new_hashed_password, updated_at = NOW()
     WHERE id = $user_id;
+END IF;
+
+COMMIT;
+
+-- delete account ?? on delete cascade no user não??  mas está na checklist e on delete cascade não está
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DELETE FROM Medals WHERE user_id = $1;
+
+DELETE FROM Vote WHERE user_id = $1;
+
+DELETE FROM NotificationUser WHERE user_id = $1;
+
+DELETE FROM FollowTag WHERE user_id = $1;
+
+DELETE FROM FollowQuestion WHERE user_id = $1;
+
+DELETE FROM Report WHERE user_id = $1;
+
+DELETE FROM Post WHERE user_id = $1;
+
+DELETE FROM Users WHERE id = $1;
+
+COMMIT;
+
+
+-- Edit question
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+IF $new_title IS NOT NULL THEN
+    UPDATE Question
+    SET title = $new_title
+    WHERE id = $question_id AND user_id = $user_id;
+END IF;
+
+IF $new_text IS NOT NULL THEN
+    UPDATE Post
+    SET text = $new_text, updated_at = NOW()
+    WHERE id = (SELECT post_id FROM Question WHERE id = $question_id) AND user_id = $user_id;
 END IF;
 
 COMMIT;

@@ -53,6 +53,7 @@ CREATE TABLE Answer (
     id BIGSERIAL PRIMARY KEY,
     post_id BIGINT NOT NULL, 
     question_id BIGINT NOT NULL,
+    correct BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (post_id) REFERENCES Post(id),
     FOREIGN KEY (question_id) REFERENCES Question(id)
 );
@@ -158,7 +159,7 @@ CREATE TABLE Medals (
 
 -- TRIGGER FUNCTIONS AND TRIGGERS
 
--- Post(votes)
+-- trigger to calculate the votes of a post
 CREATE OR REPLACE FUNCTION update_post_votes()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -175,7 +176,7 @@ AFTER INSERT OR UPDATE ON Vote
 FOR EACH ROW
 EXECUTE FUNCTION update_post_votes();
 
--- Medals(post_upvotes)
+-- trigger to update the medals based on to the votes of a post
 CREATE OR REPLACE FUNCTION update_medals_posts_upvotes()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -191,7 +192,7 @@ AFTER INSERT OR UPDATE ON Vote
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_posts_upvotes();
 
--- Medals(posts_created)
+-- trigger to update the medals according to the posts created
 CREATE OR REPLACE FUNCTION update_medals_posts_created()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -207,7 +208,7 @@ AFTER INSERT ON Post
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_posts_created();
 
--- Medals(questions_created)
+-- trigger to update the medals according to the votes of a post
 CREATE OR REPLACE FUNCTION update_medals_questions_created()
 RETURNS TRIGGER AS $$
 BEGIN
