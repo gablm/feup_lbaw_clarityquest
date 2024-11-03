@@ -242,9 +242,9 @@ AFTER INSERT ON Answer
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
 
---transactions
+-- transactions
 
---add question
+-- Add question
 BEGIN;
 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
@@ -259,7 +259,7 @@ RETURNING id INTO new_question_id;
 
 COMMIT;
 
---add answer
+-- Add answer
 BEGIN;
 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
@@ -273,7 +273,7 @@ VALUES (new_post_id, $question_id);
 
 COMMIT;
 
---add comment
+-- Add comment
 BEGIN;
 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
@@ -284,5 +284,113 @@ RETURNING id INTO new_post_id;
 
 INSERT INTO Comment(post_id, question_id)
 VALUES (new_post_id, $question_id); 
+
+COMMIT;
+
+--Vote on answer / Vote on question
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+INSERT INTO Vote (user_id, post_id, positive)
+VALUES ($user_id, $post_id, $positive)
+ON CONFLICT (user_id, post_id) 
+DO UPDATE SET positive = EXCLUDED.positive;
+
+UPDATE Post
+SET votes = (SELECT COUNT(*) FROM Vote WHERE post_id = $post_id AND positive = TRUE) -
+            (SELECT COUNT(*) FROM Vote WHERE post_id = $post_id AND positive = FALSE)
+WHERE id = $post_id;
+
+COMMIT;
+
+--edit answer / edit comment
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+UPDATE Post
+SET text = $new_text, updated_at = NOW()
+WHERE id = $post_id AND user_id = $user_id;
+
+COMMIT;
+
+--edit question
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+IF $new_title IS NOT NULL THEN
+    UPDATE Question
+    SET title = $new_title
+    WHERE id = $question_id AND user_id = $user_id;
+END IF;
+
+IF $new_text IS NOT NULL THEN
+    UPDATE Post
+    SET text = $new_text, updated_at = NOW()
+    WHERE id = (SELECT post_id FROM Question WHERE id = $question_id) AND user_id = $user_id;
+END IF;
+
+COMMIT;
+
+-- delete answer
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DELETE FROM Answer
+WHERE post_id = $post_id AND EXISTS (
+    SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
+);
+
+DELETE FROM Post
+WHERE id = $post_id AND user_id = $user_id;
+
+COMMIT;
+
+-- delete comment
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DELETE FROM Comment
+WHERE post_id = $post_id AND EXISTS (
+    SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
+);
+
+DELETE FROM Post
+WHERE id = $post_id AND user_id = $user_id;
+
+COMMIT;
+
+-- edit user profile, does it make sense to have a clause for update password?
+BEGIN;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+IF $new_name IS NOT NULL THEN
+    UPDATE UserProfile
+    SET name = $new_name, updated_at = NOW()
+    WHERE user_id = $user_id;
+END IF;
+
+IF $new_email IS NOT NULL THEN
+    UPDATE UserProfile
+    SET email = $new_email, updated_at = NOW()
+    WHERE user_id = $user_id;
+END IF;
+
+IF $new_bio IS NOT NULL THEN
+    UPDATE UserProfile
+    SET bio = $new_bio, updated_at = NOW()
+    WHERE user_id = $user_id;
+END IF;
+
+IF $new_hashed_password IS NOT NULL THEN
+    UPDATE UserProfile
+    SET hashed_password = $new_hashed_password, updated_at = NOW()
+    WHERE user_id = $user_id;
+END IF;
 
 COMMIT;
