@@ -176,3 +176,48 @@ IF $new_text IS NOT NULL THEN
 END IF;
 
 COMMIT;
+
+-- Delete question
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DELETE FROM Answer WHERE question_id = $1;
+
+DELETE FROM Comment WHERE post_id IN (SELECT id FROM Post WHERE id = (SELECT post_id FROM Question WHERE id = $1));
+
+DELETE FROM PostTag WHERE post_id IN (SELECT post_id FROM Question WHERE id = $1);
+
+DELETE FROM Question WHERE id = $1;
+
+DELETE FROM Post WHERE id = (SELECT post_id FROM Question WHERE id = $1);
+
+COMMIT;
+
+-- mark the answer as correct for questioner
+-- NECESSARY ONLY IF IT IS TO unmark other answers for the same question as incorrect
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+UPDATE Answer
+SET correct = TRUE
+WHERE id = $1;
+
+UPDATE Answer
+SET correct = FALSE
+WHERE question_id = (SELECT question_id FROM Answer WHERE id = $1) AND id != $1;
+
+COMMIT;
+
+-- Delete existing tags for the question and insert new tags for the question
+BEGIN TRANSACTION;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+DELETE FROM PostTag WHERE post_id = (SELECT post_id FROM Question WHERE id = $1);
+
+FOREACH tag_id IN ARRAY $2
+LOOP
+    INSERT INTO PostTag (post_id, tag_id) VALUES ((SELECT post_id FROM Question WHERE id = $1), tag_id);
+END LOOP;
+
+COMMIT;
