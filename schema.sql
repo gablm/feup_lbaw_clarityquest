@@ -1,7 +1,4 @@
-pragma foreign_keys = on
-
-
---TABLES
+-- TABLES
 
 DROP TABLE IF EXISTS Medals;
 DROP TABLE IF EXISTS Vote;
@@ -18,7 +15,7 @@ DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Answer;
 DROP TABLE IF EXISTS Question;
 DROP TABLE IF EXISTS Post;
-DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Users;
 
 DROP TYPE IF EXISTS Permission;
 DROP TYPE IF EXISTS NotificationType;
@@ -26,142 +23,142 @@ DROP TYPE IF EXISTS NotificationType;
 CREATE TYPE Permission 
 AS ENUM('BLOCKED', 'REGULAR', 'MODERATOR', 'ADMIN');
 
-CREATE TABLE User(
-	id BIGSERIAL PRIMARY KEY,
-	username TEXT UNIQUE NOT NULL,
-	name TEXT NOT NULL,
-	hashed_password TEXT NOT NULL,
-	profile_pic TEXT NOT NULL,
-	bio TEXT NOT NULL,
-	role PERMISSION DEFAULT 'REGULAR'
+CREATE TABLE Users (
+    id BIGSERIAL PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    hashed_password TEXT NOT NULL,
+    profile_pic TEXT NOT NULL,
+    bio TEXT NOT NULL,
+    role Permission DEFAULT 'REGULAR'
 );
 
-CREATE TABLE Post(
+CREATE TABLE Post (
     id BIGSERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     votes INT DEFAULT 0,
     user_id BIGINT,
-	FOREIGN KEY (user_id) REFERENCES User(id)
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
-CREATE TABLE Question(
+CREATE TABLE Question (
     id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     post_id BIGINT NOT NULL, 
-	FOREIGN KEY (post_id) REFERENCES Post(id)
+    FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Answer(
+CREATE TABLE Answer (
     id BIGSERIAL PRIMARY KEY,
     post_id BIGINT NOT NULL, 
     question_id BIGINT NOT NULL,
-	FOREIGN KEY (post_id) REFERENCES Post(id),
-	FOREIGN KEY (question_id) REFERENCES Question(id)
+    FOREIGN KEY (post_id) REFERENCES Post(id),
+    FOREIGN KEY (question_id) REFERENCES Question(id)
 );
 
-CREATE TABLE Comment(
+CREATE TABLE Comment (
     id BIGSERIAL PRIMARY KEY,
     post_id BIGINT NOT NULL,
-	FOREIGN KEY (post_id) REFERENCES Post(id)
+    FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Report(
+CREATE TABLE Report (
     id BIGSERIAL PRIMARY KEY,
     reason VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     user_id BIGINT,
     post_id BIGINT,
-	FOREIGN KEY (user_id) REFERENCES User(id),
-	FOREIGN KEY (post_id) REFERENCES Post(id)
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Tag(
+CREATE TABLE Tag (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE PostTag(
+CREATE TABLE PostTag (
     post_id BIGINT NOT NULL, 
     tag_id BIGINT NOT NULL,
     PRIMARY KEY (post_id, tag_id),
-	FOREIGN KEY (post_id) REFERENCES Post(id) ON DELETE CASCADE,
-	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE
 );
 
-CREATE TABLE FollowTag(
+CREATE TABLE FollowTag (
     user_id BIGINT NOT NULL, 
     tag_id BIGINT NOT NULL,
-    PRIMARY KEY (user_id, tag_id)
-	FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
-	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, tag_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tag(id) ON DELETE CASCADE
 );
 
-CREATE TABLE FollowQuestion(
+CREATE TABLE FollowQuestion (
     user_id BIGINT NOT NULL,
     question_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, question_id),
-	FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
-	FOREIGN KEY (question_id) REFERENCES Question(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES Question(id) ON DELETE CASCADE
 );
 
 CREATE TYPE NotificationType
 AS ENUM('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER');
 
-CREATE TABLE Notification(
+CREATE TABLE Notification (
     id BIGSERIAL PRIMARY KEY,
     receiver BIGINT NOT NULL,
     description TEXT,
     type NotificationType NOT NULL DEFAULT 'OTHER',
     sent_at TIMESTAMP DEFAULT NOW(),
-	FOREIGN KEY (receiver) REFERENCES User(id),
+    FOREIGN KEY (receiver) REFERENCES Users(id)
 );
 
-CREATE TABLE NotificationPost(
+CREATE TABLE NotificationPost (
     notification_id BIGINT NOT NULL,
     post_id BIGINT NOT NULL,
-    PRIMARY KEY (notification_id, post_id)
-	FOREIGN KEY REFERENCES Post(id) ON DELETE CASCADE,
-	FOREIGN KEY REFERENCES Notification(id) ON DELETE CASCADE,
+    PRIMARY KEY (notification_id, post_id),
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON DELETE CASCADE,
+    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE
 );
 
-CREATE TABLE NotificationUser(
+CREATE TABLE NotificationUser (
     notification_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    PRIMARY KEY (notification_id, user_id)
-	FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
+    PRIMARY KEY (notification_id, user_id),
+    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Edition(
-	id BIGSERIAL PRIMARY KEY,
-	old TEXT,
-	new TEXT,
-	made_at TIMESTAMP DEFAULT NOW()
+CREATE TABLE Edition (
+    id BIGSERIAL PRIMARY KEY,
+    old TEXT,
+    new TEXT,
+    made_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE Vote(
-	user_id BIGINT NOT NULL,
-	post_id BIGINT NOT NULL,
-	positive BOOLEAN NOT NULL,
-	PRIMARY KEY (user_id, post_id),
-	FOREIGN KEY (user_id) REFERENCES User(id),
-	FOREIGN KEY (post_id) REFERENCES Post(id)
+CREATE TABLE Vote (
+    user_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
+    positive BOOLEAN NOT NULL,
+    PRIMARY KEY (user_id, post_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (post_id) REFERENCES Post(id)
 );
 
-CREATE TABLE Medals(
-	user_id BIGINT NOT NULL PRIMARY KEY,
-	posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
-	posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
-	questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
-	answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
-	FOREIGN KEY (user_id) REFERENCES User(id)
+CREATE TABLE Medals (
+    user_id BIGINT NOT NULL PRIMARY KEY,
+    posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
+    posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
+    questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
+    answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
---TRIGGER FUNCTIONS AND TRIGGERS
+-- TRIGGER FUNCTIONS AND TRIGGERS
 
---Post(votes)
+-- Post(votes)
 CREATE OR REPLACE FUNCTION update_post_votes()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -178,7 +175,7 @@ AFTER INSERT OR UPDATE ON Vote
 FOR EACH ROW
 EXECUTE FUNCTION update_post_votes();
 
---Medals(post_upvotes)
+-- Medals(post_upvotes)
 CREATE OR REPLACE FUNCTION update_medals_posts_upvotes()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -242,155 +239,3 @@ AFTER INSERT ON Answer
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
 
--- transactions
-
--- Add question
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
-
-INSERT INTO Post (text, user_id)
-VALUES ($text, $user_id)
-RETURNING id INTO new_post_id;
-
-INSERT INTO Question (title, post_id)
-VALUES ($title, $new_post_id)
-RETURNING id INTO new_question_id;
-
-COMMIT;
-
--- Add answer
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
-
-INSERT INTO Post (text, user_id)
-VALUES ($text, $user_id)
-RETURNING id INTO new_post_id;
-
-INSERT INTO Answer (post_id, question_id)
-VALUES (new_post_id, $question_id); 
-
-COMMIT;
-
--- Add comment
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
-
-INSERT INTO Post (text, user_id)
-VALUES ($text, $user_id)
-RETURNING id INTO new_post_id;
-
-INSERT INTO Comment(post_id, question_id)
-VALUES (new_post_id, $question_id); 
-
-COMMIT;
-
---Vote on answer / Vote on question
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-INSERT INTO Vote (user_id, post_id, positive)
-VALUES ($user_id, $post_id, $positive)
-ON CONFLICT (user_id, post_id) 
-DO UPDATE SET positive = EXCLUDED.positive;
-
-UPDATE Post
-SET votes = (SELECT COUNT(*) FROM Vote WHERE post_id = $post_id AND positive = TRUE) -
-            (SELECT COUNT(*) FROM Vote WHERE post_id = $post_id AND positive = FALSE)
-WHERE id = $post_id;
-
-COMMIT;
-
---edit answer / edit comment
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-UPDATE Post
-SET text = $new_text, updated_at = NOW()
-WHERE id = $post_id AND user_id = $user_id;
-
-COMMIT;
-
---edit question
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-IF $new_title IS NOT NULL THEN
-    UPDATE Question
-    SET title = $new_title
-    WHERE id = $question_id AND user_id = $user_id;
-END IF;
-
-IF $new_text IS NOT NULL THEN
-    UPDATE Post
-    SET text = $new_text, updated_at = NOW()
-    WHERE id = (SELECT post_id FROM Question WHERE id = $question_id) AND user_id = $user_id;
-END IF;
-
-COMMIT;
-
--- delete answer
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DELETE FROM Answer
-WHERE post_id = $post_id AND EXISTS (
-    SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
-);
-
-DELETE FROM Post
-WHERE id = $post_id AND user_id = $user_id;
-
-COMMIT;
-
--- delete comment
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DELETE FROM Comment
-WHERE post_id = $post_id AND EXISTS (
-    SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
-);
-
-DELETE FROM Post
-WHERE id = $post_id AND user_id = $user_id;
-
-COMMIT;
-
--- edit user profile, does it make sense to have a clause for update password?
-BEGIN;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-IF $new_name IS NOT NULL THEN
-    UPDATE UserProfile
-    SET name = $new_name, updated_at = NOW()
-    WHERE user_id = $user_id;
-END IF;
-
-IF $new_email IS NOT NULL THEN
-    UPDATE UserProfile
-    SET email = $new_email, updated_at = NOW()
-    WHERE user_id = $user_id;
-END IF;
-
-IF $new_bio IS NOT NULL THEN
-    UPDATE UserProfile
-    SET bio = $new_bio, updated_at = NOW()
-    WHERE user_id = $user_id;
-END IF;
-
-IF $new_hashed_password IS NOT NULL THEN
-    UPDATE UserProfile
-    SET hashed_password = $new_hashed_password, updated_at = NOW()
-    WHERE user_id = $user_id;
-END IF;
-
-COMMIT;
