@@ -147,20 +147,6 @@ COMMIT;
 BEGIN TRANSACTION;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
-DELETE FROM Medals WHERE user_id = $1;
-
-DELETE FROM Vote WHERE user_id = $1;
-
-DELETE FROM NotificationUser WHERE user_id = $1;
-
-DELETE FROM FollowTag WHERE user_id = $1;
-
-DELETE FROM FollowQuestion WHERE user_id = $1;
-
-DELETE FROM Report WHERE user_id = $1;
-
-DELETE FROM Post WHERE user_id = $1;
-
 DELETE FROM Users WHERE id = $1;
 
 COMMIT;
@@ -192,14 +178,6 @@ BEGIN TRANSACTION;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Answer WHERE question_id = $1;
-
-DELETE FROM Comment WHERE post_id IN (SELECT id FROM Post WHERE id = (SELECT post_id FROM Question WHERE id = $1));
-
-DELETE FROM PostTag WHERE post_id IN (SELECT post_id FROM Question WHERE id = $1);
-
-DELETE FROM Question WHERE id = $1;
-
-DELETE FROM Post WHERE id = (SELECT post_id FROM Question WHERE id = $1);
 
 COMMIT;
 
