@@ -47,7 +47,7 @@ VALUES (new_post_id, $question_id);
 
 END TRANSACTION;
 
--- Vote on answer / Vote on question
+-- Vote on answer/question/answer
 -- Using REPEATABLE READ to ensure consistency while updating votes.
 -- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
