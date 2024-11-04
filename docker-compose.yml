@@ -24,4 +24,5 @@ services:
     volumes:
       - ./pgadmin/servers.json:/pgadmin4/servers.json
       - ./pgadmin/config_web.py:/pgadmin4/web/config_web.py
+      - ./db/schema.sql:/schema.sql
     restart: always
