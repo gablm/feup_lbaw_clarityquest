@@ -2,6 +2,38 @@
 -- Clean Database --
 --------------------
 
+DROP INDEX IF EXISTS user_post;
+DROP INDEX IF EXISTS answer_question;
+
+DROP INDEX IF EXISTS title_search;
+DROP TRIGGER IF EXISTS questions_search_update ON Question;
+DROP FUNCTION IF EXISTS questions_search_update;
+
+ALTER TABLE Question
+DROP COLUMN IF EXISTS tsvectors;
+
+DROP INDEX IF EXISTS name_search;
+DROP TRIGGER IF EXISTS users_search_update ON Users;
+DROP FUNCTION IF EXISTS users_search_update;
+
+ALTER TABLE Users
+DROP COLUMN IF EXISTS tsvectors;
+
+DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
+DROP FUNCTION IF EXISTS update_post_votes;
+
+DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvotes ON Vote;
+DROP FUNCTION IF EXISTS update_medals_posts_upvotes;
+
+DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON Post;
+DROP FUNCTION IF EXISTS update_medals_posts_created;
+
+DROP TRIGGER IF EXISTS trigger_update_medals_questions_created ON Question;
+DROP FUNCTION IF EXISTS update_medals_questions_created;
+
+DROP TRIGGER IF EXISTS trigger_update_medals_answers_posted ON Answer;
+DROP FUNCTION IF EXISTS update_medals_answers_posted;
+
 DROP TABLE IF EXISTS Medals;
 DROP TABLE IF EXISTS Vote;
 DROP TABLE IF EXISTS Edition;
@@ -22,21 +54,6 @@ DROP TABLE IF EXISTS Users;
 DROP TYPE IF EXISTS Permission;
 DROP TYPE IF EXISTS NotificationType;
 
-DROP FUNCTION IF EXISTS update_post_votes;
-DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
-
-DROP FUNCTION IF EXISTS update_medals_posts_upvotes;
-DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvotes ON Vote;
-
-DROP FUNCTION IF EXISTS update_medals_posts_created;
-DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON Post;
-
-DROP FUNCTION IF EXISTS update_medals_questions_created;
-DROP TRIGGER IF EXISTS trigger_update_medals_questions_created ON Question;
-
-DROP FUNCTION IF EXISTS update_medals_answers_posted;
-DROP TRIGGER IF EXISTS trigger_update_medals_answers_posted ON Answer;
-
 -----------
 -- Types --
 -----------
@@ -52,15 +69,15 @@ AS ENUM('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER');
 ------------
 
 CREATE TABLE Users(
-	id SERIAL PRIMARY KEY,
-	username TEXT UNIQUE NOT NULL,
-	email TEXT UNIQUE NOT NULL,
-	name TEXT NOT NULL,
-	hashed_pw TEXT NOT NULL,
-	profile_pic TEXT,
-	bio TEXT,
-	created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
-	role PERMISSION NOT NULL DEFAULT 'REGULAR'
+    id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    hashed_pw TEXT NOT NULL,
+    profile_pic TEXT,
+    bio TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
+    role PERMISSION NOT NULL DEFAULT 'REGULAR'
 );
 
 CREATE TABLE Post(
@@ -69,46 +86,46 @@ CREATE TABLE Post(
     created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
     votes INTEGER DEFAULT 0,
     user_id INTEGER,
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Question(
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
-	FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE
+    FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Answer(
     id INTEGER PRIMARY KEY, 
     question_id BIGINT NOT NULL,
-	correct BOOLEAN DEFAULT FALSE,
-	FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE,
-	FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE
+    correct BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Comment(
     id INTEGER PRIMARY KEY,
-	post_id INTEGER NOT NULL,
-	FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE,
-	FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE
+    post_id INTEGER NOT NULL,
+    FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Vote(
-	user_id INTEGER NOT NULL,
-	post_id INTEGER NOT NULL,
-	positive BOOLEAN,
-	PRIMARY KEY (user_id, post_id),
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL,
-	FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
+    user_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL,
+    positive BOOLEAN,
+    PRIMARY KEY (user_id, post_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Medals(
-	user_id INTEGER PRIMARY KEY,
-	posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
-	posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
-	questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
-	answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    user_id INTEGER PRIMARY KEY,
+    posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
+    posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
+    questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
+    answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Report(
@@ -117,8 +134,8 @@ CREATE TABLE Report(
     created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
     user_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE,
-	FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Tag(
@@ -131,24 +148,24 @@ CREATE TABLE PostTag(
     post_id INTEGER NOT NULL, 
     tag_id INTEGER NOT NULL,
     PRIMARY KEY (post_id, tag_id),
-	FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tag(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE FollowTag(
     user_id INTEGER NOT NULL, 
     tag_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, tag_id),
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (tag_id) REFERENCES Tag(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tag(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE FollowQuestion(
     user_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, question_id),
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Notification(
@@ -157,39 +174,116 @@ CREATE TABLE Notification(
     description TEXT,
     type NotificationType NOT NULL DEFAULT 'OTHER',
     sent_at TIMESTAMP DEFAULT NOW() CHECK (sent_at >= NOW()),
-	FOREIGN KEY (receiver) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (receiver) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE NotificationPost(
     notification_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
     PRIMARY KEY (notification_id, post_id),
-	FOREIGN KEY (notification_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (post_id) REFERENCES Notification(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Notification(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE NotificationUser(
     notification_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (notification_id, user_id),
-	FOREIGN KEY (notification_id) REFERENCES Notification(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Edition(
-	id SERIAL PRIMARY KEY,
-	post_id INTEGER NOT NULL,
-	old_title TEXT,
-	new_title TEXT,
-	old TEXT NOT NULL,
-	new TEXT NOT NULL,
-	made_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (made_at >= NOW()),
-	FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    old_title TEXT,
+    new_title TEXT,
+    old TEXT NOT NULL,
+    new TEXT NOT NULL,
+    made_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (made_at >= NOW()),
+    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-----------------------------
--- Triggers and Functions --
-----------------------------
+-------------
+-- Indexes --
+-------------
+
+--                            --
+-- Performance Search Indexes --
+--                            --
+
+CREATE INDEX user_post ON Post USING hash (user_id);
+
+CREATE INDEX answer_question ON ANSWER USING hash (question_id);
+
+--                          --
+-- Full-text Search Indexes --
+--                          --
+
+-- Name Search --
+
+-- Add column to Users to store computed ts_vector.
+ALTER TABLE Users
+ADD COLUMN tsvectors TSVECTOR;
+
+-- Create a function to automatically update ts_vectors for Users.
+CREATE FUNCTION users_search_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF (NEW.username <> OLD.username) THEN
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on Users.
+CREATE TRIGGER users_search_update
+BEFORE INSERT OR UPDATE ON Users
+FOR EACH ROW
+EXECUTE PROCEDURE users_search_update();
+
+-- Create a GIN index for ts_vectors in Users.
+CREATE INDEX name_search ON Users USING GIN (tsvectors);
+
+--
+-- Question search --
+--
+
+-- Add column to Question to store computed ts_vector.
+ALTER TABLE Question
+ADD COLUMN tsvectors TSVECTOR;
+
+-- Create a function to automatically update ts_vectors for Questions.
+CREATE FUNCTION questions_search_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF (NEW.title <> OLD.title) THEN
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on Question.
+CREATE TRIGGER questions_search_update
+BEFORE INSERT OR UPDATE ON Question
+FOR EACH ROW
+EXECUTE PROCEDURE questions_search_update();
+
+CREATE INDEX title_search ON Question USING GIN (tsvectors);
+
+-----------------------
+-- Triggers and UDFs --
+-----------------------
 
 --Post(votes)
 CREATE OR REPLACE FUNCTION update_post_votes()
