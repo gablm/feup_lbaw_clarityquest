@@ -2,8 +2,9 @@
 -- that is why transactions are in a separate file.
 
 -- Add question
+-- Using REPEATABLE READ to ensure consistency while adding a question and its associated post.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 INSERT INTO Post (text, user_id)
@@ -17,8 +18,9 @@ RETURNING id INTO new_question_id;
 COMMIT;
 
 -- Add answer
+-- Using REPEATABLE READ to ensure consistency while adding an answer and its associated post.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 INSERT INTO Post (text, user_id)
@@ -31,8 +33,9 @@ VALUES (new_post_id, $question_id);
 COMMIT;
 
 -- Add comment
+-- Using REPEATABLE READ to ensure consistency while adding a comment and its associated post.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 INSERT INTO Post (text, user_id)
@@ -45,8 +48,9 @@ VALUES (new_post_id, $question_id);
 COMMIT;
 
 -- Vote on answer / Vote on question
+-- Using REPEATABLE READ to ensure consistency while updating votes.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 INSERT INTO Vote (user_id, post_id, positive)
@@ -62,8 +66,9 @@ WHERE id = $post_id;
 COMMIT;
 
 -- Edit answer / edit comment
+-- Using REPEATABLE READ to ensure consistency while editing an answer or comment.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 UPDATE Post
@@ -73,8 +78,9 @@ WHERE id = $post_id AND user_id = $user_id;
 COMMIT;
 
 -- Delete answer
+-- Using REPEATABLE READ to ensure consistency while deleting an answer and its associated post.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Answer
@@ -88,8 +94,9 @@ WHERE id = $post_id AND user_id = $user_id;
 COMMIT;
 
 -- Delete comment
+-- Using REPEATABLE READ to ensure consistency while deleting a comment and its associated post.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Comment
@@ -103,9 +110,9 @@ WHERE id = $post_id AND user_id = $user_id;
 COMMIT;
 
 -- Edit user profile
---FAZ SENTIDO POSSIBILITAR AQUI O UPDATE DA PASSWORD??
+-- Using REPEATABLE READ to ensure consistency while editing user profile details.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 IF $new_name IS NOT NULL THEN
@@ -134,9 +141,10 @@ END IF;
 
 COMMIT;
 
--- delete account ?? on delete cascade no user não??  mas está na checklist e on delete cascade não está
+-- Delete account
+-- Using REPEATABLE READ to ensure consistency while deleting a user account and all associated data.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Medals WHERE user_id = $1;
@@ -157,10 +165,10 @@ DELETE FROM Users WHERE id = $1;
 
 COMMIT;
 
-
 -- Edit question
+-- Using REPEATABLE READ to ensure consistency while editing a question and its associated post.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 IF $new_title IS NOT NULL THEN
@@ -178,8 +186,9 @@ END IF;
 COMMIT;
 
 -- Delete question
+-- Using REPEATABLE READ to ensure consistency while deleting a question and all associated data.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Answer WHERE question_id = $1;
@@ -194,10 +203,10 @@ DELETE FROM Post WHERE id = (SELECT post_id FROM Question WHERE id = $1);
 
 COMMIT;
 
--- mark the answer as correct for questioner
--- NECESSARY ONLY IF IT IS TO unmark other answers for the same question as incorrect
+-- Mark the answer as correct for questioner
+-- Using REPEATABLE READ to ensure consistency while marking an answer as correct and unmarking others.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
-
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 UPDATE Answer
@@ -210,9 +219,13 @@ WHERE question_id = (SELECT question_id FROM Answer WHERE id = $1) AND id != $1;
 
 COMMIT;
 
--- Delete existing tags for the question and insert new tags for the question
+-- Edit question tags
+-- Using REPEATABLE READ to ensure consistency while editing tags for a question.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
+
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
 DELETE FROM PostTag WHERE post_id = (SELECT post_id FROM Question WHERE id = $1);
 
 FOREACH tag_id IN ARRAY $2
@@ -221,3 +234,19 @@ LOOP
 END LOOP;
 
 COMMIT;
+
+-- Follow Question
+-- Using REPEATABLE READ to ensure consistency while following a question.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
+BEGIN TRANSACTION;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+IF EXISTS (SELECT 1 FROM Question WHERE id = $1) THEN
+    INSERT INTO FollowQuestion (user_id, question_id)
+    VALUES ($2, $1)
+    ON CONFLICT (user_id, question_id) DO NOTHING;
+END IF;
+
+COMMIT;
+
+--só faltam transactions para selecionar questões a mostrar
