@@ -74,7 +74,23 @@ WHERE id = $post_id AND user_id = $user_id;
 
 END TRANSACTION;
 
--- TODO: Edit Question
+-- Edit question
+-- Using REPEATABLE READ to ensure consistency while editing a question.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
+BEGIN TRANSACTION;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+UPDATE Post
+SET text = $new_text, updated_at = NOW()
+WHERE id = $post_id AND user_id = $user_id;
+
+UPDATE Question
+SET  title = $new_title
+WHERE id = $post_id;
+
+-- TODO: Add to Edition table
+
+END TRANSACTION;
 
 -- Delete answer
 -- Using REPEATABLE READ to ensure consistency while deleting an answer and its associated post.
