@@ -9,14 +9,14 @@ DROP INDEX IF EXISTS title_search;
 DROP TRIGGER IF EXISTS questions_search_update ON Question;
 DROP FUNCTION IF EXISTS questions_search_update;
 
-ALTER TABLE Question
+ALTER TABLE IF EXISTS Question
 DROP COLUMN IF EXISTS tsvectors;
 
 DROP INDEX IF EXISTS name_search;
 DROP TRIGGER IF EXISTS users_search_update ON Users;
 DROP FUNCTION IF EXISTS users_search_update;
 
-ALTER TABLE Users
+ALTER TABLE IF EXISTS Users
 DROP COLUMN IF EXISTS tsvectors;
 
 DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
@@ -227,7 +227,8 @@ ALTER TABLE Users
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors for Users.
-CREATE FUNCTION users_search_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION users_search_update()
+RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
@@ -259,7 +260,8 @@ ALTER TABLE Question
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors for Questions.
-CREATE FUNCTION questions_search_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION questions_search_update()
+RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
