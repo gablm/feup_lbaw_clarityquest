@@ -1,5 +1,5 @@
--- the usage of placeholders for table manipulation requires a web-server context. 
--- that is why transactions are in a separate file.
+-- The usage of placeholders for table manipulation requires a web-server context. 
+-- That is why transactions are in a separate file.
 
 -- Add question
 -- Using REPEATABLE READ to ensure consistency while adding a question and its associated post.
