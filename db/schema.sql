@@ -2,6 +2,21 @@
 -- Clean Database --
 --------------------
 
+DROP FUNCTION IF EXISTS update_post_votes;
+DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
+
+DROP FUNCTION IF EXISTS update_medals_posts_upvotes;
+DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvotes ON Vote;
+
+DROP FUNCTION IF EXISTS update_medals_posts_created;
+DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON Post;
+
+DROP FUNCTION IF EXISTS update_medals_questions_created;
+DROP TRIGGER IF EXISTS trigger_update_medals_questions_created ON Question;
+
+DROP FUNCTION IF EXISTS update_medals_answers_posted;
+DROP TRIGGER IF EXISTS trigger_update_medals_answers_posted ON Answer;
+
 DROP TABLE IF EXISTS Medals;
 DROP TABLE IF EXISTS Vote;
 DROP TABLE IF EXISTS Edition;
@@ -21,21 +36,6 @@ DROP TABLE IF EXISTS Users;
 
 DROP TYPE IF EXISTS Permission;
 DROP TYPE IF EXISTS NotificationType;
-
-DROP FUNCTION IF EXISTS update_post_votes;
-DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
-
-DROP FUNCTION IF EXISTS update_medals_posts_upvotes;
-DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvotes ON Vote;
-
-DROP FUNCTION IF EXISTS update_medals_posts_created;
-DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON Post;
-
-DROP FUNCTION IF EXISTS update_medals_questions_created;
-DROP TRIGGER IF EXISTS trigger_update_medals_questions_created ON Question;
-
-DROP FUNCTION IF EXISTS update_medals_answers_posted;
-DROP TRIGGER IF EXISTS trigger_update_medals_answers_posted ON Answer;
 
 -----------
 -- Types --
