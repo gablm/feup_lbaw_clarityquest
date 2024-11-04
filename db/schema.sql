@@ -68,8 +68,8 @@ CREATE TABLE Post(
     text TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
     votes INTEGER DEFAULT 0,
-    user_id INTEGER NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE
+    user_id INTEGER,
+	FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Question(
@@ -179,6 +179,8 @@ CREATE TABLE NotificationUser(
 CREATE TABLE Edition(
 	id SERIAL PRIMARY KEY,
 	post_id INTEGER NOT NULL,
+	old_title TEXT,
+	new_title TEXT,
 	old TEXT NOT NULL,
 	new TEXT NOT NULL,
 	made_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (made_at >= NOW()),
