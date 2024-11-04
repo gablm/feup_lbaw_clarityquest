@@ -1,5 +1,5 @@
--- the usage of placeholders for table manipulation requires a web-server context. 
--- that is why transactions are in a separate file.
+-- The usage of placeholders for table manipulation requires a web-server context. 
+-- That is why transactions are in a separate file.
 
 -- Add question
 -- Using REPEATABLE READ to ensure consistency while adding a question and its associated post.
@@ -66,11 +66,15 @@ END TRANSACTION;
 BEGIN TRANSACTION;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
+SELECT text AS old_text FROM Post
+WHERE id = $post_id;
+
 UPDATE Post
 SET text = $new_text, updated_at = NOW()
 WHERE id = $post_id AND user_id = $user_id;
 
--- TODO: Add to Edition table
+INSERT INTO Edition(post_id, old, new)
+VALUES ($post_id, $old_text, $new_text);
 
 END TRANSACTION;
 
@@ -80,15 +84,26 @@ END TRANSACTION;
 BEGIN TRANSACTION;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
-UPDATE Post
-SET text = $new_text, updated_at = NOW()
-WHERE id = $post_id AND user_id = $user_id;
+IF $new_email IS NOT NULL THEN
+	SELECT text AS old_text FROM Post
+	WHERE id = $post_id;
 
-UPDATE Question
-SET  title = $new_title
-WHERE id = $post_id;
+	UPDATE Post
+	SET text = $new_text, updated_at = NOW()
+	WHERE id = $post_id AND user_id = $user_id;
+END IF;
 
--- TODO: Add to Edition table
+IF $new_title IS NOT NULL THEN
+	SELECT text AS old_title FROM Question
+	WHERE id = $post_id;
+
+	UPDATE Question
+	SET  title = $new_title
+	WHERE id = $post_id;
+END IF;
+
+INSERT INTO Edition(post_id, old_title, new_title, old, new)
+VALUES ($post_id, $old_title, $new_title, $old_text, $new_text);
 
 END TRANSACTION;
 

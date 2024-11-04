@@ -9,14 +9,14 @@ DROP INDEX IF EXISTS title_search;
 DROP TRIGGER IF EXISTS questions_search_update ON Question;
 DROP FUNCTION IF EXISTS questions_search_update;
 
-ALTER TABLE Question
+ALTER TABLE IF EXISTS Question
 DROP COLUMN IF EXISTS tsvectors;
 
 DROP INDEX IF EXISTS name_search;
 DROP TRIGGER IF EXISTS users_search_update ON Users;
 DROP FUNCTION IF EXISTS users_search_update;
 
-ALTER TABLE Users
+ALTER TABLE IF EXISTS Users
 DROP COLUMN IF EXISTS tsvectors;
 
 DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
@@ -97,7 +97,7 @@ CREATE TABLE Question(
 
 CREATE TABLE Answer(
     id INTEGER PRIMARY KEY, 
-    question_id BIGINT NOT NULL,
+    question_id INT NOT NULL,
     correct BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -227,7 +227,8 @@ ALTER TABLE Users
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors for Users.
-CREATE FUNCTION users_search_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION users_search_update()
+RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
@@ -259,7 +260,8 @@ ALTER TABLE Question
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors for Questions.
-CREATE FUNCTION questions_search_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION questions_search_update()
+RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
@@ -365,77 +367,3 @@ CREATE TRIGGER trigger_update_medals_answers_posted
 AFTER INSERT ON Answer
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
-
-
--------------
--- Indexes --
--------------
-
---PERFORMANCE INDEXES --
-
--- Index connecting Post with user_id
-
-CREATE INDEX user_post ON Post USING hash (user_id);
-
--- Index connecting Answer and question_id
-
-CREATE INDEX answer_question ON ANSWER USING hash (question_id);
-
--- FULL TEXT SEARCH INDEXES --
-
--- searches users by full name
-
--- Add column to Users to store computed ts_vector.
-ALTER TABLE Users
-ADD COLUMN tsvectors TSVECTOR;
-
--- Create a function to automatically update ts_vectors for Users.
-CREATE FUNCTION users_search_update() RETURNS TRIGGER AS $$
-BEGIN
- IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors = setweight(to_tsvector('english', NEW.name), 'A');
- END IF;
- IF TG_OP = 'UPDATE' THEN
-         IF (NEW.name <> OLD.name) THEN
-           NEW.tsvectors = setweight(to_tsvector('english', NEW.name), 'A');
-         END IF;
- END IF;
- RETURN NEW;
-END $$ LANGUAGE plpgsql;
-
--- Create a trigger before insert or update on Users.
-CREATE TRIGGER users_search_update
- BEFORE INSERT OR UPDATE ON Users
- FOR EACH ROW
- EXECUTE PROCEDURE users_search_update();
-
--- Create a GIN index for ts_vectors in Users.
-CREATE INDEX username_search ON Users USING GIN (tsvectors);
-
--- searches question by title
-
--- Add column to Question to store computed ts_vector.
-ALTER TABLE Question
-ADD COLUMN tsvectors TSVECTOR;
-
--- Create a function to automatically update ts_vectors for Questions.
-CREATE FUNCTION questions_search_update() RETURNS TRIGGER AS $$
-BEGIN
- IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
- END IF;
- IF TG_OP = 'UPDATE' THEN
-         IF (NEW.title <> OLD.title) THEN
-           NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
-         END IF;
- END IF;
- RETURN NEW;
-END $$ LANGUAGE plpgsql;
-
--- Create a trigger before insert or update on Question.
-CREATE TRIGGER questions_search_update
- BEFORE INSERT OR UPDATE ON Question
- FOR EACH ROW
- EXECUTE PROCEDURE questions_search_update();
-
-CREATE INDEX title_search ON Question USING GIN (tsvectors);
