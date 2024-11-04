@@ -4,10 +4,6 @@
 
 CREATE INDEX user_post ON Post USING hash (user_id);
 
--- Index connecting Vote and post_id
-
-CREATE INDEX post_vote ON VOTE USING hash (post_id);
-
 -- Index connecting Answer and question_id
 
 CREATE INDEX answer_question ON ANSWER USING hash (question_id);
