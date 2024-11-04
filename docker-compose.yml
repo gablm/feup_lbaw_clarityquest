@@ -1,35 +1,27 @@
 services:
   postgres:
-    image: postgres
+    container_name: postgres
+    image: postgres:latest
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=cqlbaw2425-125
-      - POSTGRES_DB=clarityquest
-      - PGDATA=/data/postgres
-    volumes:
-      - postgres:/data/postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4:latest
     environment:
-      - PGADMIN_DEFAULT_EMAIL=lbaw24125@db.fe.up.pt
-      - PGADMIN_DEFAULT_PASSWORD=LDs8bc1BwL
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
       - PGADMIN_CONFIG_SERVER_MODE=False
     ports:
-      - "80:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-networks:
-  postgres:
-    driver: bridge
-
-volumes:
-  postgres:
-  pgadmin:
+      - "5050:80"
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - ./pgadmin/config_web.py:/pgadmin4/web/config_web.py
+    restart: always

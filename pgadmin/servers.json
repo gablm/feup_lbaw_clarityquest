@@ -1,0 +1,22 @@
+{
+    "Servers": {
+        "local": {
+            "Name": "local",
+            "Group": "Servers",
+            "Port": 5432,
+            "Username": "root",
+            "Host": "postgres",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+        },
+		"remote": {
+            "Name": "remote",
+            "Group": "Servers",
+            "Port": 5432,
+            "Username": "lbaw24125",
+            "Host": "db.fe.up.pt",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+        }
+    }
+}
