@@ -15,7 +15,7 @@ INSERT INTO Question (title, post_id)
 VALUES ($title, $new_post_id)
 RETURNING id INTO new_question_id;
 
-COMMIT;
+END TRANSACTION;
 
 -- Add answer
 -- Using REPEATABLE READ to ensure consistency while adding an answer and its associated post.
@@ -30,7 +30,7 @@ RETURNING id INTO new_post_id;
 INSERT INTO Answer (post_id, question_id)
 VALUES (new_post_id, $question_id); 
 
-COMMIT;
+END TRANSACTION;
 
 -- Add comment
 -- Using REPEATABLE READ to ensure consistency while adding a comment and its associated post.
@@ -45,7 +45,7 @@ RETURNING id INTO new_post_id;
 INSERT INTO Comment(post_id, question_id)
 VALUES (new_post_id, $question_id); 
 
-COMMIT;
+END TRANSACTION;
 
 -- Vote on answer / Vote on question
 -- Using REPEATABLE READ to ensure consistency while updating votes.
@@ -58,7 +58,7 @@ VALUES ($user_id, $post_id, $positive)
 ON CONFLICT (user_id, post_id) 
 DO UPDATE SET positive = EXCLUDED.positive;
 
-COMMIT;
+END TRANSACTION;
 
 -- Edit answer / edit comment
 -- Using REPEATABLE READ to ensure consistency while editing an answer or comment.
@@ -72,7 +72,7 @@ WHERE id = $post_id AND user_id = $user_id;
 
 -- TODO: Add to Edition table
 
-COMMIT;
+END TRANSACTION;
 
 -- TODO: Edit Question
 
@@ -87,7 +87,7 @@ WHERE post_id = $post_id AND EXISTS (
     SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
 );
 
-COMMIT;
+END TRANSACTION;
 
 -- Delete comment
 -- Using REPEATABLE READ to ensure consistency while deleting a comment and its associated post.
@@ -100,7 +100,7 @@ WHERE post_id = $post_id AND EXISTS (
     SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
 );
 
-COMMIT;
+END TRANSACTION;
 
 -- Edit user profile
 -- Using REPEATABLE READ to ensure consistency while editing user profile details.
@@ -132,7 +132,7 @@ IF $new_hashed_password IS NOT NULL THEN
     WHERE id = $user_id;
 END IF;
 
-COMMIT;
+END TRANSACTION;
 
 -- Delete account
 -- Using REPEATABLE READ to ensure consistency while deleting a user account and all associated data.
@@ -142,7 +142,7 @@ SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Users WHERE id = $1;
 
-COMMIT;
+END TRANSACTION;
 
 -- Edit question
 -- Using REPEATABLE READ to ensure consistency while editing a question and its associated post.
@@ -162,7 +162,7 @@ IF $new_text IS NOT NULL THEN
     WHERE id = (SELECT post_id FROM Question WHERE id = $question_id) AND user_id = $user_id;
 END IF;
 
-COMMIT;
+END TRANSACTION;
 
 -- Delete question
 -- Using REPEATABLE READ to ensure consistency while deleting a question and all associated data.
@@ -172,7 +172,7 @@ SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DELETE FROM Answer WHERE question_id = $1;
 
-COMMIT;
+END TRANSACTION;
 
 -- Mark the answer as correct for questioner
 -- Using REPEATABLE READ to ensure consistency while marking an answer as correct and unmarking others.
@@ -188,7 +188,7 @@ UPDATE Answer
 SET correct = FALSE
 WHERE question_id = (SELECT question_id FROM Answer WHERE id = $1) AND id != $1;
 
-COMMIT;
+END TRANSACTION;
 
 -- Edit question tags
 -- Using REPEATABLE READ to ensure consistency while editing tags for a question.
@@ -204,7 +204,7 @@ LOOP
     INSERT INTO PostTag (post_id, tag_id) VALUES ((SELECT post_id FROM Question WHERE id = $1), tag_id);
 END LOOP;
 
-COMMIT;
+END TRANSACTION;
 
 -- Follow Question
 -- Using REPEATABLE READ to ensure consistency while following a question.
@@ -218,4 +218,18 @@ IF EXISTS (SELECT 1 FROM Question WHERE id = $1) THEN
     ON CONFLICT (user_id, question_id) DO NOTHING;
 END IF;
 
-COMMIT;
+END TRANSACTION;
+
+-- Follow Tag
+-- Using REPEATABLE READ to ensure consistency while following a tag.
+-- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
+BEGIN TRANSACTION;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+IF EXISTS (SELECT 1 FROM Tag WHERE id = $1) THEN
+    INSERT INTO FollowTag (user_id, tag_id)
+    VALUES ($2, $1)
+    ON CONFLICT (user_id, tag_id) DO NOTHING;
+END IF;
+
+END TRANSACTION;
