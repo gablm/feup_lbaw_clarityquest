@@ -22,8 +22,8 @@ DROP COLUMN IF EXISTS tsvectors;
 DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
 DROP FUNCTION IF EXISTS update_post_votes;
 
-DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvotes ON Vote;
-DROP FUNCTION IF EXISTS update_medals_posts_upvotes;
+DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvoted ON Vote;
+DROP FUNCTION IF EXISTS update_medals_posts_upvoted;
 
 DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON Post;
 DROP FUNCTION IF EXISTS update_medals_posts_created;
@@ -121,7 +121,7 @@ CREATE TABLE Vote(
 
 CREATE TABLE Medals(
     user_id INTEGER PRIMARY KEY,
-    posts_upvotes BIGINT DEFAULT 0 CHECK (posts_upvotes >= 0),
+    posts_upvoted BIGINT DEFAULT 0 CHECK (posts_upvoted >= 0),
     posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
     questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
     answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
@@ -304,21 +304,21 @@ AFTER INSERT OR UPDATE ON Vote
 FOR EACH ROW
 EXECUTE FUNCTION update_post_votes();
 
---Medals(post_upvotes)
-CREATE OR REPLACE FUNCTION update_medals_posts_upvotes()
+--Medals(posts_upvoted)
+CREATE OR REPLACE FUNCTION update_medals_posts_upvoted()
 RETURNS TRIGGER AS $$
 BEGIN
     UPDATE Medals
-    SET posts_upvotes = (SELECT COUNT(*) FROM Vote WHERE user_id = NEW.user_id AND positive = TRUE)
+    SET posts_upvoted = (SELECT COUNT(*) FROM Vote WHERE user_id = NEW.user_id AND positive = TRUE)
     WHERE user_id = NEW.user_id;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_update_medals_posts_upvotes
+CREATE TRIGGER trigger_update_medals_posts_upvoted
 AFTER INSERT OR UPDATE ON Vote
 FOR EACH ROW
-EXECUTE FUNCTION update_medals_posts_upvotes();
+EXECUTE FUNCTION update_medals_posts_upvoted();
 
 -- Medals(posts_created)
 CREATE OR REPLACE FUNCTION update_medals_posts_created()
