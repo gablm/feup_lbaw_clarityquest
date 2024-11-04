@@ -220,7 +220,7 @@ CREATE INDEX answer_question ON ANSWER USING hash (question_id);
 -- Full-text Search Indexes --
 --                          --
 
--- Username Search --
+-- Name Search --
 
 -- Add column to Users to store computed ts_vector.
 ALTER TABLE Users
