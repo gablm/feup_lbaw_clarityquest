@@ -58,11 +58,6 @@ VALUES ($user_id, $post_id, $positive)
 ON CONFLICT (user_id, post_id) 
 DO UPDATE SET positive = EXCLUDED.positive;
 
-UPDATE Post
-SET votes = (SELECT COUNT(*) FROM Vote WHERE post_id = $post_id AND positive = TRUE) -
-            (SELECT COUNT(*) FROM Vote WHERE post_id = $post_id AND positive = FALSE)
-WHERE id = $post_id;
-
 COMMIT;
 
 -- Edit answer / edit comment
@@ -75,7 +70,11 @@ UPDATE Post
 SET text = $new_text, updated_at = NOW()
 WHERE id = $post_id AND user_id = $user_id;
 
+-- TODO: Add to Edition table
+
 COMMIT;
+
+-- TODO: Edit Question
 
 -- Delete answer
 -- Using REPEATABLE READ to ensure consistency while deleting an answer and its associated post.
@@ -87,9 +86,6 @@ DELETE FROM Answer
 WHERE post_id = $post_id AND EXISTS (
     SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
 );
-
-DELETE FROM Post
-WHERE id = $post_id AND user_id = $user_id;
 
 COMMIT;
 
@@ -103,9 +99,6 @@ DELETE FROM Comment
 WHERE post_id = $post_id AND EXISTS (
     SELECT 1 FROM Post WHERE id = $post_id AND user_id = $user_id
 );
-
-DELETE FROM Post
-WHERE id = $post_id AND user_id = $user_id;
 
 COMMIT;
 
@@ -226,5 +219,3 @@ IF EXISTS (SELECT 1 FROM Question WHERE id = $1) THEN
 END IF;
 
 COMMIT;
-
---só faltam transactions para selecionar questões a mostrar
