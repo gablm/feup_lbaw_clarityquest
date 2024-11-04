@@ -187,9 +187,13 @@ CREATE TABLE Edition(
 	FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-----------------------------
--- Triggers and Functions --
-----------------------------
+-------------
+-- Indexes --
+-------------
+
+-----------------------
+-- Triggers and UDFs --
+-----------------------
 
 --Post(votes)
 CREATE OR REPLACE FUNCTION update_post_votes()
