@@ -12,7 +12,7 @@ DROP FUNCTION IF EXISTS questions_search_update;
 ALTER TABLE Question
 DROP COLUMN IF EXISTS tsvectors;
 
-DROP INDEX IF EXISTS username_search;
+DROP INDEX IF EXISTS name_search;
 DROP TRIGGER IF EXISTS users_search_update ON Users;
 DROP FUNCTION IF EXISTS users_search_update;
 
@@ -229,25 +229,26 @@ ADD COLUMN tsvectors TSVECTOR;
 -- Create a function to automatically update ts_vectors for Users.
 CREATE FUNCTION users_search_update() RETURNS TRIGGER AS $$
 BEGIN
- IF TG_OP = 'INSERT' THEN
+    IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
- END IF;
- IF TG_OP = 'UPDATE' THEN
-         IF (NEW.username <> OLD.username) THEN
-           NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
-         END IF;
- END IF;
- RETURN NEW;
-END $$ LANGUAGE plpgsql;
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF (NEW.username <> OLD.username) THEN
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Create a trigger before insert or update on Users.
 CREATE TRIGGER users_search_update
- BEFORE INSERT OR UPDATE ON Users
- FOR EACH ROW
- EXECUTE PROCEDURE users_search_update();
+BEFORE INSERT OR UPDATE ON Users
+FOR EACH ROW
+EXECUTE PROCEDURE users_search_update();
 
 -- Create a GIN index for ts_vectors in Users.
-CREATE INDEX username_search ON Users USING GIN (tsvectors);
+CREATE INDEX name_search ON Users USING GIN (tsvectors);
 
 --
 -- Question search --
@@ -260,22 +261,23 @@ ADD COLUMN tsvectors TSVECTOR;
 -- Create a function to automatically update ts_vectors for Questions.
 CREATE FUNCTION questions_search_update() RETURNS TRIGGER AS $$
 BEGIN
- IF TG_OP = 'INSERT' THEN
+    IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
- END IF;
- IF TG_OP = 'UPDATE' THEN
-         IF (NEW.title <> OLD.title) THEN
-           NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
-         END IF;
- END IF;
- RETURN NEW;
-END $$ LANGUAGE plpgsql;
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF (NEW.title <> OLD.title) THEN
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A');
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Create a trigger before insert or update on Question.
 CREATE TRIGGER questions_search_update
- BEFORE INSERT OR UPDATE ON Question
- FOR EACH ROW
- EXECUTE PROCEDURE questions_search_update();
+BEFORE INSERT OR UPDATE ON Question
+FOR EACH ROW
+EXECUTE PROCEDURE questions_search_update();
 
 CREATE INDEX title_search ON Question USING GIN (tsvectors);
 
