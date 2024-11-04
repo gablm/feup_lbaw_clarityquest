@@ -4,10 +4,10 @@
 
 ## Project Components
 
-* [ER: Requirements Specification](er)
-* [EBD: Database Specification](ebd)
-* [EAP: Architecture Specification and Prototype](eap)
-* [PA: Product and Presentation](pa)
+* [ER: Requirements Specification](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24125/-/wikis/er)
+* [EBD: Database Specification](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24125/-/wikis/ebd)
+* [EAP: Architecture Specification and Prototype](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24125/-/wikis/eap)
+* [PA: Product and Presentation](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24125/-/wikis/pa)
 
 ## Artefacts Checklist
 
