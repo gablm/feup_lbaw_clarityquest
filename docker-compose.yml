@@ -24,6 +24,5 @@ services:
       - "5050:80"
     volumes:
       - ./pgadmin/servers.json:/pgadmin4/servers.json
-      - ./pgadmin/config_web.py:/pgadmin4/web/config_web.py
       - ./db:/db
     restart: always
