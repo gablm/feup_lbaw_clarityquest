@@ -76,14 +76,14 @@ CREATE TABLE Users(
     hashed_pw TEXT NOT NULL,
     profile_pic TEXT,
     bio TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     role PERMISSION NOT NULL DEFAULT 'REGULAR'
 );
 
 CREATE TABLE Post(
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     votes INTEGER DEFAULT 0,
     user_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL
@@ -131,7 +131,7 @@ CREATE TABLE Medals(
 CREATE TABLE Report(
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW()),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     user_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -141,7 +141,7 @@ CREATE TABLE Report(
 CREATE TABLE Tag(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (created_at >= NOW())
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE PostTag(
@@ -173,7 +173,7 @@ CREATE TABLE Notification(
     receiver INTEGER NOT NULL,
     description TEXT,
     type NotificationType NOT NULL DEFAULT 'OTHER',
-    sent_at TIMESTAMP DEFAULT NOW() CHECK (sent_at >= NOW()),
+    sent_at TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (receiver) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -200,7 +200,7 @@ CREATE TABLE Edition(
     new_title TEXT,
     old TEXT NOT NULL,
     new TEXT NOT NULL,
-    made_at TIMESTAMP NOT NULL DEFAULT NOW() CHECK (made_at >= NOW()),
+    made_at TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -295,7 +295,7 @@ BEGIN
     SET votes = (SELECT COUNT(*) FROM Vote WHERE post_id = NEW.post_id AND positive = TRUE) -
                 (SELECT COUNT(*) FROM Vote WHERE post_id = NEW.post_id AND positive = FALSE)
     WHERE id = NEW.post_id;
-    RETURN NEW;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -311,7 +311,7 @@ BEGIN
     UPDATE Medals
     SET posts_upvoted = (SELECT COUNT(*) FROM Vote WHERE user_id = NEW.user_id AND positive = TRUE)
     WHERE user_id = NEW.user_id;
-    RETURN NEW;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -327,7 +327,7 @@ BEGIN
     UPDATE Medals
     SET posts_created = (SELECT COUNT(*) FROM Post WHERE user_id = NEW.user_id)
     WHERE user_id = NEW.user_id;
-    RETURN NEW;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -339,11 +339,17 @@ EXECUTE FUNCTION update_medals_posts_created();
 -- Medals(questions_created)
 CREATE OR REPLACE FUNCTION update_medals_questions_created()
 RETURNS TRIGGER AS $$
+DECLARE
+	user_id2 INTEGER;
 BEGIN
+	SELECT user_id INTO user_id2
+	FROM Post
+	WHERE id = NEW.id;
+
     UPDATE Medals
-    SET questions_created = (SELECT COUNT(*) FROM Question WHERE post_id IN (SELECT id FROM Post WHERE user_id = NEW.user_id))
-    WHERE user_id = NEW.user_id;
-    RETURN NEW;
+    SET questions_created = (SELECT COUNT(*) FROM Question WHERE id IN (SELECT id FROM Post WHERE user_id = user_id2))
+    WHERE user_id = user_id2;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -355,11 +361,17 @@ EXECUTE FUNCTION update_medals_questions_created();
 -- Medals(answers_posted)
 CREATE OR REPLACE FUNCTION update_medals_answers_posted()
 RETURNS TRIGGER AS $$
+DECLARE
+	user_id2 INTEGER;
 BEGIN
+	SELECT user_id INTO user_id2
+	FROM Post
+	WHERE id = NEW.id;
+
     UPDATE Medals
-    SET answers_posted = (SELECT COUNT(*) FROM Answer WHERE post_id IN (SELECT id FROM Post WHERE user_id = NEW.user_id))
-    WHERE user_id = NEW.user_id;
-    RETURN NEW;
+    SET answers_posted = (SELECT COUNT(*) FROM Answer WHERE id IN (SELECT id FROM Post WHERE user_id = user_id2))
+    WHERE user_id = user_id2;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 

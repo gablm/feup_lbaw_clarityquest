@@ -3001,7 +3001,8 @@ VALUES
   (2246,'mus. Proin vel nisl. Quisque fringilla euismod enim. Etiam',1414,312),
   (2247,'Nam ac',1279,386),
   (2248,'dapibus id, blandit at, nisi.',1519,312),
-  (2249,'dignissim magna',1709,44);
+  (2249,'dignissim magna',1709,44),
+  (2250,'lorem ipsum',3241,124);
 
 
 -- populate question
