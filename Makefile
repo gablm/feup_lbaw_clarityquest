@@ -5,4 +5,4 @@ compose-d:
 	docker compose up -d
 
 exec-db:
-	docker exec -it lbaw24125-postgres-1 /bin/sh
+	docker exec -it postgres /bin/sh
