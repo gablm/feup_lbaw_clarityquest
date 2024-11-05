@@ -47,7 +47,7 @@ VALUES (new_post_id, $question_id);
 
 END TRANSACTION;
 
--- Vote on answer/question/answer
+-- Vote on question/answer/comment
 -- Using REPEATABLE READ to ensure consistency while updating votes.
 -- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
@@ -175,33 +175,13 @@ DELETE FROM Users WHERE id = $1;
 
 END TRANSACTION;
 
--- Edit question
--- Using REPEATABLE READ to ensure consistency while editing a question and its associated post.
--- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
-BEGIN TRANSACTION;
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-IF $new_title IS NOT NULL THEN
-    UPDATE Question
-    SET title = $new_title
-    WHERE id = $question_id AND user_id = $user_id;
-END IF;
-
-IF $new_text IS NOT NULL THEN
-    UPDATE Post
-    SET text = $new_text, updated_at = NOW()
-    WHERE id = (SELECT post_id FROM Question WHERE id = $question_id) AND user_id = $user_id;
-END IF;
-
-END TRANSACTION;
-
 -- Delete question
 -- Using REPEATABLE READ to ensure consistency while deleting a question and all associated data.
 -- Higher isolation levels like SERIALIZABLE are not necessary as REPEATABLE READ prevents non-repeatable reads and phantom reads.
 BEGIN TRANSACTION;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
-DELETE FROM Answer WHERE question_id = $1;
+DELETE FROM Question WHERE question_id = $1;
 
 END TRANSACTION;
 
