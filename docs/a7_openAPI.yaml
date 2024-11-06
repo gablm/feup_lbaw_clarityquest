@@ -6,7 +6,7 @@ info:
  description: 'Web Resources Specification (A7) for MediaLibrary'
 
 servers:
- - url: http://lbaw.fe.up.pt/24125 #<!--- is it? 
+ - url: http://lbaw24125.fe.up.pt/24125
    description: Production server
 
 externalDocs:
