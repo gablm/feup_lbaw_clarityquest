@@ -18,5 +18,7 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     ports:
       - "4321:80"
+    volumes:
+      - ../docs/servers.json:/pgadmin4/servers.json
     depends_on:
       - postgres
