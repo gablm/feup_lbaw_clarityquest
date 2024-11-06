@@ -6,8 +6,8 @@ info:
  description: 'Web Resources Specification (A7) for MediaLibrary'
 
 servers:
- url: http://lbaw.fe.up.pt/24125 #<!--- is it? 
- description: Production server
+ - url: http://lbaw.fe.up.pt/24125 #<!--- is it? 
+   description: Production server
 
 externalDocs:
  description: Find more info here.
@@ -38,7 +38,7 @@ paths:
      tags:
        - 'M01: Authentication and Individual Profile'
 
-     rrequestBody:
+     requestBody:
       required: true
       content:
         application/x-www-form-urlencoded: 

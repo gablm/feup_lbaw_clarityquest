@@ -9,7 +9,7 @@
             "SSLMode": "prefer",
             "MaintenanceDB": "postgres"
         },
-		"remote": {
+        "remote": {
             "Name": "remote",
             "Group": "Servers",
             "Port": 5432,
