@@ -19,6 +19,6 @@ services:
     ports:
       - "4321:80"
     volumes:
-      - ../docs/pgadmin/servers.json:/pgadmin4/servers.json
+      - ./pgadm_servers.json:/pgadmin4/servers.json
     depends_on:
       - postgres
