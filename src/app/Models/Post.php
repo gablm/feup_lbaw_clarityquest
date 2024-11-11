@@ -4,18 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-use App\Enum\User\Permission;
-
-class User extends Authenticatable
+class Post
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
@@ -26,15 +21,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
-		'name',
-        'email',
-        'hashed_pw',
-		'google_token',
-		'x_token',
-		'profile_pic',
-		'bio',
-		'role'
+        'text',
+		'votes',
+		'user'
     ];
 
     /**
@@ -43,12 +32,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'hashed_pw',
-		'google_token',
-		'x_token',
-        'remember_token',
-		'created_at',
-		'role'
+		'created_at'
     ];
 
     /**
@@ -58,8 +42,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'created_at' => 'datetime',
-        'hashed_pw' => 'hashed',
-		'role' => Permission::class
+		'user_id' => User::class
     ];
 
     /**
