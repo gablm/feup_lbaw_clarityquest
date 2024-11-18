@@ -178,8 +178,8 @@ paths:
                   type: string
                   format: email
                   example: 'user@example.com'
-                required:
-                  - email
+              required:
+                - email
       responses:
        '302':
          description: 'Redirect after processing the recovery request.'
@@ -212,8 +212,8 @@ paths:
      responses:
        '200':
          description: 'Ok. Show User Profile UI'
-        '404':
-          description: 'User ID not found.'
+       '404':
+         description: 'User ID not found.'
  /users/{id}/edit:
   get:
     operationId: R109
@@ -244,7 +244,7 @@ paths:
         required: true
     requestBody:
       content:
-      application/x-www-form-urlencoded:
+       application/x-www-form-urlencoded:
         schema:
           type: object
           properties:
