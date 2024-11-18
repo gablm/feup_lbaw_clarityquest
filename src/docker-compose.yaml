@@ -20,5 +20,6 @@ services:
       - "4321:80"
     volumes:
       - ./pgadm_servers.json:/pgadmin4/servers.json
+      - ./database/clarityquest-seed.sql:/db/seed.sql
     depends_on:
       - postgres
