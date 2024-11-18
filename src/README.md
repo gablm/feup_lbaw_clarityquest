@@ -20,6 +20,11 @@ sudo apt install git composer php8.3 php8.3-mbstring php8.3-xml php8.3-pgsql php
 composer update
 ```
 
+- Update JS dependencies.
+```
+npm install
+```
+
 - Start database container
 ```
 docker compose up -d
