@@ -31,7 +31,7 @@ class AnswerPolicy
     {
         $has_role = $user->role == Permission::Admin
 			|| $user->role == Permission::Moderator;
-		$is_owner = $user->id == $answer->post()->user_id;
+		$is_owner = $user->id == $answer->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 		
         return $has_role || ($is_owner && !$is_blocked);
@@ -44,7 +44,7 @@ class AnswerPolicy
     {
 		$has_role = $user->role == Permission::Admin
 			|| $user->role == Permission::Moderator;
-		$is_owner = $user->id == $answer->post()->user_id;
+		$is_owner = $user->id == $answer->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 
         return $has_role || ($is_owner && !$is_blocked);

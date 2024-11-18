@@ -3,7 +3,13 @@
 @section('content')
 <form method="POST" action="{{ route('login') }}">
 	{{ csrf_field() }}
-
+	
+	@if (session('success'))
+	<p class="auth-success bold">
+		{{ session('success') }}
+	</p>
+	
+	@endif
 	<div class="mb-4">
 		<label class="auth" for="email">E-mail</label>
 		<input class="auth focus:outline-none focus:shadow-outline" id="email" type="email" name="email" value="{{ old('email') }}" required>
@@ -34,14 +40,9 @@
 		<button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
 			Sign In
 		</button>
-		<a class="auth" href="{{ route('register') }}">
+		<a class="auth-link" href="{{ route('register') }}">
 			Register
 		</a>
 	</div>
-	@if (session('success'))
-	<p class="success">
-		{{ session('success') }}
-	</p>
-	@endif
 </form>
 @endsection

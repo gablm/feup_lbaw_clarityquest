@@ -53,7 +53,7 @@
 		<button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
 			Register
 		</button>
-		<a class="auth" href="{{ route('login') }}">
+		<a class="auth-link" href="{{ route('login') }}">
 			Login
 		</a>
 	</div>
