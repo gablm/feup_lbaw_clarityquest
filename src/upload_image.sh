@@ -8,6 +8,8 @@ IMAGE_NAME=gitlab.up.pt:5050/lbaw/lbawYYYY/lbawYYXX
 
 # Ensure that dependencies are available
 composer install
+npm install
+npm run build
 php artisan config:clear
 php artisan clear-compiled
 php artisan optimize
