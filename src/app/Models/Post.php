@@ -58,33 +58,9 @@ class Post
         return $this->hasMany(Vote::class, 'post_id');
     }
 
-    /**
-     * Upvote the post.
-     */
-    public function upvote(int $userId): void
+    public function editions(): HasMany
     {
-        $vote = Vote::updateOrCreate(
-            ['user_id' => $userId, 'post_id' => $this->id],
-            ['positive' => true]
-        );
-
-        if (!$vote->wasRecentlyCreated && !$vote->positive) {
-            $this->post->increment('votes');
-        }
+        return $this->hasMany(Edition::class, 'post_id');
     }
 
-    /**
-     * Downvote the post.
-     */
-    public function downvote(int $userId): void
-    {
-        $vote = Vote::updateOrCreate(
-            ['user_id' => $userId, 'post_id' => $this->id],
-            ['positive' => false]
-        );
-
-        if (!$vote->wasRecentlyCreated && $vote->positive) {
-            $this->post->decrement('votes');
-        }
-    }
 }

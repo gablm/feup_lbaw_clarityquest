@@ -62,17 +62,4 @@ class Answer extends Model
         return $this->belongsTo(Question::class, 'question_id');
     }
 
-    /**
-     * Mark this answer as correct.
-     */
-    public function markAsCorrect(): void
-    {
-        // should it unmark other answers for the same question?
-        self::where('question_id', $this->question_id)
-            ->where('id', '!=', $this->id)
-            ->update(['correct' => false]);
-
-        $this->correct = true;
-        $this->save();
-    }
 }

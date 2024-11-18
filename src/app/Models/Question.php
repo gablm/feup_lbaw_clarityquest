@@ -57,16 +57,35 @@ class Question extends Model
     {
         return $this->hasMany(Answer::class, 'question_id');
     }
-    
 
+   
     /**
-     * Get the votes for the question.
+     * Get the comments for the answers to the question.
      */
-    public function votes(): HasMany
+    public function commentsOnAnswers(): HasManyThrough
     {
-        return $this->hasMany(Vote::class, 'post_id');
+        return $this->hasManyThrough(Comment::class, Answer::class, 'question_id', 'post_id', 'id', 'id');
     }
 
-   
-   
+    /**
+     * Get the answer marked as correct for the question.
+     */
+    public function correctAnswer(): ?Answer
+    {
+        return $this->answers()->where('correct', true)->first();
+    }
+     /**
+     * Get all tags associated with the question.
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'post_tag', 'post_id', 'tag_id', 'id', 'id');
+    }
+     /**
+     * Get all followers of the question.
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follow_question', 'question_id', 'user_id');
+    }
 }
