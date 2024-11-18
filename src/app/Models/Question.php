@@ -10,8 +10,6 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $table = 'questions';
-
     protected $primaryKey = 'id';
 
     public $timestamps = false;

@@ -4,19 +4,19 @@
 <form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
 
-	<label for="nickname">Nickname</label>
-    <input id="nickname" type="text" name="nickname" value="{{ old('nickname') }}" required autofocus>
-    @if ($errors->has('nickname'))
+	<label for="name">Name</label>
+    <input id="name" type="text" name="name" value="{{ old('name') }}" required>
+    @if ($errors->has('name'))
       <span class="error">
           {{ $errors->first('name') }}
       </span>
     @endif
 
-    <label for="name">Name</label>
-    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-    @if ($errors->has('name'))
+	<label for="username">Handle</label>
+    <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+    @if ($errors->has('username'))
       <span class="error">
-          {{ $errors->first('name') }}
+          {{ $errors->first('username') }}
       </span>
     @endif
 
@@ -39,7 +39,7 @@
     <label for="password-confirm">Confirm Password</label>
     <input id="password-confirm" type="password" name="password_confirmation" required>
 
-    <button type="submit">
+    <button class="button button-outline" type="submit">
       Register
     </button>
     <a class="button button-outline" href="{{ route('login') }}">Login</a>

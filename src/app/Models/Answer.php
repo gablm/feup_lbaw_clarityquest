@@ -10,9 +10,6 @@ class Answer extends Model
 {
     use HasFactory;
 
-    // Define the table associated with the model
-    protected $table = 'answers';
-
     // Define the primary key for the model
     protected $primaryKey = 'id';
 

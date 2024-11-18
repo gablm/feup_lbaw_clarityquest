@@ -23,7 +23,9 @@
     <body>
         <main>
             <header>
-                <h1 class="center"><a href="{{ url('/') }}">ClarityQuest</a></h1>
+				<a href="{{ url('/') }}">
+					<img src={{ url('img/logo.png') }} width="20%vh" class="center"/>
+				</a>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @else

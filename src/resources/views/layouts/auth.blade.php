@@ -24,7 +24,9 @@
     </head>
     <body>
         <main class="flex flex-col items-center h-screen">
-			<img class="" src={{ url('img/logo.png') }} class="center"></h1>
+			<a href="{{ url('/') }}">
+				<img src={{ url('img/logo.png') }} class="center"/>
+			</a>
             <section id="content" class="m-2">
                 @yield('content')
             </section>

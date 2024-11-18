@@ -122,6 +122,7 @@ main > header span {
 
 #content > form input {
   background-color: white;
+  margin-bottom: 0.5em;
 }
 
 @media (max-width: 70em) {

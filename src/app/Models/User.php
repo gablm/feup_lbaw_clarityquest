@@ -29,7 +29,7 @@ class User extends Authenticatable
         'username',
 		'name',
         'email',
-        'hashed_pw',
+        'password',
 		'google_token',
 		'x_token',
 		'profile_pic',
@@ -43,7 +43,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'hashed_pw',
+        'password',
 		'google_token',
 		'x_token',
         'remember_token',
@@ -58,7 +58,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'created_at' => 'datetime',
-        'hashed_pw' => 'hashed',
+        'password' => 'hashed',
 		'role' => Permission::class
     ];
 
