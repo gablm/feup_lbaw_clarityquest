@@ -27,7 +27,7 @@
 			<a href="{{ url('/') }}">
 				<img  class="h-32 md:h-48 lg:h-64" src={{ url('img/logo.png') }}>
 			</a>
-			<section id="content">
+			<section id="content" class="min-w-[40vw] mt-5 p-[1em] shadow-lg border border-gray-200 rounded">
 				@yield('content')
 			</section>
 		</div>
