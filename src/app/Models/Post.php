@@ -45,7 +45,6 @@ class Post
 		'user_id' => User::class
     ];
 
-    
     /**
      * Get the comments for a post.
      */

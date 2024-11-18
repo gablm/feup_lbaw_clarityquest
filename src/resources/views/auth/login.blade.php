@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
 <form method="POST" action="{{ route('login') }}">
@@ -24,7 +24,7 @@
         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
     </label>
 
-    <button type="submit">
+    <button class="button button-outline" type="submit">
         Login
     </button>
     <a class="button button-outline" href="{{ route('register') }}">Register</a>

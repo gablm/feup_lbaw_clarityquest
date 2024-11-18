@@ -1,8 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
 <form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
+
+	<label for="nickname">Nickname</label>
+    <input id="nickname" type="text" name="nickname" value="{{ old('nickname') }}" required autofocus>
+    @if ($errors->has('nickname'))
+      <span class="error">
+          {{ $errors->first('name') }}
+      </span>
+    @endif
 
     <label for="name">Name</label>
     <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
