@@ -23,7 +23,7 @@ class Post
     protected $fillable = [
         'text',
 		'votes',
-		'user'
+		'user_id'
     ];
 
     /**
