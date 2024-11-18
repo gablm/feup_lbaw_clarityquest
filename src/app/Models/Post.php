@@ -45,11 +45,47 @@ class Post
 		'user_id' => User::class
     ];
 
+    
     /**
-     * Get the posts for a user.
+     * Get the comments for a post.
      */
-    public function posts(): HasMany
+    public function comments(): HasMany
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Comment::class, 'post_id');
+    }
+    
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class, 'post_id');
+    }
+
+    /**
+     * Upvote the post.
+     */
+    public function upvote(int $userId): void
+    {
+        $vote = Vote::updateOrCreate(
+            ['user_id' => $userId, 'post_id' => $this->id],
+            ['positive' => true]
+        );
+
+        if (!$vote->wasRecentlyCreated && !$vote->positive) {
+            $this->post->increment('votes');
+        }
+    }
+
+    /**
+     * Downvote the post.
+     */
+    public function downvote(int $userId): void
+    {
+        $vote = Vote::updateOrCreate(
+            ['user_id' => $userId, 'post_id' => $this->id],
+            ['positive' => false]
+        );
+
+        if (!$vote->wasRecentlyCreated && $vote->positive) {
+            $this->post->decrement('votes');
+        }
     }
 }
