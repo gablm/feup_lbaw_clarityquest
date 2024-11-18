@@ -280,34 +280,3 @@ paths:
                302Failure:
                  description: 'Failed editing request. Redirect to user profile edit form.'
                  value: '/user/{id}/edit'
-       '400':
-         description: 'Bad Request. The input data is invalid or missing required fields.'
-         content:
-           application/x-www-form-urlencoded:
-             schema:
-               type: object
-               properties:
-                 status:
-                   type: string
-                   example: "error"
-                 message:
-                   type: string
-                   example: "Invalid input. Please check the following fields."
-                 errors:
-                   type: object
-                   properties:
-                     email:
-                       type: string
-                       example: "Invalid email format."
-                     profile_pic:
-                       type: string
-                       example: "Profile picture must be a valid image URL or a file upload."
-             examples:
-               invalidInput:
-                 summary: "Invalid input example"
-                 value:
-                   status: "error"
-                   message: "Invalid input. Please check the following fields."
-                   errors:
-                     email: "Invalid email format."
-            
