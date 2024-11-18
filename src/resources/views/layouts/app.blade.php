@@ -7,7 +7,7 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
+		@vite('resources/css/app.css')
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
@@ -23,7 +23,7 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">ClarityQuest Test</a></h1>
+                <h1><a href="{{ url('/') }}">ClarityQuest</a></h1>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif
