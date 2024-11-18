@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Report extends Model
+class Notification extends Model
 {
     use HasFactory;
 
     // Define the table associated with the model
-    protected $table = 'reports';
+    protected $table = 'notifications';
 
     // Define the primary key for the model
     protected $primaryKey = 'id';
@@ -25,10 +26,10 @@ class Report extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'reason',
-        'created_at',
-        'user_id',
-        'post_id',
+        'receiver',
+        'description',
+        'type',
+        'sent_at',
     ];
 
     /**
@@ -46,22 +47,31 @@ class Report extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'created_at' => 'datetime',
+        'sent_at' => 'datetime',
+        'type' => 'string',
     ];
 
     /**
-     * Get the user that made the report.
+     * Get the user that received the notification.
      */
-    public function user(): BelongsTo
+    public function receiver(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'receiver');
     }
 
     /**
-     * Get the post that the report is about.
+     * Get the posts associated with the notification.
      */
-    public function post(): BelongsTo
+    public function posts(): BelongsToMany
     {
-        return $this->belongsTo(Post::class, 'post_id');
+        return $this->belongsToMany(Post::class, 'notification_post', 'notification_id', 'post_id');
+    }
+
+    /**
+     * Get the users associated with the notification.
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'notification_user', 'notification_id', 'user_id');
     }
 }
