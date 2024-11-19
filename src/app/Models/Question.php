@@ -63,7 +63,6 @@ class Question extends Model
         return $this->hasMany(Answer::class, 'question_id');
     }
 
-   
     /**
      * Get the comments for the answers to the question.
      */

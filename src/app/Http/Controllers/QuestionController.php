@@ -69,10 +69,14 @@ class QuestionController extends Controller
 
 	public function show(string $id)
 	{
+		$user_id = Auth::user()->id;
+
 		$question = Question::findOrFail($id);
+		$question_owner = $question->post->owner->id;
 
 		return view('questions.show', [
-			'question' => $question 
+			'question' => $question,
+			'mine' => $question_owner == $user_id
 		]);
 	}
 }

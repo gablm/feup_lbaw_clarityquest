@@ -8,7 +8,7 @@
 		@include('partials.sidebar')
 	</section>
 	<div class="container mx-auto p-4">
-		@include('partials.question', $question)
+		@include('partials.question', ['question' => $question, 'mine' => $mine, 'details' => false])
 	</div>
 </div>
 @endsection
