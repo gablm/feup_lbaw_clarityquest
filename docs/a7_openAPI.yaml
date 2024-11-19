@@ -508,7 +508,7 @@ paths:
  /users/{id}/view:
   get:
     operationId: R301
-    summary: 'R301'
+    summary: 'R301: View Public User Profile'
     description: 'Retrieve user information. Access: REG, MOD, ADMIN'
     tags:
       - 'M03: Profiles'
