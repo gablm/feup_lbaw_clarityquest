@@ -1,4 +1,15 @@
-<div class="w-64 p-4 bg-gray-100">
+<div class="w-64 h-full p-4 bg-gray-100">
+    <!-- Breadcrumbs STUBBED!-->
+    <nav class="mb-4" aria-label="Breadcrumb">
+        <ol class="list-reset flex text-gray-700">
+            <li><a href="#" class="text-blue-500 hover:text-blue-700">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li><a href="#" class="text-blue-500 hover:text-blue-700">Section</a></li>
+            <li><span class="mx-2">></span></li>
+            <li class="text-gray-500">Current</li>
+        </ol>
+    </nav>
+
     <h5 class="text-lg font-semibold mb-4 text-white bg-blue-500 p-2 rounded-md">Post a Question</h5>
     <ul class="space-y-2">
         <li>
