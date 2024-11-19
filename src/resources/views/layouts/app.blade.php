@@ -26,22 +26,13 @@
 </head>
 
 <body>
-    {{-- Navbar --}}
-    @include('partials.navbar')
-
-    <main class="grid grid-cols-12 h-screen">
-        {{-- Sidebar --}}
-        <div class="col-span-3 h-full bg-gray-100 p-4">
-            @include('partials.sidebar')
-        </div>
-
-        {{-- Main Content --}}
-        <div class="col-span-9 p-4">
-            <section id="content" class="mt-4">
-                @yield('content')
-            </section>
-        </div>
-    </main>
+	<main class="flex flex-col h-screen justify-between">
+    	@include('layouts.navbar')
+		<section id="content">
+        	@yield('content')
+    	</section>
+		@include('layouts.footer')
+	</main>
 </body>
 
 </html>

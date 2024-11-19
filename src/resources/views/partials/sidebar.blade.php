@@ -1,4 +1,4 @@
-<div class="w-64 h-full p-4 bg-gray-100">
+<div class="flex flex-col flex-grow w-64 p-4 bg-gray-100">
     <!-- Breadcrumbs STUBBED!-->
     <nav class="mb-4" aria-label="Breadcrumb">
         <ol class="list-reset flex text-gray-700">
