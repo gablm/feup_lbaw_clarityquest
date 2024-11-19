@@ -420,7 +420,8 @@ paths:
     operationId: R205
     summary: 'R205: Delete Question'
     description: 'Delete posted question. Access: OWN, MOD, ADMIN'
-    tags: 'M02: Q&A'
+    tags: 
+      - 'M02: Q&A'
     parameters:
       - in: path
         name: id
