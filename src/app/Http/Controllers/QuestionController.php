@@ -17,8 +17,9 @@ class QuestionController extends Controller
         $user = Auth::user();
         $followedQuestions = $user->followedQuestions()->with(['post.user', 'answers', 'post.comments', 'tags'])->get();
 
-        return view('followedquestions', compact('followedQuestions'));
+        return view('pages.flwquest', compact('followedQuestions'));
     }
+	
     public function myQuestions()
     {
         if (!Auth::check()) {
@@ -28,6 +29,6 @@ class QuestionController extends Controller
         $user = Auth::user();
         $myQuestions = $user->questionsCreated()->with(['post.user', 'answers', 'post.comments', 'tags'])->get();
 
-        return view('myquestions', compact('myQuestions'));
+        return view('pages.myquestions', compact('myQuestions'));
     }
 }

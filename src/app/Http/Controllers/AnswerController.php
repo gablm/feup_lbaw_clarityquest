@@ -21,6 +21,6 @@ class AnswerController extends Controller
         $user = Auth::user();
         $answers = $user->answersPosted()->with('question')->get();
 
-        return view('myanswers', compact('answers'));
+        return view('pages.myanswers', compact('answers'));
     }
 }
