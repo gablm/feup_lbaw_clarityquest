@@ -2,6 +2,7 @@
  
 namespace App\Http\Controllers\Auth;
 
+//use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
  
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended('/');
         }
  
         return back()->withErrors([
