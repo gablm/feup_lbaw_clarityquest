@@ -151,6 +151,7 @@ paths:
                302Failure:
                  description: 'Failed authentication. Redirect to login form.'
                  value: '/login'
+
  /recover:
     get:
       operationId: R106
@@ -194,10 +195,11 @@ paths:
                302Failure:
                  description: 'Failed recovery request. Redirect to recovery form.'
                  value: '/recover'
+
  /users/{id}:
    get:
      operationId: R108
-     summary: 'R108: View user profile.'
+     summary: 'R108: View User Profile.'
      description: 'Show the individual user profile. Access: REG, MOD, ADMIN'
      tags:
        - 'M01: Authentication and Individual Profile'
@@ -214,6 +216,7 @@ paths:
          description: 'Ok. Show User Profile UI'
         '404':
           description: 'User ID not found.'
+
  /users/{id}/edit:
   get:
     operationId: R109
@@ -230,7 +233,7 @@ paths:
     responses:
       '200':
         description: 'Ok. Show account edit information.'
-  post:
+  put:
     operationId: R110
     summary: 'R110: Edit User Profile Action.'
     description: 'Process the account editing request. Access: REG, MOD, ADMIN'
@@ -310,4 +313,195 @@ paths:
                    message: "Invalid input. Please check the following fields."
                    errors:
                      email: "Invalid email format."
-            
+                    
+ /questions:
+  get: 
+    operationId: R201
+    summary: 'R201: View Question List/Question Search'
+    description: 'Retrieve question list or perform a filtered search. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: "Perform question search."
+    responses:
+      '200':
+        description: 'Ok. Question list retrieved successfully.'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: array
+  post:
+    operationId: R202
+    summary: 'R202: Create New Question'
+    description: 'Post a new question. Access: REG'
+    tags:
+      - 'M02: Q&A'
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              question_body:
+                type: string
+              question_tags:
+                type: array
+                items:
+                  type: string
+            required:
+              - title
+              - question_body
+    responses:
+      '201':
+        description: 'Ok. Question created successfully.'
+      '400':
+        description: 'Invalid input.'
+
+ /questions/{id}:
+   get:
+    operationId: R203
+    summary: 'R203: Fetch Question (ID)'
+    description: 'Look up question details based on ID. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    responses:
+        '200':
+          description: 'Ok. Question details retrieved successfully.'
+        '404':
+          description: 'Question not found.'
+   put:
+    operationId: R204
+    summary: 'R204: Edit Question'
+    description: 'Update question details. Access: OWN'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              question_body:
+                type: string
+              question_tags:
+                type: array
+                items:
+                  type: string
+    responses:
+      '200':
+        description: 'Ok. Question updated successfully.'
+      '400':
+        description: 'Invalid input.'
+      '404':
+        description: 'Question not found.'
+  delete:
+    operationId: R205
+    summary: 'R205: Delete Question'
+    description: 'Delete posted question. Access: OWN, MOD, ADMIN'
+    tags: 'M02: Q&A'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+        '204':
+          description: 'Question deleted successfully.'
+        '404':
+          description: 'Question not found.'
+
+ /questions/{id}/answers:
+  get: 
+    operationId: R206
+    summary: 'R206: Get Answers for Question'
+    description: 'Fetch answers for specific question. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    responses:
+      '200':
+        description: 'List of answers retrieved successfully.'
+  post:
+    operationId: R207
+    summary: 'R207: Create Answer for Question'
+    description: 'Create new answer for specific question. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                answer_body:
+                  type: text
+              required:
+                - answer_body
+    responses:
+        '201':
+          description: 'Answer created successfully.'
+
+ /questions/{id}/votes:
+  post:
+    operationId: R208
+    summary: 'R208: Up or Downvote a Question'
+    description: "Up or Downvote a question. Access: REG, MOD, ADMIN"
+    tags: 
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content: 
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properting:
+              positive:
+                type: boolean
+    responses:
+      '200':
+        description: 'Vote registered successfully.'
+      '400':
+        description: 'Invalid vote type.'
+
+        
