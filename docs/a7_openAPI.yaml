@@ -416,7 +416,7 @@ paths:
         description: 'Invalid input.'
       '404':
         description: 'Question not found.'
-  delete:
+   delete:
     operationId: R205
     summary: 'R205: Delete Question'
     description: 'Delete posted question. Access: OWN, MOD, ADMIN'
