@@ -23,26 +23,22 @@
 </head>
 
 <body>
-	{{-- Navbar --}}
-	@include('partials.navbar')
+    {{-- Navbar --}}
+    @include('partials.navbar')
 
-	<main class="grid h-screen">
-		<div class="container-fluid">
-			<div class="row">
-				{{-- Sidebar --}}
-				<div class="col-md-3 bg-light">
-					@include('partials.sidebar')
-				</div>
+    <main class="grid grid-cols-12 h-screen">
+        {{-- Sidebar --}}
+        <div class="col-span-3 h-full bg-gray-100 p-4">
+            @include('partials.sidebar')
+        </div>
 
-				{{-- Main Content --}}
-				<div class="col-md-9">
-					<section id="content" class="mt-4">
-						@yield('content')
-					</section>
-				</div>
-			</div>
-		</div>
-	</main>
+        {{-- Main Content --}}
+        <div class="col-span-9 p-4">
+            <section id="content" class="mt-4">
+                @yield('content')
+            </section>
+        </div>
+    </main>
 </body>
 
 </html>
