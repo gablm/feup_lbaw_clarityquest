@@ -23,27 +23,24 @@
 </head>
 
 <body>
-	<main class="grid h-screen place-items-center">
-		<div class="flex flex-col items-center">
-			<a href="{{ url('/') }}">
-				<img class="h-32 md:h-48 lg:h-64" src={{ url('img/logo.png') }}>
-			</a>
-			<section id="auth-bar-temp" class="flex flex-col items-center min-w-[40vw] mt-5 p-[1em] shadow-lg border border-gray-200 rounded">
-				@if (Auth::check())
-				<span>Logged in as {{ Auth::user()->name }} ({{ Auth::user()->email }})!</span>
-				<a href="{{ url('/logout') }}">
-					<button class="auth-main">Logout</button>
-				</a>
-				@else
-				<a href="{{ url('/login') }}">
-					<button class="auth-main">Login</button>
-				</a>
-				@endif
-			</section>
+	{{-- Navbar --}}
+	@include('partials.navbar')
 
-			<section id="content" class="min-w-[40vw] mt-5 p-[1em] shadow-lg border border-gray-200 rounded">
-				@yield('content')
-			</section>
+	<main class="grid h-screen">
+		<div class="container-fluid">
+			<div class="row">
+				{{-- Sidebar --}}
+				<div class="col-md-3 bg-light">
+					@include('partials.sidebar')
+				</div>
+
+				{{-- Main Content --}}
+				<div class="col-md-9">
+					<section id="content" class="mt-4">
+						@yield('content')
+					</section>
+				</div>
+			</div>
 		</div>
 	</main>
 </body>

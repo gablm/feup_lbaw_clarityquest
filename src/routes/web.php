@@ -21,7 +21,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 // Home
 Route::view('/', 'home');
-
+//Route::get('/', [HomeController::class, 'index'])->name('home');
 // Cards
 //Route::controller(CardController::class)->group(function () {
 //    Route::get('/cards', 'list')->name('cards');
