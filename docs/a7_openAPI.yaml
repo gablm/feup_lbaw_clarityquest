@@ -772,13 +772,13 @@ paths:
         schema:
           type: integer
         required: true
-     responses:
-        '200':
-          description: 'Ok. Notification details retrieved successfully.'
-        '404':
-          description: 'Notification not found.'
-        '401':
-          description: 'Unauthorized. User must be logged in.'
+    responses:
+      '200':
+        description: 'Ok. Notification details retrieved successfully'
+      '404':
+        description: 'Notification not found.'
+      '401':
+        description: 'Unauthorized. User must be logged in.'
 
 /notifications/{id}/mark-read:
   put:
