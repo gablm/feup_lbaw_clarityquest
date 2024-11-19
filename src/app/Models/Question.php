@@ -1,56 +1,24 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use App\Models\Post;
-use App\Models\Answer;
-use App\Models\Comment;
+use Illuminate\Support\Facades\DB;
 
 class Question extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id';
-
-    public $timestamps = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'title',
         'id', // This is the foreign key referencing the Post table
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        // Add any attributes you want to hide
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        // Add any attributes that need casting
-    ];
-
-    /**
      * Get the post associated with the question.
      */
-    public function post(): BelongsTo
+    public function post()
     {
         return $this->belongsTo(Post::class, 'id');
     }
@@ -58,39 +26,52 @@ class Question extends Model
     /**
      * Get the answers for the question.
      */
-    public function answers(): HasMany
+    public function answers()
     {
         return $this->hasMany(Answer::class, 'question_id');
     }
 
-   
     /**
-     * Get the comments for the answers to the question.
+     * Get the comments for the question.
      */
-    public function commentsOnAnswers(): HasManyThrough
+    public function comments()
     {
-        return $this->hasManyThrough(Comment::class, Answer::class, 'question_id', 'post_id', 'id', 'id');
+        return $this->hasMany(Comment::class, 'post_id', 'id');
     }
 
     /**
-     * Get the answer marked as correct for the question.
+     * Get the tags for the question.
      */
-    public function correctAnswer(): ?Answer
+    public function tags()
     {
-        return $this->answers()->where('correct', true)->first();
+        return $this->belongsToMany(Tag::class, 'post_tag', 'post_id', 'tag_id');
     }
-     /**
-     * Get all tags associated with the question.
+
+    /**
+     * Get the top 10 questions sorted by score.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function tags(): BelongsToMany
+    public static function getTopQuestions()
     {
-        return $this->belongsToMany(Tag::class, 'posttag', 'post_id', 'tag_id', 'id', 'id');
+        return self::select('questions.*', DB::raw('0.6 * posts.votes + 0.4 * EXTRACT(EPOCH FROM (NOW() - posts.created_at)) as score'))
+            ->join('posts', 'questions.id', '=', 'posts.id')
+            ->orderByDesc('score')
+            ->limit(10)
+            ->get();
     }
-     /**
-     * Get all followers of the question.
+    /**
+     * Get the latest 10 questions sorted by creation date.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function followers(): BelongsToMany
+    public static function getLatestQuestions()
     {
-        return $this->belongsToMany(User::class, 'followquestion', 'question_id', 'user_id');
+        return self::select('questions.*')
+            ->join('posts', 'questions.id', '=', 'posts.id')
+            ->orderByDesc('posts.created_at')
+            ->limit(10)
+            ->get();
     }
+    
 }
