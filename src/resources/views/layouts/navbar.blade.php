@@ -1,9 +1,9 @@
-<nav class="z-index-1 shadow-lg px-2">
+<nav class="fixed w-screen bg-white z-0 shadow-lg px-2">
 	<div class="container mx-auto flex justify-between items-center">
 		<a href="{{ url('/') }}" class="flex items-center">
 			<img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
 		</a>
-		<form class="flex items-center space-x-1">
+		<form class="flex items-center w-[30vw] space-x-1">
 			<input type="search" placeholder="Search" aria-label="Search" class="nav">
 			<button type="submit" class="nav-search">
 				<i class="fa-solid fa-magnifying-glass"></i>

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="grid grid-cols-12 h-full">
+<div class="flex flex-row">
 	{{-- Sidebar --}}
-	<section class="col-span-3 bg-gray-100 px-4">
+	<section class="bg-gray-100 px-4">
 		@include('partials.sidebar')
 	</section>
 
