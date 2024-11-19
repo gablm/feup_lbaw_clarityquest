@@ -1,4 +1,4 @@
-<nav class="fixed w-screen bg-white z-0 shadow-lg px-2">
+<nav class="fixed w-screen bg-white z-0 shadow-lg px-4">
 	<div class="flex justify-between items-center">
 		<a href="{{ url('/') }}" class="flex items-center">
 			<img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
