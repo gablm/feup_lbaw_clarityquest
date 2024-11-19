@@ -582,7 +582,7 @@ paths:
       '404':
         description: 'User not found.'
 
-/users/{id}/comments:
+ /users/{id}/comments:
   get:
     operationId: R304
     summary: 'R304: List User Comments'
@@ -611,7 +611,7 @@ paths:
       '404':
         description: 'User not found.'
 
-/users/{id}/followed-topics:
+ /users/{id}/followed-topics:
   get:
     operationId: R305
     summary: 'R305: View Followed Topics'
@@ -662,7 +662,7 @@ paths:
       '404':
         description: 'User not found.'
 
-/users/{id}/followed-questions:
+ /users/{id}/followed-questions:
   get:
     operationId: R307
     summary: 'R307: View Followed Questions'
