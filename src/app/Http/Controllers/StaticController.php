@@ -28,4 +28,13 @@ class StaticController extends Controller
 
         return view('pages.home', compact('topQuestions', 'latestQuestions'));
     }
+    /**
+     * Show the about page.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function aboutUs()
+    {
+        return view('pages.about');
+    }
 }

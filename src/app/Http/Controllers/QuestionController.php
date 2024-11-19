@@ -79,4 +79,5 @@ class QuestionController extends Controller
 			'mine' => $question_owner == $user_id
 		]);
 	}
+    
 }
