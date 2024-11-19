@@ -72,7 +72,7 @@ class QuestionController extends Controller
 		$user_id = Auth::user()->id;
 
 		$question = Question::findOrFail($id);
-		$question_owner = $question->post->owner->id;
+		$question_owner = $question->post->user->id;
 
 		return view('questions.show', [
 			'question' => $question,

@@ -7,7 +7,7 @@
 			<h5 class="text-lg font-semibold mb-2">{{ $question->title }}</h5>
 			<p class="text-gray-700">{{ $question->post->text }}</p>
 			<div class="text-gray-500 text-sm mt-4">
-				<span class="text-gray-500">By {{ $question->post->owner->name ?? "[REDACTED]" }}</span>
+				<span class="text-gray-500">By {{ $question->post->user->name ?? "[REDACTED]" }}</span>
 				@if ($details)
 				<span>| {{ $question->answers->count() }} Answers</span>
 				<span>| {{ $question->post->comments->count() }} Comments</span>

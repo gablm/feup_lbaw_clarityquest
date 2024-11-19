@@ -28,7 +28,7 @@
                             <h4 class="text-lg font-semibold mb-2">{{ $question->title }}</h4>
                             <p class="text-gray-700 mb-2">{{ Str::limit($question->post->text, 100) }}</p>
                             <div class="text-gray-500 text-sm">
-                                <span>Asked by {{ $question->post->user->name }}</span> |
+                                <span>Asked by {{ $question->post->user->name ?? "[REDACTED]" }}</span> |
                                 <span>{{ $question->answers->count() }} Answers</span> |
                                 <span>{{ $question->post->comments->count() }} Comments</span>
                             </div>
@@ -54,7 +54,7 @@
                             <h4 class="text-lg font-semibold mb-2">{{ $question->title }}</h4>
                             <p class="text-gray-700 mb-2">{{ Str::limit($question->post->text, 100) }}</p>
                             <div class="text-gray-500 text-sm">
-                                <span>Asked by {{ $question->post->user->name }}</span> |
+                                <span>Asked by {{  $question->post->user->name ?? "[REDACTED]" }}</span> |
                                 <span>{{ $question->answers->count() }} Answers</span> |
                                 <span>{{ $question->post->comments->count() }} Comments</span>
                             </div>

@@ -44,7 +44,7 @@ class Post extends Model
         'created_at' => 'datetime',
     ];
 
-	public function owner(): HasOne
+	public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
