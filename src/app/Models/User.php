@@ -2,18 +2,25 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
-// Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 use App\Enum\User\Permission;
+use App\Models\Post;
+use App\Models\Question;
+use App\Models\Answer;
+use App\Models\Comment;
+use App\Models\Vote;
+use App\Models\Medal;
+use App\Models\Report;
+use App\Models\Tag;
+use App\Models\Notification;
 
 class User extends Authenticatable
 {
@@ -77,7 +84,7 @@ class User extends Authenticatable
      */
     public function followedTags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'follow_tag', 'user_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, 'followtag', 'user_id', 'tag_id');
     }
 
     /**
@@ -85,7 +92,7 @@ class User extends Authenticatable
      */
     public function followedQuestions(): BelongsToMany
     {
-        return $this->belongsToMany(Question::class, 'follow_question', 'user_id', 'question_id');
+        return $this->belongsToMany(Question::class, 'followquestion', 'user_id', 'question_id');
     }
 
     /**
@@ -156,32 +163,76 @@ class User extends Authenticatable
     /**
      * Get all the answers to the user's questions.
      */
-    public function answersToQuestions(): HasMany
+    public function answersToQuestions(): HasManyThrough
     {
-        return $this->hasManyThrough(Answer::class, Question::class, 'user_id', 'question_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Answer::class,
+            Question::class,
+            'user_id', // Foreign key on the Question table
+            'question_id', // Foreign key on the Answer table
+            'id', // Local key on the User table
+            'id' // Local key on the Question table
+        );
     }
 
     /**
      * Get all comments on the user's posts.
      */
-    public function commentsOnPosts(): HasMany
+    public function commentsOnPosts(): HasManyThrough
     {
-        return $this->hasManyThrough(Comment::class, Post::class, 'user_id', 'post_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Comment::class,
+            Post::class,
+            'user_id', // Foreign key on the Post table
+            'post_id', // Foreign key on the Comment table
+            'id', // Local key on the User table
+            'id' // Local key on the Post table
+        );
     }
 
     /**
      * Get all votes on the user's posts.
      */
-    public function votesOnPosts(): HasMany
+    public function votesOnPosts(): HasManyThrough
     {
-        return $this->hasManyThrough(Vote::class, Post::class, 'user_id', 'post_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Vote::class,
+            Post::class,
+            'user_id', // Foreign key on the Post table
+            'post_id', // Foreign key on the Vote table
+            'id', // Local key on the User table
+            'id' // Local key on the Post table
+        );
     }
-     /**
+
+    /**
      * Get all the questions created by the user.
      * Its kinda posts created, but only questions.
      */
-    public function questionsCreated(): HasMany
+    public function questionsCreated(): HasManyThrough
     {
-        return $this->hasManyThrough(Question::class, Post::class, 'user_id', 'id', 'id', 'id');
+        return $this->hasManyThrough(
+            Question::class,
+            Post::class,
+            'user_id', // Foreign key on the Post table
+            'id', // Foreign key on the Question table
+            'id', // Local key on the User table
+            'id' // Local key on the Post table
+        );
+    }
+
+    /**
+     * Get all the answers posted by the user.
+     */
+    public function answersPosted(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Answer::class,
+            Post::class,
+            'user_id', // Foreign key on the Post table
+            'id', // Foreign key on the Answer table
+            'id', // Local key on the User table
+            'id' // Local key on the Post table
+        );
     }
 }

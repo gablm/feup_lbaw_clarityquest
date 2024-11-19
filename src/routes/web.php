@@ -11,6 +11,10 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\AnswerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +29,12 @@ use App\Http\Controllers\Auth\RegisterController;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/followed-questions', [QuestionController::class, 'followedQuestions'])->name('followed-questions')->middleware('auth');
+Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('followed-tags')->middleware('auth');
+Route::get('/my-questions', [QuestionController::class, 'myQuestions'])->name('my-questions')->middleware('auth');
+Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
 // Cards
 //Route::controller(CardController::class)->group(function () {
 //    Route::get('/cards', 'list')->name('cards');

@@ -52,7 +52,7 @@ class Tag extends Model
      */
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'post_tag', 'tag_id', 'post_id');
+        return $this->belongsToMany(Post::class, 'posttag', 'tag_id', 'post_id');
     }
 
     /**
@@ -60,7 +60,7 @@ class Tag extends Model
      */
     public function followers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follow_tag', 'tag_id', 'user_id');
+        return $this->belongsToMany(User::class, 'followtag', 'tag_id', 'user_id');
     }
    
       /**
@@ -69,6 +69,6 @@ class Tag extends Model
      */
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(Question::class, 'post_tag', 'tag_id', 'post_id', 'id', 'id');
+        return $this->belongsToMany(Question::class, 'posttag', 'tag_id', 'post_id', 'id', 'id');
     }
 }

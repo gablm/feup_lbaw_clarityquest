@@ -13,22 +13,22 @@
     <h5 class="text-lg font-semibold mb-4 text-white bg-blue-500 p-2 rounded-md">Post a Question</h5>
     <ul class="space-y-2">
         <li>
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+            <a href="/my-questions" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
                 My Questions
             </a>
         </li>
         <li>
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+            <a href="/my-answers" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
                 My Answers
             </a>
         </li>
         <li>
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+            <a href="/followed-questions" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
                 Followed Questions
             </a>
         </li>
         <li>
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+            <a href="/followed-tags" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
                 Followed Tags
             </a>
         </li>
