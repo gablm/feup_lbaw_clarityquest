@@ -14,6 +14,9 @@
 	<!-- Styles -->
 	@vite('resources/css/app.css')
 
+	<!-- FontAwesome Icons -->
+	<script src="https://kit.fontawesome.com/f23eb02d6c.js" crossorigin="anonymous"></script>
+
 	<script type="text/javascript">
 		// Fix for Firefox autofocus CSS bug
 		// See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951

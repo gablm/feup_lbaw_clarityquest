@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 //use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\RedirectResponse;
@@ -55,7 +56,7 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login')
+        return redirect(RouteServiceProvider::HOME)
             ->withSuccess('You have logged out successfully!');
     } 
 }
