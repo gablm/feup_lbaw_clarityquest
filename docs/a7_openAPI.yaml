@@ -722,3 +722,84 @@ paths:
         description: 'Invalid input data.'
       '404':
         description: 'User not found.'
+
+ /notifications:
+  get:
+    operationId: R401
+    summary: 'R401: List Notifications'
+    description: 'Fetch list of notifications for current user. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M04: Notifications'
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of notifications per page.'
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum: ['RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER']
+        description: 'Filter notifications by type.'
+      - in: query
+        name: read_status
+        schema:
+          type: string
+          enum: [all, read, unread]
+        description: 'Filter notifications by their read status.'
+    responses:
+        '200':
+          description: 'Ok. List of notifications retrieved successfully.'
+        '401':
+          description: 'Unauthorized. User must be logged in.'
+
+ /notifications/{id}:
+  get:
+    operationId: R402
+    summary: 'R402: View Notification'
+    description: 'Retrieve details of a specific notification by ID. Access: REG'
+    tags:
+      - 'M04: Notifications'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+     responses:
+        '200':
+          description: 'Ok. Notification details retrieved successfully.'
+        '404':
+          description: 'Notification not found.'
+        '401':
+          description: 'Unauthorized. User must be logged in.'
+
+/notifications/{id}/mark-read:
+  put:
+    operationId: R403
+    summary: 'R403: Mark Notification as Read'
+    description: 'Mark a specific notification as read. Access: REG'
+    tags:
+      - 'M04: Notifications'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true  
+    responses:
+      '200':
+        description: 'Ok. Notification marked as read successfully.'
+      '404':
+        description: 'Notification not found.'
+      '401':
+        description: 'Unauthorized. User must be logged in.'
+  
+
+      
