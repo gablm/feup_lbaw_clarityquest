@@ -28,15 +28,17 @@ use App\Http\Controllers\AnswerController;
 Route::get('/', [StaticController::class, 'index'])->name('home');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/followed-questions', [QuestionController::class, 'followedQuestions'])->name('followed-questions')->middleware('auth');
 Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('followed-tags')->middleware('auth');
 Route::get('/my-questions', [QuestionController::class, 'myQuestions'])->name('my-questions')->middleware('auth');
 Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
-// Cards
-//Route::controller(CardController::class)->group(function () {
-//    Route::get('/cards', 'list')->name('cards');
-//    Route::get('/cards/{id}', 'show');
-//});
+
+// Questions
+Route::controller(QuestionController::class)->group(function () {
+	Route::get('/followed-questions', 'followedQuestions')->name('followed-questions')->middleware('auth');
+    Route::get('/questions/create', 'showCreateForm')->middleware('auth');
+	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');
+	Route::get('/questions/{id}', 'show');
+});
 
 
 // API

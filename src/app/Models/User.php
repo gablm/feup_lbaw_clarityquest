@@ -17,7 +17,7 @@ use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Comment;
 use App\Models\Vote;
-use App\Models\Medal;
+use App\Models\Medals;
 use App\Models\Report;
 use App\Models\Tag;
 use App\Models\Notification;
@@ -108,7 +108,7 @@ class User extends Authenticatable
      */
     public function medals(): HasOne
     {
-        return $this->hasOne(Medal::class, 'user_id');
+        return $this->hasOne(Medals::class, 'user_id');
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,20 +17,62 @@ class QuestionController extends Controller
     public function followedQuestions()
     {
         $user = Auth::user();
-        $followedQuestions = $user->followedQuestions()->with(['post.user', 'answers', 'post.comments', 'tags'])->get();
+        $followedQuestions = $user->followedQuestions;
 
         return view('pages.flwquest', compact('followedQuestions'));
     }
 	
     public function myQuestions()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
-        $myQuestions = $user->questionsCreated()->with(['post.user', 'answers', 'post.comments', 'tags'])->get();
+        $myQuestions = $user->questionsCreated;
 
-        return view('pages.myquestions', compact('myQuestions'));
+        return view('questions.mine', compact('myQuestions'));
     }
+
+	/**
+     * Creates a new question.
+     */
+    public function create(Request $request)
+    {
+		$user = Auth::user();
+
+        $request->validate([
+			'title' => 'required|string|max:64',
+            'description' => 'required|string|max:2000'
+        ]);
+
+		$post = Post::create([
+			'text' => $request->description,
+			'user_id' => $user->id
+		]);
+
+        $question = Question::create([
+			'title' => $request->title,
+            'id' => $post->id
+        ]);
+
+        return redirect("/questions/$question->id")
+			->withSuccess('Question created!');
+    }
+
+	/**
+     * Display a create form.
+     */
+    public function showCreateForm()
+    {
+        if (!Auth::check())
+            return redirect('/');
+        
+		return view('questions.create');
+    }
+
+	public function show(string $id)
+	{
+		$question = Question::findOrFail($id);
+
+		return view('questions.show', [
+			'question' => $question 
+		]);
+	}
 }

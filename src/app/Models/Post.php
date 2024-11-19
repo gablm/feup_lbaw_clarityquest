@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Post extends Model
 {
@@ -41,12 +42,13 @@ class Post extends Model
      */
     protected $casts = [
         'created_at' => 'datetime',
-		'user_id' => User::class
     ];
 
-    /**
-     * Get the comments for a post.
-     */
+	public function owner(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'post_id');

@@ -5,9 +5,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Models\Post;
 use App\Models\Answer;
-use App\Models\Commeht;
+use App\Models\Comment;
 
 class Question extends Model
 {
@@ -82,7 +84,7 @@ class Question extends Model
      */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'post_tag', 'post_id', 'tag_id', 'id', 'id');
+        return $this->belongsToMany(Tag::class, 'posttag', 'post_id', 'tag_id', 'id', 'id');
     }
      /**
      * Get all followers of the question.

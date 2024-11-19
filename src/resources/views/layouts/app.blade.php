@@ -28,7 +28,7 @@
 <body>
 	<main class="flex flex-col h-screen justify-between">
     	@include('layouts.navbar')
-		<section id="content" class="z-1 pt-20 flex flex-grow">
+		<section id="content" class="z-1 pt-20 pb-5 flex flex-grow">
         	@yield('content')
     	</section>
 		@include('layouts.footer')
