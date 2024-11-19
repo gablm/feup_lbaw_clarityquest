@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Post;
+use App\Models\Answer;
+use App\Models\Commeht;
 
 class Question extends Model
 {
@@ -86,6 +89,6 @@ class Question extends Model
      */
     public function followers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follow_question', 'question_id', 'user_id');
+        return $this->belongsToMany(User::class, 'followquestion', 'question_id', 'user_id');
     }
 }
