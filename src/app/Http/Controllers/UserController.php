@@ -18,6 +18,6 @@ class UserController extends Controller
             return redirect()->route('login');
         }
 
-        return view('profile');
+        return view('pages.profile');
     }
 }
