@@ -780,7 +780,7 @@ paths:
       '401':
         description: 'Unauthorized. User must be logged in.'
 
-/notifications/{id}/mark-read:
+ /notifications/{id}/mark-read:
   put:
     operationId: R403
     summary: 'R403: Mark Notification as Read'
