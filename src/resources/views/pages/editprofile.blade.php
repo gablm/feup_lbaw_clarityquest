@@ -41,7 +41,7 @@
 
             <div class="mb-4">
                 <label for="bio" class="block text-gray-700">Bio</label>
-                <textarea name="bio" id="bio" placeholder="Tell us about yourself" class="w-full px-3 py-2 border rounded-md">{{ old('bio', Auth::user()->bio) }}</textarea>
+                <textarea name="bio" id="bio" placeholder="Tell others about yourself" class="w-full px-3 py-2 border rounded-md">{{ old('bio', Auth::user()->bio) }}</textarea>
             </div>
 
             <div class="mb-4">
