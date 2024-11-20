@@ -9,13 +9,9 @@
 	<!-- CSRF Token -->
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>{{ config('app.name', 'Laravel') }}</title>
-	<link rel="icon" type="image/x-icon" href={{ url('favicon.ico') }}>
 
 	<!-- Styles -->
 	@vite('resources/css/app.css')
-
-	<!-- FontAwesome Icons -->
-	<script src="https://kit.fontawesome.com/f23eb02d6c.js" crossorigin="anonymous"></script>
 
 	<script type="text/javascript">
 		// Fix for Firefox autofocus CSS bug
@@ -26,12 +22,15 @@
 </head>
 
 <body>
-	<main class="flex flex-col h-screen justify-between">
-    	@include('layouts.navbar')
-		<section id="content" class="z-1 pt-20 pb-5 flex flex-grow">
-        	@yield('content')
-    	</section>
-		@include('layouts.footer')
+	<main class="grid h-screen place-items-center">
+		<div class="flex flex-col items-center">
+			<a href="{{ url('/') }}">
+				<img  class="h-32 md:h-48 lg:h-64" src={{ url('img/logo.png') }}>
+			</a>
+			<section id="content" class="min-w-[40vw] lg:min-w-[25vw] mt-5 p-[1em] shadow-lg border border-gray-200 rounded">
+				@yield('content')
+			</section>
+		</div>
 	</main>
 </body>
 

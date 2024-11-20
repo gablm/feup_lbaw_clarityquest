@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-// Added to define Eloquent relationships.
+use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Post
+class Post extends Model
 {
     use HasFactory;
 
@@ -23,7 +23,7 @@ class Post
     protected $fillable = [
         'text',
 		'votes',
-		'user'
+		'user_id'
     ];
 
     /**
@@ -42,13 +42,13 @@ class Post
      */
     protected $casts = [
         'created_at' => 'datetime',
-		'user_id' => User::class
     ];
 
-    
-    /**
-     * Get the comments for a post.
-     */
+	public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'post_id');
@@ -59,33 +59,9 @@ class Post
         return $this->hasMany(Vote::class, 'post_id');
     }
 
-    /**
-     * Upvote the post.
-     */
-    public function upvote(int $userId): void
+    public function editions(): HasMany
     {
-        $vote = Vote::updateOrCreate(
-            ['user_id' => $userId, 'post_id' => $this->id],
-            ['positive' => true]
-        );
-
-        if (!$vote->wasRecentlyCreated && !$vote->positive) {
-            $this->post->increment('votes');
-        }
+        return $this->hasMany(Edition::class, 'post_id');
     }
 
-    /**
-     * Downvote the post.
-     */
-    public function downvote(int $userId): void
-    {
-        $vote = Vote::updateOrCreate(
-            ['user_id' => $userId, 'post_id' => $this->id],
-            ['positive' => false]
-        );
-
-        if (!$vote->wasRecentlyCreated && $vote->positive) {
-            $this->post->decrement('votes');
-        }
-    }
 }

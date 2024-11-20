@@ -10,9 +10,6 @@ class Comment extends Model
 {
     use HasFactory;
 
-    // Define the table associated with the model
-    protected $table = 'comments';
-
     // Define the primary key for the model
     protected $primaryKey = 'id';
 

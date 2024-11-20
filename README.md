@@ -11,7 +11,11 @@
 
 ## Artefacts Checklist
 
-* The artefacts checklist is available at: [Checklists [lbaw2405]](https://docs.google.com/spreadsheets/d/1wYn5ffQm20_wKMxD2ZR3perkGi6s6RD3p_9f2RkwdUA/edit?gid=1236141839#gid=1236141839)
+The artefacts checklist is available at: [Checklists [lbaw2405]](https://docs.google.com/spreadsheets/d/1wYn5ffQm20_wKMxD2ZR3perkGi6s6RD3p_9f2RkwdUA/edit?gid=1236141839#gid=1236141839)
+
+## Running the project
+
+A detailed guide on how to run this project can be found [here](./src/README.md).
 
 ## Team
 

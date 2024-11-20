@@ -2,11 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
+use App\Http\Controllers\StaticController;
+use App\Http\Controllers\UserController;
+
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\AnswerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,26 +25,34 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::get('/', [StaticController::class, 'index'])->name('home');
+Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('followed-tags')->middleware('auth');
+Route::get('/my-questions', [QuestionController::class, 'myQuestions'])->name('my-questions')->middleware('auth');
+Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
+Route::get('/about', [StaticController::class, 'aboutUs'])->name('about-us');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+// Questions
+Route::controller(QuestionController::class)->group(function () {
+	Route::get('/followed-questions', 'followedQuestions')->name('followed-questions')->middleware('auth');
+    Route::get('/questions/create', 'showCreateForm')->middleware('auth');
+	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');
+	Route::get('/questions/{id}', 'show');
 });
 
 
 // API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
+//Route::controller(CardController::class)->group(function () {
+//    Route::put('/api/cards', 'create');
+//    Route::delete('/api/cards/{card_id}', 'delete');
+//});
 
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
+//Route::controller(ItemController::class)->group(function () {
+//    Route::put('/api/cards/{card_id}', 'create');
+//    Route::post('/api/item/{id}', 'update');
+//    Route::delete('/api/item/{id}', 'delete');
+//});
 
 
 // Authentication

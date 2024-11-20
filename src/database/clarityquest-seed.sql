@@ -10,17 +10,17 @@ DROP INDEX IF EXISTS user_post;
 DROP INDEX IF EXISTS answer_question;
 
 DROP INDEX IF EXISTS title_search;
-DROP TRIGGER IF EXISTS questions_search_update ON Question;
+DROP TRIGGER IF EXISTS questions_search_update ON "questions";
 DROP FUNCTION IF EXISTS questions_search_update;
 
-ALTER TABLE IF EXISTS Question
+ALTER TABLE IF EXISTS "questions"
 DROP COLUMN IF EXISTS tsvectors;
 
 DROP INDEX IF EXISTS name_search;
-DROP TRIGGER IF EXISTS users_search_update ON Users;
+DROP TRIGGER IF EXISTS users_search_update ON "users";
 DROP FUNCTION IF EXISTS users_search_update;
 
-ALTER TABLE IF EXISTS Users
+ALTER TABLE IF EXISTS "users"
 DROP COLUMN IF EXISTS tsvectors;
 
 DROP TRIGGER IF EXISTS trigger_update_post_votes ON Vote;
@@ -29,31 +29,31 @@ DROP FUNCTION IF EXISTS update_post_votes;
 DROP TRIGGER IF EXISTS trigger_update_medals_posts_upvoted ON Vote;
 DROP FUNCTION IF EXISTS update_medals_posts_upvoted;
 
-DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON Post;
+DROP TRIGGER IF EXISTS trigger_update_medals_posts_created ON "posts";
 DROP FUNCTION IF EXISTS update_medals_posts_created;
 
-DROP TRIGGER IF EXISTS trigger_update_medals_questions_created ON Question;
+DROP TRIGGER IF EXISTS trigger_update_medals_questions_created ON "questions";
 DROP FUNCTION IF EXISTS update_medals_questions_created;
 
-DROP TRIGGER IF EXISTS trigger_update_medals_answers_posted ON Answer;
+DROP TRIGGER IF EXISTS trigger_update_medals_answers_posted ON "answers";
 DROP FUNCTION IF EXISTS update_medals_answers_posted;
 
-DROP TABLE IF EXISTS Medals;
-DROP TABLE IF EXISTS Vote;
-DROP TABLE IF EXISTS Edition;
+DROP TABLE IF EXISTS "medals";
+DROP TABLE IF EXISTS "votes";
+DROP TABLE IF EXISTS "editions";
 DROP TABLE IF EXISTS NotificationPost;
 DROP TABLE IF EXISTS NotificationUser;
-DROP TABLE IF EXISTS Notification;
+DROP TABLE IF EXISTS "notifications";
 DROP TABLE IF EXISTS FollowQuestion;
 DROP TABLE IF EXISTS FollowTag;
 DROP TABLE IF EXISTS PostTag;
-DROP TABLE IF EXISTS Tag;
-DROP TABLE IF EXISTS Report;
-DROP TABLE IF EXISTS Comment;
-DROP TABLE IF EXISTS Answer;
-DROP TABLE IF EXISTS Question;
-DROP TABLE IF EXISTS Post;
-DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS "tags";
+DROP TABLE IF EXISTS "report";
+DROP TABLE IF EXISTS "comments";
+DROP TABLE IF EXISTS "answers";
+DROP TABLE IF EXISTS "questions";
+DROP TABLE IF EXISTS "posts";
+DROP TABLE IF EXISTS "users";
 
 DROP TYPE IF EXISTS Permission;
 DROP TYPE IF EXISTS NotificationType;
@@ -72,12 +72,12 @@ AS ENUM('RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER');
 -- Tables --
 ------------
 
-CREATE TABLE Users(
+CREATE TABLE "users"(
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
-    hashed_pw TEXT,
+    password TEXT,
 	google_token TEXT,
 	x_token TEXT,
 	remember_token TEXT,
@@ -87,65 +87,65 @@ CREATE TABLE Users(
     role PERMISSION NOT NULL DEFAULT 'REGULAR'
 );
 
-CREATE TABLE Post(
+CREATE TABLE "posts"(
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     votes INTEGER DEFAULT 0,
     user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-CREATE TABLE Question(
+CREATE TABLE "questions"(
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
-    FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Answer(
+CREATE TABLE "answers"(
     id INTEGER PRIMARY KEY, 
     question_id INT NOT NULL,
     correct BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES "questions"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Comment(
+CREATE TABLE "comments"(
     id INTEGER PRIMARY KEY,
     post_id INTEGER NOT NULL,
-    FOREIGN KEY (id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Vote(
+CREATE TABLE "votes"(
     user_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
     positive BOOLEAN,
     PRIMARY KEY (user_id, post_id),
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Medals(
+CREATE TABLE "medals"(
     user_id INTEGER PRIMARY KEY,
     posts_upvoted BIGINT DEFAULT 0 CHECK (posts_upvoted >= 0),
     posts_created BIGINT DEFAULT 0 CHECK (posts_created >= 0),
     questions_created BIGINT DEFAULT 0 CHECK (questions_created >= 0),
     answers_posted BIGINT DEFAULT 0 CHECK (answers_posted >= 0),
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Report(
+CREATE TABLE "reports"(
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     user_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-CREATE TABLE Tag(
+CREATE TABLE "tags"(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -155,52 +155,52 @@ CREATE TABLE PostTag(
     post_id INTEGER NOT NULL, 
     tag_id INTEGER NOT NULL,
     PRIMARY KEY (post_id, tag_id),
-    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES Tag(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES "tags"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE FollowTag(
     user_id INTEGER NOT NULL, 
     tag_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, tag_id),
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES Tag(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES "tags"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE FollowQuestion(
     user_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, question_id),
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES Question(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES "questions"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Notification(
+CREATE TABLE "notifications"(
     id SERIAL PRIMARY KEY,
     receiver INTEGER NOT NULL,
     description TEXT,
     type NotificationType NOT NULL DEFAULT 'OTHER',
     sent_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (receiver) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (receiver) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE NotificationPost(
     notification_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
     PRIMARY KEY (notification_id, post_id),
-    FOREIGN KEY (notification_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES Notification(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES "notifications"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE NotificationUser(
     notification_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (notification_id, user_id),
-    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES "notifications"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES "users"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Edition(
+CREATE TABLE "editions"(
     id SERIAL PRIMARY KEY,
     post_id INTEGER NOT NULL,
     old_title TEXT,
@@ -208,7 +208,7 @@ CREATE TABLE Edition(
     old TEXT NOT NULL,
     new TEXT NOT NULL,
     made_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (post_id) REFERENCES Post(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -------------
@@ -219,9 +219,9 @@ CREATE TABLE Edition(
 -- Performance Search Indexes --
 --                            --
 
-CREATE INDEX user_post ON Post USING hash (user_id);
+CREATE INDEX user_post ON "posts" USING hash (user_id);
 
-CREATE INDEX answer_question ON ANSWER USING hash (question_id);
+CREATE INDEX answer_question ON "answers" USING hash (question_id);
 
 --                          --
 -- Full-text Search Indexes --
@@ -229,11 +229,11 @@ CREATE INDEX answer_question ON ANSWER USING hash (question_id);
 
 -- Name Search --
 
--- Add column to Users to store computed ts_vector.
-ALTER TABLE Users
+-- Add column to "users" to store computed ts_vector.
+ALTER TABLE "users"
 ADD COLUMN tsvectors TSVECTOR;
 
--- Create a function to automatically update ts_vectors for Users.
+-- Create a function to automatically update ts_vectors for "users".
 CREATE FUNCTION users_search_update()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -249,21 +249,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create a trigger before insert or update on Users.
+-- Create a trigger before insert or update on "users".
 CREATE TRIGGER users_search_update
-BEFORE INSERT OR UPDATE ON Users
+BEFORE INSERT OR UPDATE ON "users"
 FOR EACH ROW
 EXECUTE PROCEDURE users_search_update();
 
--- Create a GIN index for ts_vectors in Users.
-CREATE INDEX name_search ON Users USING GIN (tsvectors);
+-- Create a GIN index for ts_vectors in "users".
+CREATE INDEX name_search ON "users" USING GIN (tsvectors);
 
 --
--- Question search --
+-- "questions" search --
 --
 
--- Add column to Question to store computed ts_vector.
-ALTER TABLE Question
+-- Add column to "questions" to store computed ts_vector.
+ALTER TABLE "questions"
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors for Questions.
@@ -282,32 +282,32 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create a trigger before insert or update on Question.
+-- Create a trigger before insert or update on "questions".
 CREATE TRIGGER questions_search_update
-BEFORE INSERT OR UPDATE ON Question
+BEFORE INSERT OR UPDATE ON "questions"
 FOR EACH ROW
 EXECUTE PROCEDURE questions_search_update();
 
-CREATE INDEX title_search ON Question USING GIN (tsvectors);
+CREATE INDEX title_search ON "questions" USING GIN (tsvectors);
 
 -----------------------
 -- Triggers and UDFs --
 -----------------------
 
---Post(votes)
+-- Posts(votes)
 CREATE OR REPLACE FUNCTION update_post_votes()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE Post
-    SET votes = (SELECT COUNT(*) FROM Vote WHERE post_id = NEW.post_id AND positive = TRUE) -
-                (SELECT COUNT(*) FROM Vote WHERE post_id = NEW.post_id AND positive = FALSE)
+    UPDATE "posts"
+    SET votes = (SELECT COUNT(*) FROM "votes" WHERE post_id = NEW.post_id AND positive = TRUE) -
+                (SELECT COUNT(*) FROM "votes" WHERE post_id = NEW.post_id AND positive = FALSE)
     WHERE id = NEW.post_id;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_post_votes
-AFTER INSERT OR UPDATE ON Vote
+AFTER INSERT OR UPDATE ON "votes"
 FOR EACH ROW
 EXECUTE FUNCTION update_post_votes();
 
@@ -315,15 +315,15 @@ EXECUTE FUNCTION update_post_votes();
 CREATE OR REPLACE FUNCTION update_medals_posts_upvoted()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE Medals
-    SET posts_upvoted = (SELECT COUNT(*) FROM Vote WHERE user_id = NEW.user_id AND positive = TRUE)
+    UPDATE "medals"
+    SET posts_upvoted = (SELECT COUNT(*) FROM "votes" WHERE user_id = NEW.user_id AND positive = TRUE)
     WHERE user_id = NEW.user_id;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_medals_posts_upvoted
-AFTER INSERT OR UPDATE ON Vote
+AFTER INSERT OR UPDATE ON "votes"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_posts_upvoted();
 
@@ -331,15 +331,15 @@ EXECUTE FUNCTION update_medals_posts_upvoted();
 CREATE OR REPLACE FUNCTION update_medals_posts_created()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE Medals
-    SET posts_created = (SELECT COUNT(*) FROM Post WHERE user_id = NEW.user_id)
+    UPDATE "medals"
+    SET posts_created = (SELECT COUNT(*) FROM "posts" WHERE user_id = NEW.user_id)
     WHERE user_id = NEW.user_id;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_medals_posts_created
-AFTER INSERT ON Post
+AFTER INSERT ON "posts"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_posts_created();
 
@@ -350,18 +350,18 @@ DECLARE
 	user_id2 INTEGER;
 BEGIN
 	SELECT user_id INTO user_id2
-	FROM Post
+	FROM "posts"
 	WHERE id = NEW.id;
 
     UPDATE Medals
-    SET questions_created = (SELECT COUNT(*) FROM Question WHERE id IN (SELECT id FROM Post WHERE user_id = user_id2))
+    SET questions_created = (SELECT COUNT(*) FROM "questions" WHERE id IN (SELECT id FROM "posts" WHERE user_id = user_id2))
     WHERE user_id = user_id2;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_medals_questions_created
-AFTER INSERT ON Question
+AFTER INSERT ON "questions"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_questions_created();
 
@@ -372,17 +372,17 @@ DECLARE
 	user_id2 INTEGER;
 BEGIN
 	SELECT user_id INTO user_id2
-	FROM Post
+	FROM "posts"
 	WHERE id = NEW.id;
 
-    UPDATE Medals
-    SET answers_posted = (SELECT COUNT(*) FROM Answer WHERE id IN (SELECT id FROM Post WHERE user_id = user_id2))
+    UPDATE "medals"
+    SET answers_posted = (SELECT COUNT(*) FROM "answers" WHERE id IN (SELECT id FROM "posts" WHERE user_id = user_id2))
     WHERE user_id = user_id2;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_medals_answers_posted
-AFTER INSERT ON Answer
+AFTER INSERT ON "answers"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
