@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AnswerController;
-
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +32,10 @@ Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('foll
 Route::get('/my-questions', [QuestionController::class, 'myQuestions'])->name('my-questions')->middleware('auth');
 Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
 Route::get('/about', [StaticController::class, 'aboutUs'])->name('about-us');
+
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('auth');
 
 // Questions
 Route::controller(QuestionController::class)->group(function () {
