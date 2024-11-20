@@ -630,7 +630,7 @@ paths:
       '404':
         description: 'Answer ID not found.'
 
-/answers/{answer_id}/comments/{comment_id}:
+ /answers/{answer_id}/comments/{comment_id}:
   get:
     operationId: R213
     summary: 'R213: Get Specific Comment on Answer'
