@@ -15,11 +15,6 @@
                     <button class="nav-secondary">Home</button>
                 </a>
             </li>
-            <li>
-                <a href="{{ url('/about') }}">
-                    <button class="nav-secondary">About</button>
-                </a>
-            </li>
             @if (Auth::check())
             <li class="relative">
                 <a href="#" id="inboxDropdown" class="nav space-x-2">
