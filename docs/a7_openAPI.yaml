@@ -18,7 +18,7 @@ tags:
  - name: 'M02: Q&A'
  - name: 'M03: Profiles'
  - name: 'M04: Notifications'
- - name: 'M05: User Administration and Static pages'
+ - name: 'M05: User Administration and Static Pages'
 
 paths:
  /login:
@@ -216,11 +216,32 @@ paths:
          description: 'Ok. Show User Profile UI'
        '404':
          description: 'User ID not found.'
+    
+   delete:
+    operationId: R109
+    summary: 'R109: Delete User Profile.'
+    description: 'Delete the individual user profile. Access: REG'
+    tags:
+      - 'M01: Authentication and Individual Profile'
+
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: 'The ID of the user whose profile is to be deleted.'
+
+    responses:
+      '204':
+        description: 'User profile deleted successfully. No content is returned.'
+      '404':
+        description: 'User ID not found.'
          
  /users/{id}/edit:
   get:
-    operationId: R109
-    summary: 'R109: Edit Profile Form.'
+    operationId: R110
+    summary: 'R110: Edit Profile Form.'
     description: 'Allow user to edit profile information. Access: REG, MOD, ADMIN'
     tags:
       - 'M01: Authentication and Individual Profile'
@@ -234,8 +255,8 @@ paths:
       '200':
         description: 'Ok. Show account edit information.'
   put:
-    operationId: R110
-    summary: 'R110: Edit User Profile Action.'
+    operationId: R111
+    summary: 'R111: Edit User Profile Action.'
     description: 'Process the account editing request. Access: REG, MOD, ADMIN'
     tags:
       - 'M01: Authentication and Individual Profile'
@@ -476,6 +497,189 @@ paths:
     responses:
         '201':
           description: 'Answer created successfully.'
+  
+ /questions/{question_id}/answers/{answer_id}:
+  delete:
+    operationId: R208
+    summary: 'R208: Delete Specific Answer'
+    description: 'Delete a specific answer for a question. Access: REG, MOD, ADMIN.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: question_id
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the question the answer belongs to.'
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the specific answer to delete.'
+    responses:
+      '204':
+        description: 'Answer deleted successfully.'
+      '404':
+        description: 'Answer or Question ID not found.'
+  
+ /questions/{id}/comments:
+  get: 
+    operationId: R209
+    summary: 'R209: Get Comments for Question'
+    description: 'Fetch comments for a specific question. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    responses:
+      '200':
+        description: 'List of comments retrieved successfully.'
+  post:
+    operationId: R210
+    summary: 'R210: Create Comment for Question'
+    description: 'Create a new comment for a specific question. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the question to which the comment belongs.'
+    requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comment_body:
+                  type: string
+              required:
+                - comment_body
+    responses:
+        '201':
+          description: 'Comment created successfully.'
+
+ /answers/{answer_id}/comments:
+  get:
+    operationId: R211
+    summary: 'R211: Get Comments on Answer'
+    description: 'Fetch a list of comments associated with a specific answer. Access: PUB.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer for which comments are being retrieved.'
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of comments per page.'
+    responses:
+      '200':
+        description: 'List of comments retrieved successfully.'
+      '404':
+        description: 'Answer ID not found.'
+
+  post:
+    operationId: R212
+    summary: 'R212: Add Comment to Answer'
+    description: 'Create a new comment on a specific answer. Access: REG, MOD, ADMIN.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer to comment on.'
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              comment_body:
+                type: string
+            required:
+              - comment_body
+    responses:
+      '201':
+        description: 'Comment created successfully.'
+      '400':
+        description: 'Invalid request. Comment body is required.'
+      '404':
+        description: 'Answer ID not found.'
+
+/answers/{answer_id}/comments/{comment_id}:
+  get:
+    operationId: R213
+    summary: 'R213: Get Specific Comment on Answer'
+    description: 'Fetch a specific comment on an answer. Access: PUB.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer the comment is associated with.'
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the specific comment to retrieve.'
+    responses:
+      '200':
+        description: 'Comment retrieved successfully.'
+      '404':
+        description: 'Comment or Answer ID not found.'
+
+  delete:
+    operationId: R214
+    summary: 'R214: Delete Specific Comment on Answer'
+    description: 'Delete a specific comment on an answer. Access: REG, MOD, ADMIN.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer the comment is associated with.'
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the specific comment to delete.'
+    responses:
+      '204':
+        description: 'Comment deleted successfully.'
+      '404':
+        description: 'Comment or Answer ID not found.'
 
  /questions/{id}/votes:
   post:
