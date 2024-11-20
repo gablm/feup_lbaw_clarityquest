@@ -1029,7 +1029,7 @@ paths:
         schema:
           type: integer
         description: 'Page number for pagination.'
-       - in: query
+      - in: query
         name: page_size
         schema:
           type: integer
