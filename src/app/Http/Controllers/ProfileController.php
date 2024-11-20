@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -63,25 +62,5 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully.');
-    }
-
-    /**
-     * Delete the user's account.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy()
-    {
-        $user = Auth::user();
-
-        // Delete profile picture if exists
-        if ($user->profile_pic) {
-            unlink(public_path($user->profile_pic));
-        }
-
-        // Delete user
-        $user->delete();
-
-        return redirect('/')->with('success', 'Account deleted successfully.');
     }
 }

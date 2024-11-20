@@ -8,14 +8,24 @@
             @csrf
             @method('PUT')
 
+            @if ($errors->any())
+                <div class="mb-4">
+                    <ul class="list-disc list-inside text-red-500">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">Name</label>
-                <input type="text" name="name" id="name" value="{{ Auth::user()->name }}" class="w-full px-3 py-2 border rounded-md">
+                <input type="text" name="name" id="name" value="{{ old('name', Auth::user()->name) }}" placeholder="Enter your name" class="w-full px-3 py-2 border rounded-md">
             </div>
 
             <div class="mb-4">
                 <label for="email" class="block text-gray-700">Email</label>
-                <input type="email" name="email" id="email" value="{{ Auth::user()->email }}" class="w-full px-3 py-2 border rounded-md">
+                <input type="email" name="email" id="email" value="{{ old('email', Auth::user()->email) }}" placeholder="Enter your email" class="w-full px-3 py-2 border rounded-md">
             </div>
 
             <div class="mb-4">
@@ -31,17 +41,17 @@
 
             <div class="mb-4">
                 <label for="bio" class="block text-gray-700">Bio</label>
-                <textarea name="bio" id="bio" class="w-full px-3 py-2 border rounded-md">{{ Auth::user()->bio }}</textarea>
+                <textarea name="bio" id="bio" placeholder="Tell us about yourself" class="w-full px-3 py-2 border rounded-md">{{ old('bio', Auth::user()->bio) }}</textarea>
             </div>
 
             <div class="mb-4">
                 <label for="password" class="block text-gray-700">New Password</label>
-                <input type="password" name="password" id="password" class="w-full px-3 py-2 border rounded-md">
+                <input type="password" name="password" id="password" placeholder="Enter a new password" class="w-full px-3 py-2 border rounded-md">
             </div>
 
             <div class="mb-4">
                 <label for="password_confirmation" class="block text-gray-700">Confirm New Password</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" class="w-full px-3 py-2 border rounded-md">
+                <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm your new password" class="w-full px-3 py-2 border rounded-md">
             </div>
 
             <div class="flex justify-end">
