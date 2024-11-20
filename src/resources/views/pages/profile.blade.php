@@ -21,6 +21,9 @@
                     <p><strong>Username:</strong> {{ Auth::user()->username }}</p>
                     <p><strong>Name:</strong> {{ Auth::user()->name }}</p>
                     <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
+                    @if (Auth::user()->bio)
+                        <p><strong>Bio:</strong> {{ Auth::user()->bio }}</p>
+                    @endif
                 </div>
             </div>
         </div>
