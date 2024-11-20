@@ -12,7 +12,6 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AnswerController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +31,10 @@ Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('foll
 Route::get('/my-questions', [QuestionController::class, 'myQuestions'])->name('my-questions')->middleware('auth');
 Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
 Route::get('/about', [StaticController::class, 'aboutUs'])->name('about-us');
+
+Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::put('/profile/update', [UserController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::delete('/profile/destroy', [UserController::class, 'destroy'])->name('profile.destroy')->middleware('auth');
 
 // Questions
 Route::controller(QuestionController::class)->group(function () {

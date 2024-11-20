@@ -5,7 +5,7 @@
         <p>Copyright &copy; ClarityQuest 2024</p>
 		<div class="flex justify-evenly space-x-4 items-center text-xs">
 			<a href="#" class="hover:underline">FAQ</a>	
-			<a href="#" class="hover:underline">About Us</a>
+			<a href={{ url('/about') }} class="hover:underline">About Us</a>
 			<a href="#" class="hover:underline">Contacts</a>
 		</div>
     </div>

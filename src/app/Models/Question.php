@@ -10,6 +10,8 @@ class Question extends Model
 {
     use HasFactory;
 
+	public $timestamps = false;
+
     protected $fillable = [
         'title',
         'id', // This is the foreign key referencing the Post table

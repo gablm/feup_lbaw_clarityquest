@@ -15,11 +15,6 @@
                     <button class="nav-secondary">Home</button>
                 </a>
             </li>
-            <li>
-                <a href="{{ url('/about') }}">
-                    <button class="nav-secondary">About</button>
-                </a>
-            </li>
             @if (Auth::check())
             <li class="relative">
                 <a href="#" id="inboxDropdown" class="nav space-x-2">
@@ -31,7 +26,11 @@
             </li>
             <li>
                 <a href="{{ url('/profile') }}" class="nav">
-                    <button class="nav-secondary">Profile</button>    
+                    @if (Auth::user()->profile_pic)
+                        <img src="{{ asset(Auth::user()->profile_pic) }}" alt="Profile Picture" class="h-10 w-10 rounded-full object-cover">
+                    @else
+                        <img src="{{ url('img/default_pic.png') }}" alt="Default Profile Picture" class="h-10 w-10 rounded-full object-cover">
+                    @endif
                 </a>
             </li>
             @else
