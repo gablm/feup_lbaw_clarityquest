@@ -3,7 +3,7 @@ openapi: 3.0.0
 info:
  version: '1.0'
  title: 'LBAW ClarityQuest Web API'
- description: 'Web Resources Specification (A7) for MediaLibrary'
+ description: 'Web Resources Specification (A7) for our Collaborative Q&A Web App - ClarityQuest'
 
 servers:
  - url: http://lbaw24125.fe.up.pt/24125
@@ -18,7 +18,7 @@ tags:
  - name: 'M02: Q&A'
  - name: 'M03: Profiles'
  - name: 'M04: Notifications'
- - name: 'M05: User Administration and Static pages'
+ - name: 'M05: User Administration and Static Pages'
 
 paths:
  /login:
@@ -47,6 +47,8 @@ paths:
             properties:
               email:
                 type: string
+                format: email
+                example: 'user@example.com'
               username:
                 type: string
               password:
@@ -77,7 +79,7 @@ paths:
    post:
      operationId: R103
      summary: 'R103: Logout Action'
-     description: 'Logout the current authenticated user. Access: USR, ADM'
+     description: 'Logout the current authenticated user. Access: REG, MOD, ADMIN'
      tags:
        - 'M01: Authentication and Individual Profile'
      responses:
@@ -121,6 +123,8 @@ paths:
                 type: string
               email:
                 type: string
+                format: email
+                example: 'user@example.com'
               username:
                 type: string
               password:
@@ -148,11 +152,55 @@ paths:
                  description: 'Failed authentication. Redirect to login form.'
                  value: '/login'
 
+ /recover:
+    get:
+      operationId: R106
+      summary: 'R106: Recovery Form.'
+      description: 'Allow user to recover account credentials through the insertion of an email account. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '200':
+          description: 'Ok. Show account recovery information.'
+    post:
+      operationId: R107
+      summary: 'R107: Recovery Action.'
+      description: 'Process the account recovery request. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: 'user@example.com'
+              required:
+                - email
+      responses:
+       '302':
+         description: 'Redirect after processing the recovery request.'
+         headers:
+           Location:
+             schema:
+               type: string
+             examples:
+               302Success:
+                 description: 'Successful recovery request. Redirect to login.'
+                 value: '/login'
+               302Failure:
+                 description: 'Failed recovery request. Redirect to recovery form.'
+                 value: '/recover'
+
  /users/{id}:
    get:
-     operationId: R106
-     summary: 'R106: View user profile'
-     description: 'Show the individual user profile. Access: USR'
+     operationId: R108
+     summary: 'R108: View User Profile.'
+     description: 'Show the individual user profile. Access: REG, MOD, ADMIN'
      tags:
        - 'M01: Authentication and Individual Profile'
 
@@ -166,81 +214,983 @@ paths:
      responses:
        '200':
          description: 'Ok. Show User Profile UI'
- 
+       '404':
+         description: 'User ID not found.'
+    
+   delete:
+    operationId: R109
+    summary: 'R109: Delete User Profile.'
+    description: 'Delete the individual user profile. Access: REG'
+    tags:
+      - 'M01: Authentication and Individual Profile'
 
- /api/works:
-   get:
-     operationId: R202
-     summary: 'R202: Search Works API'
-     description: 'Searches for works and returns the results as JSON. Access: PUB.'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: 'The ID of the user whose profile is to be deleted.'
 
-     tags: 
-       - 'M02: Works'
-
-     parameters:
-       - in: query
-         name: query
-         description: String to use for full-text search
-         schema:
-           type: string
-         required: false
-       - in: query
-         name: item
-         description: Category of the works
-         schema:
-           type: string
-         required: false
-       - in: query
-         name: loaned
-         description: Boolean with the loaned flag value
-         schema:
-           type: boolean
-         required: false
-       - in: query
-         name: owner
-         description: Boolean with the owner flag value
-         schema:
-           type: boolean
-         required: false
-       - in: query
-         name: classification
-         description: Integer corresponding to the work classification
-         schema:
-           type: integer
-         required: false
-
-     responses:
-       '200':
-         description: Success
-         content:
-           application/json:
+    responses:
+      '204':
+        description: 'User profile deleted successfully. No content is returned.'
+      '404':
+        description: 'User ID not found.'
+         
+ /users/{id}/edit:
+  get:
+    operationId: R110
+    summary: 'R110: Edit Profile Form.'
+    description: 'Allow user to edit profile information. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M01: Authentication and Individual Profile'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    responses:
+      '200':
+        description: 'Ok. Show account edit information.'
+  put:
+    operationId: R111
+    summary: 'R111: Edit User Profile Action.'
+    description: 'Process the account editing request. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M01: Authentication and Individual Profile'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    requestBody:
+      content:
+       application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            username:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+            password_confirm:
+              type: string
+            profile_pic:
+              oneOf:
+              - type: string
+                format: binary
+              - type: string
+                format: uri
+            bio:
+              type: string
+    responses:
+       '302':
+         description: 'Redirect after processing the user information edit request.'
+         headers:
+           Location:
              schema:
-               type: array
-               items:
-                 type: object
-                 properties:
-                   id:
-                     type: string
-                   title:
-                     type: string
-                   obs:
-                     type: string
-                   year:
-                     type: string
-                   owner:
-                     type: string
-                   type:
-                     type: string
-               example:
-                 - id: 1
-                   title: Rihanna - Unapologetic
-                   obs: Good pop music album.
-                   year: 2012
-                   owner: Joana Lima
-                   type: MP3
-                 - id: 15
-                   title: Mr. Bean
-                   obs: The best comedy movie.
-                   year: 1995
-                   owner: Manuel Teixeira
-                   type: DVD
+               type: string
+             examples:
+               302Success:
+                 description: 'Successful editing request. Redirect to user profile.'
+                 value: '/user/{id}'
+               302Failure:
+                 description: 'Failed editing request. Redirect to user profile edit form.'
+                 value: '/user/{id}/edit'
+       '400':
+         description: 'Bad Request. The input data is invalid or missing required fields.'
+         content:
+           application/x-www-form-urlencoded:
+             schema:
+               type: object
+               properties:
+                 status:
+                   type: string
+                   example: "error"
+                 message:
+                   type: string
+                   example: "Invalid input. Please check the following fields."
+                 errors:
+                   type: object
+                   properties:
+                     email:
+                       type: string
+                       example: "Invalid email format."
+                     profile_pic:
+                       type: string
+                       example: "Profile picture must be a valid image URL or a file upload."
+             examples:
+               invalidInput:
+                 summary: "Invalid input example"
+                 value:
+                   status: "error"
+                   message: "Invalid input. Please check the following fields."
+                   errors:
+                     email: "Invalid email format."
+                    
+ /questions:
+  get: 
+    operationId: R201
+    summary: 'R201: View Question List/Question Search'
+    description: 'Retrieve question list or perform a filtered search. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: "Perform question search."
+    responses:
+      '200':
+        description: 'Ok. Question list retrieved successfully.'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: array
+  post:
+    operationId: R202
+    summary: 'R202: Create New Question'
+    description: 'Post a new question. Access: REG'
+    tags:
+      - 'M02: Q&A'
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              question_body:
+                type: string
+              question_tags:
+                type: array
+                items:
+                  type: string
+            required:
+              - title
+              - question_body
+    responses:
+      '201':
+        description: 'Ok. Question created successfully.'
+      '400':
+        description: 'Invalid input.'
+
+ /questions/{id}:
+   get:
+    operationId: R203
+    summary: 'R203: Fetch Question (ID)'
+    description: 'Look up question details based on ID. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    responses:
+        '200':
+          description: 'Ok. Question details retrieved successfully.'
+        '404':
+          description: 'Question not found.'
+   put:
+    operationId: R204
+    summary: 'R204: Edit Question'
+    description: 'Update question details. Access: OWN'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              question_body:
+                type: string
+              question_tags:
+                type: array
+                items:
+                  type: string
+    responses:
+      '200':
+        description: 'Ok. Question updated successfully.'
+      '400':
+        description: 'Invalid input.'
+      '404':
+        description: 'Question not found.'
+   delete:
+    operationId: R205
+    summary: 'R205: Delete Question'
+    description: 'Delete posted question. Access: OWN, MOD, ADMIN'
+    tags: 
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+        '204':
+          description: 'Question deleted successfully.'
+        '404':
+          description: 'Question not found.'
+
+ /questions/{id}/answers:
+  get: 
+    operationId: R206
+    summary: 'R206: Get Answers for Question'
+    description: 'Fetch answers for specific question. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    responses:
+      '200':
+        description: 'List of answers retrieved successfully.'
+  post:
+    operationId: R207
+    summary: 'R207: Create Answer for Question'
+    description: 'Create new answer for specific question. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                answer_body:
+                  type: text
+              required:
+                - answer_body
+    responses:
+        '201':
+          description: 'Answer created successfully.'
+  
+ /questions/{question_id}/answers/{answer_id}:
+  delete:
+    operationId: R208
+    summary: 'R208: Delete Specific Answer'
+    description: 'Delete a specific answer for a question. Access: REG, MOD, ADMIN.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: question_id
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the question the answer belongs to.'
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the specific answer to delete.'
+    responses:
+      '204':
+        description: 'Answer deleted successfully.'
+      '404':
+        description: 'Answer or Question ID not found.'
+  
+ /questions/{id}/comments:
+  get: 
+    operationId: R209
+    summary: 'R209: Get Comments for Question'
+    description: 'Fetch comments for a specific question. Access: PUB'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    responses:
+      '200':
+        description: 'List of comments retrieved successfully.'
+  post:
+    operationId: R210
+    summary: 'R210: Create Comment for Question'
+    description: 'Create a new comment for a specific question. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the question to which the comment belongs.'
+    requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comment_body:
+                  type: string
+              required:
+                - comment_body
+    responses:
+        '201':
+          description: 'Comment created successfully.'
+
+ /answers/{answer_id}/comments:
+  get:
+    operationId: R211
+    summary: 'R211: Get Comments on Answer'
+    description: 'Fetch a list of comments associated with a specific answer. Access: PUB.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer for which comments are being retrieved.'
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of comments per page.'
+    responses:
+      '200':
+        description: 'List of comments retrieved successfully.'
+      '404':
+        description: 'Answer ID not found.'
+
+  post:
+    operationId: R212
+    summary: 'R212: Add Comment to Answer'
+    description: 'Create a new comment on a specific answer. Access: REG, MOD, ADMIN.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer to comment on.'
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              comment_body:
+                type: string
+            required:
+              - comment_body
+    responses:
+      '201':
+        description: 'Comment created successfully.'
+      '400':
+        description: 'Invalid request. Comment body is required.'
+      '404':
+        description: 'Answer ID not found.'
+
+ /answers/{answer_id}/comments/{comment_id}:
+  get:
+    operationId: R213
+    summary: 'R213: Get Specific Comment on Answer'
+    description: 'Fetch a specific comment on an answer. Access: PUB.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer the comment is associated with.'
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the specific comment to retrieve.'
+    responses:
+      '200':
+        description: 'Comment retrieved successfully.'
+      '404':
+        description: 'Comment or Answer ID not found.'
+
+  delete:
+    operationId: R214
+    summary: 'R214: Delete Specific Comment on Answer'
+    description: 'Delete a specific comment on an answer. Access: REG, MOD, ADMIN.'
+    tags:
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: answer_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the answer the comment is associated with.'
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: integer
+        description: 'The ID of the specific comment to delete.'
+    responses:
+      '204':
+        description: 'Comment deleted successfully.'
+      '404':
+        description: 'Comment or Answer ID not found.'
+
+ /questions/{id}/votes:
+  post:
+    operationId: R215
+    summary: 'R215: Up or Downvote a Question'
+    description: "Up or Downvote a question. Access: REG, MOD, ADMIN"
+    tags: 
+      - 'M02: Q&A'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content: 
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properting:
+              positive:
+                type: boolean
+    responses:
+      '200':
+        description: 'Vote registered successfully.'
+      '400':
+        description: 'Invalid vote type.'
+
+ /users/{id}/view:
+  get:
+    operationId: R301
+    summary: 'R301: View Public User Profile'
+    description: 'Retrieve user information. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true       
+    responses:
+      '200':
+        description: 'Ok. Successfully retrieved user details.'
+      '404':
+        description: 'User not found.'
+
+ /users/{id}/questions:
+  get:
+    operationId: R302
+    summary: 'R302: List User Questions'
+    description: 'Fetch list of questions posted by a specific user. Access: PUB'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of questions per page.'
+    responses:
+      '200':
+        description: 'Ok. List of user questions retrieved successfully.'
+      '404':
+        description: 'User not found.'
+
+ /users/{id}/answers:
+  get:
+    operationId: R303
+    summary: 'R303: List User Answers'
+    description: 'Fetch list of answers posted by a specific user. Access: PUB'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of answers per page.'
+    responses:
+      '200':
+        description: 'Ok. List of user answers retrieved successfully.'
+      '404':
+        description: 'User not found.'
+
+ /users/{id}/comments:
+  get:
+    operationId: R304
+    summary: 'R304: List User Comments'
+    description: 'Fetch list of comments posted by a specific user. Access: PUB'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of comments per page.'
+    responses:
+      '200':
+        description: 'Ok. List of user comments retrieved successfully.'
+      '404':
+        description: 'User not found.'
+
+ /users/{id}/followed-topics:
+  get:
+    operationId: R305
+    summary: 'R305: View Followed Topics'
+    description: 'Retrieve a list of topics followed by the user. Access: REG'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    responses:
+      '200':
+        description: 'Ok. List of followed topics retrieved successfully.'
+      '404':
+        description: 'User not found.'
+
+  put:
+    operationId: R306
+    summary: 'R306: Edit Followed Topics'
+    description: 'Update user followed topics. Access: REG'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              topics:
+                type: array
+                items:
+                  type: string
+                description: 'List of updated topics to follow.'
+    responses:
+      '200':
+        description: 'Followed topics updated successfully.'
+      '400':
+        description: 'Invalid input data.'
+      '404':
+        description: 'User not found.'
+
+ /users/{id}/followed-questions:
+  get:
+    operationId: R307
+    summary: 'R307: View Followed Questions'
+    description: 'Fetch a list of questions followed by the user. Access: REG'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of comments per page.'
+    responses:
+      '200':
+        description: 'Ok. List of followed questions retrieved successfully.'
+      '404':
+        description: 'User not found.'
+  
+  put:
+    operationId: R308
+    summary: 'R308: Edit Followed Questions'
+    description: 'Update the list of questions followed by the user. Access: REG'
+    tags:
+      - 'M03: Profiles'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              topics:
+                type: array
+                items:
+                  type: string
+                description: 'List of updated questions to follow.'
+    responses:
+      '200':
+        description: 'Followed questions updated successfully.'
+      '400':
+        description: 'Invalid input data.'
+      '404':
+        description: 'User not found.'
+
+ /notifications:
+  get:
+    operationId: R401
+    summary: 'R401: List Notifications'
+    description: 'Fetch list of notifications for current user. Access: REG, MOD, ADMIN'
+    tags:
+      - 'M04: Notifications'
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of notifications per page.'
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum: ['RESPONSE', 'REPORT', 'FOLLOW', 'MENTION', 'OTHER']
+        description: 'Filter notifications by type.'
+      - in: query
+        name: read_status
+        schema:
+          type: string
+          enum: [all, read, unread]
+        description: 'Filter notifications by their read status.'
+    responses:
+        '200':
+          description: 'Ok. List of notifications retrieved successfully.'
+        '401':
+          description: 'Unauthorized. User must be logged in.'
+
+ /notifications/{id}:
+  get:
+    operationId: R402
+    summary: 'R402: View Notification'
+    description: 'Retrieve details of a specific notification by ID. Access: REG'
+    tags:
+      - 'M04: Notifications'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    responses:
+      '200':
+        description: 'Ok. Notification details retrieved successfully'
+      '404':
+        description: 'Notification not found.'
+      '401':
+        description: 'Unauthorized. User must be logged in.'
+
+ /notifications/{id}/mark-read:
+   put:
+    operationId: R403
+    summary: 'R403: Mark Notification as Read'
+    description: 'Mark a specific notification as read. Access: REG'
+    tags:
+      - 'M04: Notifications'
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true  
+    responses:
+      '200':
+        description: 'Ok. Notification marked as read successfully.'
+      '404':
+        description: 'Notification not found.'
+      '401':
+        description: 'Unauthorized. User must be logged in.'
+
+ /admin/users:
+  get:
+    operationId: R501
+    summary: 'R501: View User List'
+    description: 'Fetch list of all users in the system with optional search and filter parameters. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: 'Filter users by name, username, or email.'
+      - in: query
+        name: role
+        schema:
+          type: string
+          enum: [REG, MOD, ADMIN]
+        description: 'Filter users by role.'
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of users per page.'
+    responses:
+      '200':
+        description: 'Ok. List of users retrieved successfully.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/users/{id}:
+  get:
+    operationId: R502
+    summary: 'R502: View User Details (ADMIN)'
+    description: 'Retrieve detailed information about a specific user by their ID. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '200':
+        description: 'Ok. User details retrieved successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+  delete:
+    operationId: R503
+    summary: 'R503: Delete User Account (ADMIN)'
+    description: 'Delete a specific user account from the system. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '204':
+        description: 'User deleted successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/users/{id}/block:
+  put:
+    operationId: R504
+    summary: 'R504: Block User Account (ADMIN)'
+    description: 'Block a specific user account to restrict their access to the system. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '200':
+        description: 'Ok. User blocked successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/users/{id}/unblock:
+  put:
+    operationId: R505
+    summary: 'R505: Unblock User Account'
+    description: 'Unblock a specific user account to restore their access to the system. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '200':
+        description: 'User unblocked successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/dashboard:
+  get:
+    operationId: R506
+    summary: 'R506: Admin Dashboard'
+    description: 'Display the admin dashboard with an overview of system activity and statistics. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Dashboard displayed successfully.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /home:
+  get:
+    operationId: R507
+    summary: 'R507: Homepage'
+    description: 'Display Homepage. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Homepage displayed successfully.'
+
+ /about:
+  get:
+    operationId: R508
+    summary: 'R508: About Page'
+    description: 'Display information about the application and its purpose. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. About page displayed successfully.'
+
+ /contact:
+  get:
+    operationId: R509
+    summary: 'R509: Contact Page'
+    description: 'Display contact information. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Contact page displayed successfully.'
+
+ /services:
+  get:
+    operationId: R510
+    summary: 'R510: Services Page'
+    description: 'Display details about the services offered by the platform. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Services page displayed successfully.'
+
+ /faq:
+  get:
+    operationId: R511
+    summary: 'R511: FAQ Page'
+    description: 'Display frequently asked questions about the platform and their answers. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. FAQ page displayed successfully.'
