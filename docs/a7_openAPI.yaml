@@ -780,7 +780,7 @@ paths:
       '401':
         description: 'Unauthorized. User must be logged in.'
 
-/notifications/{id}/mark-read:
+ /notifications/{id}/mark-read:
   put:
     operationId: R403
     summary: 'R403: Mark Notification as Read'
@@ -800,6 +800,193 @@ paths:
         description: 'Notification not found.'
       '401':
         description: 'Unauthorized. User must be logged in.'
-  
 
-      
+ /admin/users:
+  get:
+    operationId: R501
+    summary: 'R501: View User List'
+    description: 'Fetch list of all users in the system with optional search and filter parameters. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: 'Filter users by name, username, or email.'
+      - in: query
+        name: role
+        schema:
+          type: string
+          enum: [REG, MOD, ADMIN]
+        description: 'Filter users by role.'
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number for pagination.'
+       - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: 'Number of users per page.'
+    responses:
+      '200':
+        description: 'Ok. List of users retrieved successfully.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/users/{id}:
+  get:
+    operationId: R502
+    summary: 'R502: View User Details (ADMIN)'
+    description: 'Retrieve detailed information about a specific user by their ID. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '200':
+        description: 'Ok. User details retrieved successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+  delete:
+    operationId: R503
+    summary: 'R503: Delete User Account (ADMIN)'
+    description: 'Delete a specific user account from the system. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '204':
+        description: 'User deleted successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/users/{id}/block:
+  put:
+    operationId: R504
+    summary: 'R504: Block User Account (ADMIN)'
+    description: 'Block a specific user account to restrict their access to the system. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '200':
+        description: 'Ok. User blocked successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/users/{id}/unblock:
+  put:
+    operationId: R505
+    summary: 'R505: Unblock User Account'
+    description: 'Unblock a specific user account to restore their access to the system. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: 'User ID.'
+    responses:
+      '200':
+        description: 'User unblocked successfully.'
+      '404':
+        description: 'User not found.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /admin/dashboard:
+  get:
+    operationId: R506
+    summary: 'R506: Admin Dashboard'
+    description: 'Display the admin dashboard with an overview of system activity and statistics. Access: ADMIN'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Dashboard displayed successfully.'
+      '401':
+        description: 'Unauthorized. Admin privileges required.'
+
+ /home:
+  get:
+    operationId: R507
+    summary: 'R507: Homepage'
+    description: 'Display Homepage. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Homepage displayed successfully.'
+
+ /about:
+  get:
+    operationId: R508
+    summary: 'R508: About Page'
+    description: 'Display information about the application and its purpose. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. About page displayed successfully.'
+
+ /contact:
+  get:
+    operationId: R509
+    summary: 'R509: Contact Page'
+    description: 'Display contact information. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Contact page displayed successfully.'
+
+ /services:
+  get:
+    operationId: R510
+    summary: 'R510: Services Page'
+    description: 'Display details about the services offered by the platform. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. Services page displayed successfully.'
+
+ /faq:
+  get:
+    operationId: R511
+    summary: 'R511: FAQ Page'
+    description: 'Display frequently asked questions about the platform and their answers. Access: PUB'
+    tags:
+      - 'M05: User Administration and Static Pages'
+    responses:
+      '200':
+        description: 'Ok. FAQ page displayed successfully.'
