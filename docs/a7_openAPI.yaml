@@ -683,8 +683,8 @@ paths:
 
  /questions/{id}/votes:
   post:
-    operationId: R208
-    summary: 'R208: Up or Downvote a Question'
+    operationId: R215
+    summary: 'R215: Up or Downvote a Question'
     description: "Up or Downvote a question. Access: REG, MOD, ADMIN"
     tags: 
       - 'M02: Q&A'
