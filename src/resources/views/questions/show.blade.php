@@ -15,12 +15,11 @@ $comment_count = $question->comments->count();
 		@include('partials.question', $question)
 
 		@if ($comment_count)
-		<h2 id="question-comment-count" class="p4 text-1xl mt-4">{{ $answers_count }} comments</h2>
-		<div class="p-4">
-			@foreach ($question->comments as $comment)
-			@include('partials.comment', $comment)
-			@endforeach
-		</div>
+		<div class="py-4 pl-4">
+		@foreach ($question->comments as $comment)
+		@include('partials.comment', $comment)
+		@endforeach
+	</div>
 		@endif
 		<h2 id="question-answer-count" class="text-1xl mt-4">{{ $answers_count }} answers</h2>
 		<div class="flex flex-col space-y-2">

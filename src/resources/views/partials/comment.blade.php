@@ -16,10 +16,6 @@ $elevated = Auth::user()->isElevated();
 				<span>{{ $post->votes }}</span>
 				<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
 			</div>
-			<a href=# class="tool-link">
-				<i class="fa-solid fa-plus"></i>
-				<span class="ml-1">Comment</span>
-			</a>
 			@if ($owner == false && $post->user)
 			<a href=# class="tool-link">
 				<i class="fa-solid fa-flag"></i>

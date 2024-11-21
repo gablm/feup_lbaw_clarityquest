@@ -57,13 +57,9 @@ $comment_count = $answer->comments->count();
 		</div>
 		@endif
 	</div>
-
-	@if ($comment_count)
-	<h2 id="answer-comment-count" class="p4 text-1xl mt-4">{{ $comment_count }} comments</h2>
-	<div class="p-4">
-		@foreach ($question->comments as $comment)
+	<div class="py-4 pl-4">
+		@foreach ($answer->comments as $comment)
 		@include('partials.comment', $comment)
 		@endforeach
 	</div>
-	@endif
 </article>
