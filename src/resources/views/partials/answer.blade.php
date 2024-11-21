@@ -4,8 +4,6 @@ $profile_pic = Auth::user()->profile_pic ? asset($user->profile_pic) : url('img/
 $post = $answer->post;
 $owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
 $elevated = Auth::user()->isElevated();
-
-$comment_count = $answer->comments->count();
 @endphp
 
 <article class="mt-2" data-id="{{ $post->id }}">

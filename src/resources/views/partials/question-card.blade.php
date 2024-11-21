@@ -20,13 +20,16 @@ $elevated = Auth::user()->isElevated();
 			</div>
 			<p class="text-gray-700 my-3">{{ $question->post->text }}</p>
 			<div class="flex flex-row justify-between space-x-6 text-gray-500 text-sm">
-				<div>
-					<i class="fa-solid fa-up-down"></i>
-					<span>{{ $question->post->votes }}</span>
+				<div class="flex flex-row space-x-6">
+					<div>
+						<i class="fa-solid fa-up-down"></i>
+						<span>{{ $question->post->votes }}</span>
+					</div>
+					<span> {{ $question->answers->count() }} Answers</span>
+					<span>{{ $post->comments->count() }} Comments</span>
 				</div>
 				<div>
-					<span>{{ $question->answers->count() }} Answers</span>
-					<span>| {{ $question->post->comments->count() }} Comments</span>
+					<span>{{ $post->creationDate() }} at {{ $post->creationTime() }}</span>
 				</div>
 			</div>
 			@if ($question->tags->count())
