@@ -11,9 +11,9 @@ $elevated = Auth::user()->isElevated();
 	<div class="flex justify-between items-center">
 		<div class="flex">
 			<div class="space-x-1">
-				<a href=# class="vote-link fa-solid fa-up-long"></a>
+				<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
 				<span>{{ $post->votes }}</span>
-				<a href=# class="vote-link fa-solid fa-down-long"></a>
+				<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
 			</div>
 			<a href=# class="tool-link">
 				<i class="fa-solid fa-plus"></i>
@@ -48,7 +48,7 @@ $elevated = Auth::user()->isElevated();
 		</div>
 		@endif
 	</div>
-	
+
 	@if ($question->tags->count())
 	<div class="mt-2">
 		@foreach($question->tags as $tag)
