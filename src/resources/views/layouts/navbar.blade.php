@@ -17,10 +17,10 @@
             </li>
             @if (Auth::check())
             <li class="relative">
-                <a href="#" id="inboxDropdown" class="nav space-x-2">
+                <a href="#" id="inboxDropdown" class="nav">
                     <button class="nav-secondary">
                         <i class="fa-solid fa-envelope"></i>
-                        Inbox
+                        <span class="max-sm:hidden">Inbox</span>
                     </button>
                 </a>
             </li>
