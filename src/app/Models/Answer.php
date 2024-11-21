@@ -62,4 +62,11 @@ class Answer extends Model
         return $this->belongsTo(Question::class, 'question_id');
     }
 
+	 /**
+     * Get the comments for the answer.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'id');
+    }
 }

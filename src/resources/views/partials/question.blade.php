@@ -1,28 +1,36 @@
 @php
 $profile_pic = Auth::user()->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
-$owner = $question->post->user && Auth::check() && $question->post->user->id == Auth::user()->id;
+$post = $question->post;
+$owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
+$elevated = Auth::user()->isElevated();
 @endphp
 
 <article data-id="{{ $question->id }}">
 	<h2 class="text-4xl font-semibold">{{ $question->title }}</h2>
-	<div class="flex flex-row items-center text-gray-500 text-sm">
-		<span class="mr-2">By</span>
-		<img
-			src={{ $profile_pic }}
-			alt="Profile Picture"
-			class="w-4 h-4 rounded-full object-cover">
-		<span class="ml-1">{{ $question->post->user->name ?? "[REDACTED]" }}</span>
-	</div>
-	<p class="text-gray-700 my-3">{{ $question->post->text }}</p>
-	<div class="flex space-x-2">
+	<p class="text-gray-700 my-3">{{ $post->text }}</p>
+	<div class="flex items-center">
 		<div class="space-x-1">
 			<a href=# class="vote-link fa-solid fa-up-long"></a>
-			<span>{{ $question->post->votes }}</span>
+			<span>{{ $post->votes }}</span>
 			<a href=# class="vote-link fa-solid fa-down-long"></a>
 		</div>
-		@if ($owner)
-		<a href=# class="tool-link">Edit</a>
-		<a href=# class="tool-link text-red-500">Delete</a>
+		@if ($owner || $elevated)
+		<div>
+			<a href=# class="tool-link">Edit</a>
+			<a href=# class="tool-link text-red-500">Delete</a>
+		</div>
+		@else
+		@if ($post->user)
+		<a href=# class="tool-link">Report</a>
+		@endif
+		<div class="flex flex-row items-center text-gray-500 text-sm ml-3">
+			<span class="mr-2">By</span>
+			<img
+				src="{{ $profile_pic }}"
+				alt="Profile Picture"
+				class="w-4 h-4 rounded-full object-cover">
+			<span class="ml-1">{{ $post->user->name ?? "[REDACTED]" }}</span>
+		</div>
 		@endif
 	</div>
 	@if ($question->tags->count())

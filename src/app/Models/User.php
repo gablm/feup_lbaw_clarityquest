@@ -235,4 +235,24 @@ class User extends Authenticatable
             'id' // Local key on the Post table
         );
     }
+
+	public function isAdmin(): bool
+	{
+		return $this->role == Permission::Admin;
+	}
+
+	public function isModerator(): bool
+	{
+		return $this->role == Permission::Moderator;
+	}
+
+	public function isBlocked(): bool
+	{
+		return $this->role == Permission::Blocked;
+	}
+
+	public function isElevated(): bool
+	{
+		return $this->isAdmin() || $this->isModerator();
+	}
 }

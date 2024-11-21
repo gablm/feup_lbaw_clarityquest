@@ -25,9 +25,12 @@ $comment_count = $question->comments->count();
 		</div>
 		@endif
 		<h2 id="question-answer-count" class="text-1xl mt-4">{{ $answers_count }} answers</h2>
-		@foreach ($question->answers as $answer)
-		@include('partials.answer', $answer)
-		@endforeach
+		<div class="flex flex-col space-y-2">
+			@foreach ($question->answers as $answer)
+			@include('partials.answer', $answer)
+			@endforeach
+		</div>
+
 	</div>
 </div>
 
