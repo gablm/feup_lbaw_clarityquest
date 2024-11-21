@@ -9,6 +9,9 @@ $comment_count = $answer->comments->count();
 @endphp
 
 <article class="mt-2" data-id="{{ $post->id }}">
+	@if($answer->correct)
+	<a class="tag-link">Marked as correct</a>
+	@endif
 	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
 	<div class="flex justify-between items-center">
 		<div class="flex">
@@ -19,24 +22,28 @@ $comment_count = $answer->comments->count();
 			</div>
 			<a href=# class="tool-link">
 				<i class="fa-solid fa-plus"></i>
-				<span class="ml-1">Comment</span>
+				<span class="max-sm:hidden ml-1">Comment</span>
 			</a>
 			@if ($owner == false && $post->user)
 			<a href=# class="tool-link">
 				<i class="fa-solid fa-flag"></i>
-				<span class="ml-1">Report</span>
+				<span class="max-sm:hidden ml-1">Report</span>
 			</a>
 			@endif
 		</div>
 		@if ($owner || $elevated)
 		<div>
 			<a href=# class="tool-link">
+				<i class="fa-solid fa-check"></i>
+				<span class="max-md:hidden ml-1">Correct</span>
+			</a>
+			<a href=# class="tool-link">
 				<i class="fa-solid fa-pencil"></i>
-				<span class="ml-1">Edit</span>
+				<span class="max-md:hidden ml-1">Edit</span>
 			</a>
 			<a href=# class="tool-link text-red-500">
 				<i class="fa-solid fa-trash"></i>
-				<span class="ml-1">Delete</span>
+				<span class="max-md:hidden ml-1">Delete</span>
 			</a>
 		</div>
 		@else

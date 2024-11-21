@@ -1,4 +1,4 @@
-<div class="flex flex-col w-64 p-4 bg-gray-100">
+<div class="flex flex-col max-sm:hidden sm:w-64 md:w-64 sm:p-4 bg-gray-100">
 	<a href= {{ url('questions/create') }}>
 		<button class="auth-main mb-2">
 			<i class="fa-solid fa-plus pr-2"></i>

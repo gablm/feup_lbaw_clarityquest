@@ -10,9 +10,7 @@ $comment_count = $question->comments->count();
 @endphp
 
 <div class="flex flex-row flex-grow">
-	<section class="bg-gray-100 px-4">
-		@include('partials.sidebar')
-	</section>
+	@include('partials.sidebar')
 	<div data-id="{{ $question->id }}" class="flex flex-col container mx-auto p-8">
 		@include('partials.question', $question)
 
@@ -30,7 +28,6 @@ $comment_count = $question->comments->count();
 			@include('partials.answer', $answer)
 			@endforeach
 		</div>
-
 	</div>
 </div>
 

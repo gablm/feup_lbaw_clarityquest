@@ -2,9 +2,7 @@
 
 @section('content')
 <div class="flex flex-row flex-grow">
-    <section class="bg-gray-100 px-4">
-        @include('partials.sidebar')
-    </section>
+    @include('partials.sidebar')
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-semibold mb-4">My Questions</h2>
         @if($myQuestions->isEmpty())
