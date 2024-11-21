@@ -67,17 +67,15 @@ class QuestionController extends Controller
 		return view('questions.create');
     }
 
+	/**
+     * Display a question.
+     */
 	public function show(string $id)
 	{
-		$user_id = Auth::user()->id ?? -2;
-
 		$question = Question::findOrFail($id);
-		$question_owner = $question->post->user->id ?? -1;
 
 		return view('questions.show', [
-			'question' => $question,
-			'mine' => $question_owner == $user_id
+			'question' => $question
 		]);
 	}
-    
 }

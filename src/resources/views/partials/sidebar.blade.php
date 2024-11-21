@@ -7,22 +7,22 @@
 	</a>
 	<ul class="space-y-2">
 		<li>
-			<a href="/my-questions" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+			<a href="/my-questions" class="side-link">
 				My Questions
 			</a>
 		</li>
 		<li>
-			<a href="/my-answers" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+			<a href="/my-answers" class="side-link">
 				My Answers
 			</a>
 		</li>
 		<li>
-			<a href="/followed-questions" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+			<a href="/followed-questions" class="side-link">
 				Followed Questions
 			</a>
 		</li>
 		<li>
-			<a href="/followed-tags" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
+			<a href="/followed-tags" class="side-link">
 				Followed Tags
 			</a>
 		</li>
