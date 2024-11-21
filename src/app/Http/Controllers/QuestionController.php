@@ -19,7 +19,7 @@ class QuestionController extends Controller
         $user = Auth::user();
         $followedQuestions = $user->followedQuestions;
 
-        return view('pages.flwquest', compact('followedQuestions'));
+        return view('questions.followed', compact('followedQuestions'));
     }
 	
     public function myQuestions()

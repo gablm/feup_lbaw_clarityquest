@@ -13,7 +13,7 @@
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($topQuestions as $question)
-						@include('partials.question', ['question' => $question, 'mine' => false, 'details' => true])
+						@include('partials.question-card', $question)
                     @endforeach
                 </div>
             @endif
@@ -26,7 +26,7 @@
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($latestQuestions as $question)
-						@include('partials.question', ['question' => $question, 'mine' => false, 'details' => true])
+						@include('partials.question-card', $question)
                     @endforeach
                 </div>
             @endif
