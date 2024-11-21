@@ -10,22 +10,37 @@ $comment_count = $answer->comments->count();
 
 <article class="mt-2" data-id="{{ $post->id }}">
 	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
-	<div class="flex items-center">
-		<div class="space-x-1">
-			<a href=# class="vote-link fa-solid fa-up-long"></a>
-			<span>{{ $post->votes }}</span>
-			<a href=# class="vote-link fa-solid fa-down-long"></a>
+	<div class="flex justify-between items-center">
+		<div class="flex">
+			<div class="space-x-1">
+				<a href=# class="vote-link fa-solid fa-up-long"></a>
+				<span>{{ $post->votes }}</span>
+				<a href=# class="vote-link fa-solid fa-down-long"></a>
+			</div>
+			<a href=# class="tool-link">
+				<i class="fa-solid fa-plus"></i>
+				<span class="ml-1">Comment</span>
+			</a>
+			@if ($owner == false && $post->user)
+			<a href=# class="tool-link">
+				<i class="fa-solid fa-flag"></i>
+				<span class="ml-1">Report</span>
+			</a>
+			@endif
 		</div>
 		@if ($owner || $elevated)
 		<div>
-			<a href=# class="tool-link">Edit</a>
-			<a href=# class="tool-link text-red-500">Delete</a>
+			<a href=# class="tool-link">
+				<i class="fa-solid fa-pencil"></i>
+				<span class="ml-1">Edit</span>
+			</a>
+			<a href=# class="tool-link text-red-500">
+				<i class="fa-solid fa-trash"></i>
+				<span class="ml-1">Delete</span>
+			</a>
 		</div>
 		@else
-		@if ($post->user)
-		<a href=# class="tool-link">Report</a>
-		@endif
-		<div class="flex flex-row items-center text-gray-500 text-sm ml-3">
+		<div class="flex flex-row items-center text-gray-500 text-sm mr-3">
 			<span class="mr-2">By</span>
 			<img
 				src="{{ $profile_pic }}"
