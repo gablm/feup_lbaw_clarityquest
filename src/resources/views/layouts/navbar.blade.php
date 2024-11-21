@@ -26,11 +26,7 @@
             </li>
             <li>
                 <a href="{{ url('/profile') }}" class="nav">
-                    @if (Auth::user()->profile_pic)
-                        <img src="{{ asset(Auth::user()->profile_pic) }}" alt="Profile Picture" class="h-10 w-10 rounded-full object-cover">
-                    @else
-                        <img src="{{ url('img/default_pic.png') }}" alt="Default Profile Picture" class="h-10 w-10 rounded-full object-cover">
-                    @endif
+					@include('partials.profile-picture', ['user' => Auth::user(), 'size' => 10])
                 </a>
             </li>
             @else
