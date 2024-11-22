@@ -45,6 +45,7 @@ Route::controller(AnswerController::class)->group(function () {
 
 	Route::put('/answers', 'create');
 	Route::delete('/answers/{id}', 'delete');
+	Route::patch('/answers/{id}', 'update');
 });
 
 // Questions

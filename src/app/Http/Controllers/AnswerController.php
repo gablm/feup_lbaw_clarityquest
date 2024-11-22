@@ -79,4 +79,28 @@ class AnswerController extends Controller
 
 		return;
 	}
+
+	/**
+     * Update a answer.
+     */
+    public function update(Request $request, string $id)
+    {
+		$answer = Answer::findOrFail($id);
+		$post = $answer->post;
+
+		$this->authorize('update', $answer);
+
+        $request->validate([
+			'text' => 'required|string|max:10000'
+        ]);
+
+		$post->text = $request->text;
+
+		$post->save();
+		$answer->save();
+
+        return view('partials.answer', [
+			'answer' => $answer
+		]);
+    }
 }

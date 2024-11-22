@@ -112,3 +112,33 @@ function deleteComment(object)
 			comment.remove();
 		});
 }
+
+function showEditAnswerModal(id) {
+	let answer = document.querySelector('#answer[data-id="' + id + '"]');
+	let modal = answer.querySelector('#answer-edit');
+	
+	modal.classList.remove('hidden');
+}
+
+function closeEditAnswerModal()
+{
+	let modal = document.querySelector('#answer-edit:not(.hidden)');
+	
+	modal.classList.add('hidden');
+}
+
+function sendEditAnswerRequest(id) {
+	let answer = document.querySelector('#answer[data-id="' + id + '"]');
+	let text = answer.querySelector('#text');
+
+	sendAjaxRequest('PATCH', '/answers/' + id, { text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+			
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			answer.parentElement.replaceChild(doc.body.firstChild, answer);
+		});
+}
