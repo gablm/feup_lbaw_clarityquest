@@ -1,27 +1,30 @@
 @php
-$post = $question->post;
+$post = $answer->post;
 $user = $post->user;
 
 $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
 
-$owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
+$q_owner = $answer->question->post->user && Auth::check() && $answer->question->post->user->id == Auth::user()->id;
+$owner = $user && Auth::check() && $user->id == Auth::user()->id;
 $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
-<article data-id="{{ $question->id }}">
-	<div class="flex flex-row items-center space-x-6 text-gray-500 text-md mb-2">
+<article class="mt-2" data-id="{{ $post->id }}">
+	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm mb-2">
 		<div class="flex flex-row items-center">
 			<img
 				src="{{ $profile_pic }}"
 				alt="Profile Picture"
-				class="w-6 h-6 rounded-full object-cover">
-			<span class="ml-2">{{ $question->post->user->name ?? "[REDACTED]" }}</span>
+				class="w-5 h-5 rounded-full object-cover">
+			<span class="ml-2">{{ $post->user->name ?? "[REDACTED]" }}</span>
 		</div>
 		<span>{{ $post->creationFTime() }}</span>
+		@if($answer->correct)
+			<a class="ml-4 tag-link">Marked as correct</a>
+			@endif
 	</div>
-	<h2 class="text-4xl font-semibold ml-3">{{ $question->title }}</h2>
-	<p class="text-gray-700 my-3 ml-3">{{ $post->text }}</p>
-	<div class="flex items-center">
+	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
+	<div class="flex before:items-center">
 		<div class="space-x-1">
 			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
 			<span>{{ $post->votes }}</span>
@@ -31,14 +34,16 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<i class="fa-solid fa-plus"></i>
 			<span class="max-sm:hidden ml-1">Comment</span>
 		</a>
-		<a href=# class="tool-link">
-			<i class="fa-solid fa-bell"></i>
-			<span class="max-sm:hidden ml-1">Follow</span>
-		</a>
 		@if ($owner == false && $post->user)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
 			<span class="max-sm:hidden ml-1">Report</span>
+		</a>
+		@endif
+		@if ($q_owner && $answer->correct == false)
+		<a href=# class="tool-link text-blue-700">
+			<i class="fa-solid fa-check"></i>
+			<span class="max-md:hidden ml-1">Mark as Correct</span>
 		</a>
 		@endif
 		@if ($owner || $elevated)
@@ -52,12 +57,9 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		</a>
 		@endif
 	</div>
-
-	@if ($question->tags->count())
-	<div class="mt-2">
-		@foreach($question->tags as $tag)
-		@include('partials.tag', $tag)
+	<div class="py-4 pl-4">
+		@foreach ($answer->comments as $comment)
+		@include('partials.comment', $comment)
 		@endforeach
 	</div>
-	@endif
 </article>

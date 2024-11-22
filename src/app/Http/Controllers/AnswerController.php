@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,6 +22,18 @@ class AnswerController extends Controller
         $user = Auth::user();
         $answers = $user->answersPosted()->with('question')->get();
 
-        return view('pages.myanswers', compact('answers'));
+        return view('answers.mine', compact('answers'));
     }
+
+	/**
+     * Display a answer.
+     */
+	public function show(string $id)
+	{
+		$answer = Answer::findOrFail($id);
+
+		return view('partials.answer', [
+			'answer' => $answer
+		]);
+	}
 }

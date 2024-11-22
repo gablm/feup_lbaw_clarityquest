@@ -63,24 +63,16 @@ class Post extends Model
     {
         return $this->hasMany(Edition::class, 'post_id');
     }
-     /**
-     * Get the count of positive votes for the question.
-     *
-     * @return int
-     */
-    public function positiveVotes()
-    {
-        return $this->votes()->where('positive', true)->count();
-    }
 
-    /**
-     * Get the count of negative votes for the question.
-     *
-     * @return int
-     */
-    public function negativeVotes()
-    {
-        return $this->votes()->where('positive', false)->count();
-    }
+	public function creationFTime() : string
+	{
+		$date = date('Y-m-d', time());
+		$year = date('Y', );
+		$time = explode(" ", $this->created_at);
 
+		if ($date == $time[0])
+			return $this->created_at->format("H:i");
+
+		return $this->created_at->format("d/m/Y H:i");
+	}
 }

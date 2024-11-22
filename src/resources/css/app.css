@@ -46,4 +46,20 @@
 	p.auth-success {
 		@apply text-black mb-3;
 	}
+
+	a.tag-link {
+		@apply inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded;
+	}
+
+	a.side-link {
+		@apply block px-3 py-2 rounded text-base font-medium text-gray-700 hover:bg-gray-200;
+	}
+
+	a.vote-link {
+		@apply px-3 py-2 rounded text-gray-700 hover:bg-gray-200;
+	}
+
+	a.tool-link {
+		@apply px-3 py-1 rounded hover:bg-gray-200;
+	}
 }

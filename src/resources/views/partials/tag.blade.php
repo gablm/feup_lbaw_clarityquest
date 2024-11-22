@@ -1,0 +1,1 @@
+<a href="{{ url('/tag/' . $tag->id) }}" class="tag-link">{{ $tag->name }}</a>
