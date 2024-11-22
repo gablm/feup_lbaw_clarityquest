@@ -43,6 +43,7 @@ Route::controller(QuestionController::class)->group(function () {
 
 	Route::get('/questions/{id}', 'show');
 	Route::delete('/questions/{id}', 'delete');
+	Route::patch('/questions/{id}', 'update');
 });
 
 // Users

@@ -92,4 +92,30 @@ class QuestionController extends Controller
 
 		return redirect('/')->withSucess('Question delete!');
 	}
+
+	/**
+     * Update a question.
+     */
+    public function update(Request $request, string $id)
+    {
+		$question = Question::findOrFail($id);
+		$post = $question->post;
+
+		$this->authorize('update', $question);
+
+        $request->validate([
+			'title' => 'required|string|max:64',
+            'description' => 'required|string|max:10000'
+        ]);
+
+        $question->title = $request->title;
+		$post->text = $request->description;
+
+        $question->save();
+		$post->save();
+
+        return view('partials.question', [
+			'question' => $question
+		]);
+    }
 }
