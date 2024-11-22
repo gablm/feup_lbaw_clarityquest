@@ -11,8 +11,8 @@
         <ul class="mt-4 space-y-3">
             @foreach($results as $item)
                 <li class="p-4 bg-gray-100 rounded-lg shadow">
-                    <h2 class="text-xl font-semibold">{{ $item->name }}</h2>
-                    <p>{{ $item->description }}</p>
+                    <h2 class="text-xl font-semibold">{{ $item->title }}</h2> <!-- Changed from $item->name to $item->title -->
+                    <p>{{ $item->description ?? 'No description available.' }}</p> <!-- Add default text if description is empty -->
                 </li>
             @endforeach
         </ul>

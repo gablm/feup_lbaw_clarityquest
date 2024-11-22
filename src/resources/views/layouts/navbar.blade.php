@@ -4,7 +4,7 @@
             <img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
         </a>
         <form class="flex items-center w-[30vw] space-x-1" action="{{ route('search') }}"  method="GET">
-            <input type="search" placeholder="Search" aria-label="Search" class="nav" value="{{ request('q') }}" >
+            <input type="search" name='search' placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}" >
             <button type="submit" class="nav-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
