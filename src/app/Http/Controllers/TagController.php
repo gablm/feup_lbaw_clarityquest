@@ -15,6 +15,6 @@ class TagController extends Controller
         $user = Auth::user();
         $followedTags = $user->followedTags()->with(['posts.user', 'posts.comments'])->get();
 
-        return view('pages.flwtags', compact('followedTags'));
+        return view('tags.followed', compact('followedTags'));
     }
 }

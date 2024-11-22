@@ -2,9 +2,7 @@
 
 @section('content')
 <div class="flex flex-row flex-grow">
-	<section class="bg-gray-100 px-4">
-		@include('partials.sidebar')
-	</section>
+	@include('partials.sidebar')
 	<div class="container mx-auto p-4">
 		<div class="bg-white shadow-md rounded-lg p-6">
 			<h2 class="text-2xl font-semibold mb-4">Create Question</h2>
