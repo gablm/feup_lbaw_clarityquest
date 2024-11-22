@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SearchController;
 
 /*
@@ -31,6 +32,11 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
+});
+
+// Comments
+Route::controller(CommentController::class)->group(function () {
+	Route::delete('/comments/{id}', 'delete');
 });
 
 // Answers
@@ -60,6 +66,8 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
 	Route::put('/profile', 'update')->name('profile.update')->middleware('auth');
 	Route::delete('/profile', 'destroy')->name('profile.destroy')->middleware('auth');
+
+	Route::get('/user/{id}', 'showPublicProfile')->name('public.profile');
 });
 
 // Authentication
@@ -76,7 +84,3 @@ Route::controller(RegisterController::class)->group(function () {
 
 // Search
 Route::get('/search', [SearchController::class, 'index'])->name('search');
-
-// Public User Profile
-
-Route::get('/user/{id}', [UserController::class, 'showPublicProfile'])->name('public.profile');

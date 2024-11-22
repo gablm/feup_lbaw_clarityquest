@@ -18,4 +18,18 @@ class CommentController extends Controller
 			'comment' => $comment
 		]);
     }
+
+	/**
+     * Delete a comment.
+     */
+	public function delete(string $id)
+	{
+		$comment = Comment::findOrFail($id);
+
+		$this->authorize('delete', $comment);
+
+		$comment->delete();
+
+		return;
+	}
 }

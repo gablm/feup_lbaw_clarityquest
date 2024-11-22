@@ -9,7 +9,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 
 @endphp
 
-<article class="mt-2" data-id="{{ $post->id }}">
+<article id="comment" class="mt-2" data-id="{{ $post->id }}">
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm">
 		<div class="flex flex-row items-center">
 			<img
@@ -38,10 +38,10 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-sm:hidden ml-1">Edit</span>
 		</a>
-		<a href=# class="tool-link text-red-500">
+		<button data-id="{{ $comment->post->id }}" onclick="deleteComment(this)" class="tool-link text-red-500">
 			<i class="fa-solid fa-trash"></i>
-			<span class="max-sm:hidden ml-1">Delete</span>
-		</a>
+			<span class="max-md:hidden ml-1">Delete</span>
+		</button>
 		@endif
 	</div>
 </article>

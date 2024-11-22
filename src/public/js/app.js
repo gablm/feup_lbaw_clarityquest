@@ -83,12 +83,28 @@ function deleteAnswer(object)
 	let id = object.getAttribute('data-id');
 	let answer = document.querySelector('#answer[data-id="' + id + '"]');
 
-
 	sendAjaxRequest('DELETE', '/answers/' + id, { },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
 			answer.remove();
+		});
+}
+
+function deleteComment(object)
+{
+	let confirmed = confirm('Are you sure you want to delete this comment? This action cannot be undone.');
+	if (confirmed == false) return;
+
+	let id = object.getAttribute('data-id');
+	let comment = document.querySelector('#comment[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/comments/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			comment.remove();
 		});
 }
