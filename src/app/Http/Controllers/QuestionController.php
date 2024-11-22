@@ -39,7 +39,7 @@ class QuestionController extends Controller
 
         $request->validate([
 			'title' => 'required|string|max:64',
-            'description' => 'required|string|max:2000'
+            'description' => 'required|string|max:10000'
         ]);
 
 		$post = Post::create([
@@ -78,4 +78,44 @@ class QuestionController extends Controller
 			'question' => $question
 		]);
 	}
+
+	/**
+     * Delete a question.
+     */
+	public function delete(string $id)
+	{
+		$question = Question::findOrFail($id);
+
+		$this->authorize('delete', $question);
+
+		$question->delete();
+
+		return redirect('/')->withSucess('Question delete!');
+	}
+
+	/**
+     * Update a question.
+     */
+    public function update(Request $request, string $id)
+    {
+		$question = Question::findOrFail($id);
+		$post = $question->post;
+
+		$this->authorize('update', $question);
+
+        $request->validate([
+			'title' => 'required|string|max:64',
+            'description' => 'required|string|max:10000'
+        ]);
+
+        $question->title = $request->title;
+		$post->text = $request->description;
+
+        $question->save();
+		$post->save();
+
+        return view('partials.question', [
+			'question' => $question
+		]);
+    }
 }

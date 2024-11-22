@@ -59,7 +59,7 @@
 		@apply px-3 py-2 rounded text-gray-700 hover:bg-gray-200;
 	}
 
-	a.tool-link {
+	a.tool-link, button.tool-link {
 		@apply px-3 py-1 rounded hover:bg-gray-200;
 	}
 }
