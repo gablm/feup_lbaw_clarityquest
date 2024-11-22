@@ -74,3 +74,7 @@ Route::controller(RegisterController::class)->group(function () {
 
 // Search
 Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+// Public User Profile
+
+Route::get('/user/{id}', [UserController::class, 'showPublicProfile'])->name('public.profile');
