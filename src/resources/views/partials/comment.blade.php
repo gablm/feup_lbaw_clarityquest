@@ -11,13 +11,15 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 
 <article id="comment" class="mt-2" data-id="{{ $post->id }}">
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm">
-		<div class="flex flex-row items-center">
-			<img
-				src="{{ $profile_pic }}"
-				alt="Profile Picture"
-				class="w-5 h-5 rounded-full object-cover">
-			<span class="ml-2">{{ $post->user->name ?? "[REDACTED]" }}</span>
-		</div>
+		<a class="tool-link" href="{{ $user ? url('/user/' . $user->id) : '/' }}">
+			<div class="flex flex-row items-center">
+				<img
+					src="{{ $profile_pic }}"
+					alt="Profile Picture"
+					class="w-6 h-6 rounded-full object-cover">
+				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
+			</div>
+		</a>
 		<span>{{ $post->creationFTime() }}</span>
 	</div>
 	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>

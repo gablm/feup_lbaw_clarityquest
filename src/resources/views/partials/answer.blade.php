@@ -11,13 +11,15 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 
 <article id="answer" class="mt-2" data-id="{{ $post->id }}">
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm mb-2">
-		<div class="flex flex-row items-center">
-			<img
-				src="{{ $profile_pic }}"
-				alt="Profile Picture"
-				class="w-5 h-5 rounded-full object-cover">
-			<span class="ml-2">{{ $post->user->name ?? "[REDACTED]" }}</span>
-		</div>
+		<a class="tool-link" href="{{ $user ? url('/user/' . $user->id) : '/' }}">
+			<div class="flex flex-row items-center">
+				<img
+					src="{{ $profile_pic }}"
+					alt="Profile Picture"
+					class="w-6 h-6 rounded-full object-cover">
+				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
+			</div>
+		</a>
 		<span>{{ $post->creationFTime() }}</span>
 		@if($answer->correct)
 		<a class="ml-4 tag-link">Marked as correct</a>

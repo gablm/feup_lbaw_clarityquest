@@ -121,10 +121,6 @@ class UserController extends Controller
     
     public function showPublicProfile($id)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
         // Fetch the user by ID
         $user = User::findOrFail($id);
 

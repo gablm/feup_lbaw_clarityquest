@@ -22,7 +22,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				<span class="text-gray-500 text-sm">On question: {{ $answer->question->title }}</span>
 				<span>{{ $post->creationFTime() }}</span>
 			</div>
-			<p class="text-gray-700 mb-3 mt-1">{{ \Illuminate\Support\Str::limit($post->text, 150, '...')$post->text }}</p>
+			<p class="text-gray-700 mb-3 mt-1">{{ \Illuminate\Support\Str::limit($post->text, 150, '...') }}</p>
 			
 			<div class="flex flex-row justify-between space-x-6 text-gray-500 text-sm">
 				<div>
