@@ -37,6 +37,7 @@ Route::controller(StaticController::class)->group(function () {
 // Comments
 Route::controller(CommentController::class)->group(function () {
 	Route::delete('/comments/{id}', 'delete');
+	Route::patch('/comments/{id}', 'update');
 });
 
 // Answers

@@ -63,7 +63,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
 		<div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
 			<div class="modal-content py-4 text-left px-6">
-				<p class="text-2xl font-bold mb-4">Edit Comment</p>
+				<p class="text-2xl font-bold mb-4">Edit Answer</p>
 				<div class="mb-4">
 					<textarea class="auth focus:outline-none focus:shadow-outline" id="text" type="textarea" name="text" required>{{ $answer->post->text }}</textarea>
 				</div>

@@ -142,3 +142,33 @@ function sendEditAnswerRequest(id) {
 			answer.parentElement.replaceChild(doc.body.firstChild, answer);
 		});
 }
+
+function showEditCommentModal(id) {
+	let answer = document.querySelector('#comment[data-id="' + id + '"]');
+	let modal = answer.querySelector('#comment-edit');
+	
+	modal.classList.remove('hidden');
+}
+
+function closeEditCommentModal()
+{
+	let modal = document.querySelector('#comment-edit:not(.hidden)');
+	
+	modal.classList.add('hidden');
+}
+
+function sendEditCommentRequest(id) {
+	let answer = document.querySelector('#comment[data-id="' + id + '"]');
+	let text = answer.querySelector('#text');
+
+	sendAjaxRequest('PATCH', '/comments/' + id, { text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+			
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			answer.parentElement.replaceChild(doc.body.firstChild, answer);
+		});
+}

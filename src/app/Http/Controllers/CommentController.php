@@ -32,4 +32,28 @@ class CommentController extends Controller
 
 		return;
 	}
+
+	/**
+     * Update a comment.
+     */
+    public function update(Request $request, string $id)
+    {
+		$comment = Comment::findOrFail($id);
+		$post = $comment->post;
+
+		$this->authorize('update', $comment);
+
+        $request->validate([
+			'text' => 'required|string|max:10000'
+        ]);
+
+		$post->text = $request->text;
+
+		$post->save();
+		$comment->save();
+
+        return view('partials.comment', [
+			'comment' => $comment
+		]);
+    }
 }

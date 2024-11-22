@@ -36,14 +36,28 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		</a>
 		@endif
 		@if ($owner || $elevated)
-		<a href=# class="tool-link">
+		<button onclick="showEditCommentModal({{ $post->id }})" class="tool-link">
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-sm:hidden ml-1">Edit</span>
-		</a>
+		</button>
 		<button data-id="{{ $comment->post->id }}" onclick="deleteComment(this)" class="tool-link text-red-500">
 			<i class="fa-solid fa-trash"></i>
 			<span class="max-md:hidden ml-1">Delete</span>
 		</button>
+		<div id="comment-edit" class="hidden modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+		<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+		<div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+			<div class="modal-content py-4 text-left px-6">
+				<p class="text-2xl font-bold mb-4">Edit Comment</p>
+				<div class="mb-4">
+					<textarea class="auth focus:outline-none focus:shadow-outline" id="text" type="textarea" name="text" required>{{ $comment->post->text }}</textarea>
+				</div>
+				<div class="mt-4 flex space-x-2 justify-end">
+					<button class="modal-close tool-link" onclick="closeEditCommentModal()">Cancel</button>
+					<button class="nav-main" onclick="sendEditCommentRequest({{ $post->id }})">Save</button>
+				</div>
+			</div>
+		</div>
 		@endif
 	</div>
 </article>
