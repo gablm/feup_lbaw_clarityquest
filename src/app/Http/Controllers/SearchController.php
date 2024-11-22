@@ -29,6 +29,6 @@ class SearchController extends Controller
         ->get();
 
         // Return the search results to the view
-        return view('pages.search-results', ['results' => $questions, 'query' => $query]);
+        return view('pages.search', ['results' => $questions, 'query' => $query]);
     }
 }
