@@ -46,10 +46,14 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-md:hidden ml-1">Edit</span>
 		</a>
-		<a href=# class="tool-link text-red-500">
-			<i class="fa-solid fa-trash"></i>
-			<span class="max-md:hidden ml-1">Delete</span>
-		</a>
+		<form method="POST" action="{{ url('/questions/'. $question->id)}}" onsubmit="return confirm('Are you sure you want to delete this question? This action cannot be undone.');">
+			@csrf
+			@method('DELETE')
+			<button type="submit" class="tool-link text-red-500">
+				<i class="fa-solid fa-trash"></i>
+				<span class="max-md:hidden ml-1">Delete</span>
+			</button>
+		</form>
 		@endif
 	</div>
 

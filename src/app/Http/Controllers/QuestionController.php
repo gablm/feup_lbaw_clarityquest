@@ -39,7 +39,7 @@ class QuestionController extends Controller
 
         $request->validate([
 			'title' => 'required|string|max:64',
-            'description' => 'required|string|max:2000'
+            'description' => 'required|string|max:10000'
         ]);
 
 		$post = Post::create([
@@ -77,5 +77,19 @@ class QuestionController extends Controller
 		return view('questions.show', [
 			'question' => $question
 		]);
+	}
+
+	/**
+     * Delete a question.
+     */
+	public function delete(string $id)
+	{
+		$question = Question::findOrFail($id);
+
+		$this->authorize('delete', $question);
+
+		$question->delete();
+
+		return redirect('/')->withSucess('Question delete!');
 	}
 }

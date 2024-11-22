@@ -23,41 +23,35 @@ use App\Http\Controllers\AnswerController;
 |
 */
 
-// Home
-Route::get('/', [StaticController::class, 'index'])->name('home');
-Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('followed-tags')->middleware('auth');
-Route::get('/my-questions', [QuestionController::class, 'myQuestions'])->name('my-questions')->middleware('auth');
 Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
-Route::get('/about', [StaticController::class, 'aboutUs'])->name('about-us');
-Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');
 
-Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit')->middleware('auth');
-Route::put('/profile/update', [UserController::class, 'update'])->name('profile.update')->middleware('auth');
-Route::delete('/profile/destroy', [UserController::class, 'destroy'])->name('profile.destroy')->middleware('auth');
+// Static
+Route::controller(StaticController::class)->group(function () {
+	Route::get('/', 'index')->name('home');
+	Route::get('/about', 'aboutUs')->name('about-us');
+	Route::get('/contacts', 'contacts')->name('contacts');
+});
 
 // Questions
 Route::controller(QuestionController::class)->group(function () {
 	Route::get('/followed-questions', 'followedQuestions')->name('followed-questions')->middleware('auth');
+	Route::get('/my-questions', 'myQuestions')->name('my-questions')->middleware('auth');
+
     Route::get('/questions/create', 'showCreateForm')->middleware('auth');
 	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');
+
 	Route::get('/questions/{id}', 'show');
+	Route::delete('/questions/{id}', 'delete');
 });
 
-
-// API
-//Route::controller(CardController::class)->group(function () {
-//    Route::put('/api/cards', 'create');
-//    Route::delete('/api/cards/{card_id}', 'delete');
-//});
-
-//Route::controller(ItemController::class)->group(function () {
-//    Route::put('/api/cards/{card_id}', 'create');
-//    Route::post('/api/item/{id}', 'update');
-//    Route::delete('/api/item/{id}', 'delete');
-//});
-
+// Users
+Route::controller(UserController::class)->group(function () {
+	Route::get('/profile', 'profile')->name('profile');
+	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
+	Route::put('/profile', 'update')->name('profile.update')->middleware('auth');
+	Route::delete('/profile', 'destroy')->name('profile.destroy')->middleware('auth');
+});
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
