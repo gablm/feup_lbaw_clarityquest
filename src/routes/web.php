@@ -24,13 +24,18 @@ use App\Http\Controllers\AnswerController;
 */
 
 Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('followed-tags')->middleware('auth');
-Route::get('/my-answers', [AnswerController::class, 'myAnswers'])->name('my-answers')->middleware('auth');
 
 // Static
 Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
+});
+
+// Answers
+Route::controller(AnswerController::class)->group(function () {
+	Route::get('/my-answers', 'myAnswers')->name('my-answers')->middleware('auth');
+	Route::put('/answers', 'create');
 });
 
 // Questions

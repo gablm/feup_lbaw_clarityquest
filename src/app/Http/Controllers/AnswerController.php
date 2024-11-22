@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\Post;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,4 +38,31 @@ class AnswerController extends Controller
 			'answer' => $answer
 		]);
 	}
+
+	/**
+     * Creates a new answer.
+     */
+    public function create(Request $request)
+    {
+		$user = Auth::user();
+
+        $request->validate([
+            'text' => 'required|string|max:10000',
+			'id' => 'required|string'
+        ]);
+
+		$question = Question::findOrFail($request->id);
+
+		$post = Post::create([
+			'text' => $request->text,
+			'user_id' => $user->id
+		]);
+
+        $answer = Answer::create([
+            'id' => $post->id,
+			'question_id' => $question->id
+        ]);
+
+        return view('partials.answer', ['answer' => $answer]);
+    }
 }

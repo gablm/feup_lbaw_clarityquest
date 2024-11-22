@@ -12,9 +12,7 @@ function sendAjaxRequest(method, url, data, handler) {
 	request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	request.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			handler(this);
-		}
+		handler(this);
 	};
 	request.send(encodeForAjax(data));
 }
@@ -27,10 +25,13 @@ function sendEditQuestionRequest() {
 
 	sendAjaxRequest('PATCH', '/questions/' + id, { title: title.value, description: description.value },
 		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+			
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
-			question.parentElement.replaceChild(doc.body, question);
+			question.parentElement.replaceChild(doc.body.firstChild, question);
 		});
 }
 
@@ -47,4 +48,29 @@ function closeEditQuestionModal()
 	let modal = question.querySelector('#edit');
 	
 	modal.classList.add('hidden');
+}
+
+function sendCreateAnswerRequest() {
+	let question = document.querySelector('#question');
+	let id = question.getAttribute('data-id');
+	let answerList = document.querySelector('#answer-list');
+	let text = document.querySelector('#answer-text');
+	let errorBox = document.querySelector("#answer-create-err");
+
+	sendAjaxRequest('PUT', '/answers', { id: id, text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200)
+			{
+				errorBox.classList.remove('hidden');
+				return;
+			}
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			answerList.prepend(doc.body.firstChild);
+			text.value = "";
+			errorBox.classList.add('hidden');
+		});
 }

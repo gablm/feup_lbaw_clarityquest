@@ -20,8 +20,8 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		</div>
 		<span>{{ $post->creationFTime() }}</span>
 		@if($answer->correct)
-			<a class="ml-4 tag-link">Marked as correct</a>
-			@endif
+		<a class="ml-4 tag-link">Marked as correct</a>
+		@endif
 	</div>
 	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
 	<div class="flex before:items-center">
@@ -57,9 +57,11 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		</a>
 		@endif
 	</div>
+	@if ($answer->comments->count())
 	<div class="py-4 pl-4">
 		@foreach ($answer->comments as $comment)
 		@include('partials.comment', $comment)
 		@endforeach
 	</div>
+	@endif
 </article>
