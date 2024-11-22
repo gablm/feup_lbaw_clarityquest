@@ -74,3 +74,21 @@ function sendCreateAnswerRequest() {
 			errorBox.classList.add('hidden');
 		});
 }
+
+function deleteAnswer(object)
+{
+	let confirmed = confirm('Are you sure you want to delete this answer? This action cannot be undone.');
+	if (confirmed == false) return;
+
+	let id = object.getAttribute('data-id');
+	let answer = document.querySelector('#answer[data-id="' + id + '"]');
+
+
+	sendAjaxRequest('DELETE', '/answers/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			answer.remove();
+		});
+}

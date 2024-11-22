@@ -36,7 +36,9 @@ Route::controller(StaticController::class)->group(function () {
 // Answers
 Route::controller(AnswerController::class)->group(function () {
 	Route::get('/my-answers', 'myAnswers')->name('my-answers')->middleware('auth');
+
 	Route::put('/answers', 'create');
+	Route::delete('/answers/{id}', 'delete');
 });
 
 // Questions

@@ -65,4 +65,18 @@ class AnswerController extends Controller
 
         return view('partials.answer', ['answer' => $answer]);
     }
+
+	/**
+     * Delete a answer.
+     */
+	public function delete(string $id)
+	{
+		$answer = Answer::findOrFail($id);
+
+		$this->authorize('delete', $answer);
+
+		$answer->delete();
+
+		return;
+	}
 }

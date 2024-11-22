@@ -90,7 +90,7 @@ class QuestionController extends Controller
 
 		$question->delete();
 
-		return redirect('/')->withSucess('Question delete!');
+		return redirect('/')->withSucess('Question deleted!');
 	}
 
 	/**
