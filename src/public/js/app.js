@@ -56,6 +56,7 @@ function sendCreateAnswerRequest() {
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
 	let errorBox = document.querySelector("#answer-create-err");
+	let answer_count = document.querySelector('#question-answer-count');
 
 	sendAjaxRequest('PUT', '/answers', { id: id, text: text.value },
 		(request) => {
@@ -72,6 +73,7 @@ function sendCreateAnswerRequest() {
 			answerList.prepend(doc.body.firstChild);
 			text.value = "";
 			errorBox.classList.add('hidden');
+			answer_count.textContent = Number(answer_count.textContent) + 1;
 		});
 }
 
@@ -82,6 +84,7 @@ function deleteAnswer(object)
 
 	let id = object.getAttribute('data-id');
 	let answer = document.querySelector('#answer[data-id="' + id + '"]');
+	let answer_count = document.querySelector('#question-answer-count');
 
 	sendAjaxRequest('DELETE', '/answers/' + id, { },
 		(request) => {
@@ -89,6 +92,7 @@ function deleteAnswer(object)
 			if (request.status != 200) return;
 
 			answer.remove();
+			answer_count.textContent= answer_count.textContent - 1;
 		});
 }
 

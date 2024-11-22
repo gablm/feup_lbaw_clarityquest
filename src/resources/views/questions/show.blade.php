@@ -21,7 +21,7 @@ $comment_count = $question->comments->count();
 			@endforeach
 		</div>
 		@endif
-		<h2 id="question-answer-count" class="text-1xl mb-2">{{ $answers_count }} answers</h2>
+		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
 		<div class="flex flex-row space-x-2 mt-2">
 			<textarea class="auth focus:outline-none focus:shadow-outline" id="answer-text" type="textarea" name="text" required></textarea>

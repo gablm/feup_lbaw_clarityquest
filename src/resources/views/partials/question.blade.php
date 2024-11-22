@@ -27,6 +27,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<span>{{ $post->votes }}</span>
 			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
 		</div>
+		@if (Auth::check())
 		<button class="tool-link">
 			<i class="fa-solid fa-plus"></i>
 			<span class="max-sm:hidden ml-1">Comment</span>
@@ -54,6 +55,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				<span class="max-md:hidden ml-1">Delete</span>
 			</button>
 		</form>
+		@endif
 		@endif
 	</div>
 	<div id="edit" class="hidden modal fixed w-full h-full top-0 left-0 flex items-center justify-center">

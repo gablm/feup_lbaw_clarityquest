@@ -30,6 +30,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<span>{{ $post->votes }}</span>
 			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
 		</div>
+		@if (Auth::check())
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-plus"></i>
 			<span class="max-sm:hidden ml-1">Comment</span>
@@ -55,6 +56,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<i class="fa-solid fa-trash"></i>
 			<span class="max-md:hidden ml-1">Delete</span>
 		</button>
+		@endif
 		@endif
 	</div>
 	@if ($answer->comments->count())
