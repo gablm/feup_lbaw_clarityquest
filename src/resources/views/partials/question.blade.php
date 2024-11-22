@@ -67,7 +67,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				</div>
 				<div class="mb-4">
 					<label class="auth" for="description">Description</label>
-					<textarea class="auth focus:outline-none focus:shadow-outline" id="description" type="textarea" name="description" value="{{ $question->post->text }}" required></textarea>
+					<textarea class="auth focus:outline-none focus:shadow-outline" id="description" type="textarea" name="description" required>{{ $question->post->text }}</textarea>
 				</div>
 				<div class="mt-4 flex space-x-2 justify-end">
 					<button class="modal-close tool-link" onclick="closeEditQuestionModal()">Cancel</button>
