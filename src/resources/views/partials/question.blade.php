@@ -9,13 +9,13 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
 <article data-id="{{ $question->id }}">
-	<div class="flex flex-row justify-between items-center text-gray-500 text-sm mb-2">
-		<div class="flex flex-row">
+	<div class="flex flex-row items-center space-x-6 text-gray-500 text-md mb-2">
+		<div class="flex flex-row items-center">
 			<img
 				src="{{ $profile_pic }}"
 				alt="Profile Picture"
-				class="w-4 h-4 rounded-full object-cover">
-			<span class="ml-1">{{ $question->post->user->name ?? "[REDACTED]" }}</span>
+				class="w-6 h-6 rounded-full object-cover">
+			<span class="ml-2">{{ $question->post->user->name ?? "[REDACTED]" }}</span>
 		</div>
 		<span>{{ $post->creationFTime() }}</span>
 	</div>
@@ -30,6 +30,10 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-plus"></i>
 			<span class="max-sm:hidden ml-1">Comment</span>
+		</a>
+		<a href=# class="tool-link">
+			<i class="fa-solid fa-bell"></i>
+			<span class="max-sm:hidden ml-1">Follow</span>
 		</a>
 		@if ($owner == false && $post->user)
 		<a href=# class="tool-link">

@@ -10,18 +10,18 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
 <article class="mt-2" data-id="{{ $post->id }}">
-	<div class="flex flex-row justify-between items-center space-x-6 text-gray-500 text-sm mb-2">
+	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm mb-2">
 		<div class="flex flex-row items-center">
 			<img
 				src="{{ $profile_pic }}"
 				alt="Profile Picture"
-				class="w-4 h-4 rounded-full object-cover">
-			<span class="ml-1">{{ $post->user->name ?? "[REDACTED]" }}</span>
-			@if($answer->correct)
-			<a class="ml-4 tag-link">Marked as correct</a>
-			@endif
+				class="w-5 h-5 rounded-full object-cover">
+			<span class="ml-2">{{ $post->user->name ?? "[REDACTED]" }}</span>
 		</div>
 		<span>{{ $post->creationFTime() }}</span>
+		@if($answer->correct)
+			<a class="ml-4 tag-link">Marked as correct</a>
+			@endif
 	</div>
 	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
 	<div class="flex before:items-center">
@@ -40,7 +40,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<span class="max-sm:hidden ml-1">Report</span>
 		</a>
 		@endif
-		@if ($q_owner)
+		@if ($q_owner && $answer->correct == false)
 		<a href=# class="tool-link text-blue-700">
 			<i class="fa-solid fa-check"></i>
 			<span class="max-md:hidden ml-1">Mark as Correct</span>

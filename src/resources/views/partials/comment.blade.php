@@ -10,17 +10,17 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
 <article class="mt-2" data-id="{{ $post->id }}">
-	<div class="flex flex-row justify-between items-center space-x-6 text-gray-500 text-sm">
+	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm">
 		<div class="flex flex-row items-center">
 			<img
 				src="{{ $profile_pic }}"
 				alt="Profile Picture"
-				class="w-4 h-4 rounded-full object-cover">
-			<span class="ml-1">{{ $post->user->name ?? "[REDACTED]" }}</span>
+				class="w-5 h-5 rounded-full object-cover">
+			<span class="ml-2">{{ $post->user->name ?? "[REDACTED]" }}</span>
 		</div>
 		<span>{{ $post->creationFTime() }}</span>
 	</div>
-	<p class="text-gray-700 my-1 ml-3">{{ $post->text }}</p>
+	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
 	<div class="flex items-center">
 		<div class="space-x-1">
 			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
