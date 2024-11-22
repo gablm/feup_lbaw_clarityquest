@@ -6,7 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; 
+use App\Models\User;
+use App\Providers\RouteServiceProvider;
 
 class UserController extends Controller
 {
@@ -135,4 +136,20 @@ class UserController extends Controller
             'answers' => $answers,
         ]);
     }
+
+	/**
+     * Delete the user.
+     */
+	public function delete(Request $request)
+	{
+		$user = Auth::user();
+		$user->delete();
+
+		Auth::logout();
+		
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect(RouteServiceProvider::HOME)
+            ->withSuccess('You have logged out successfully!');
+	}
 }

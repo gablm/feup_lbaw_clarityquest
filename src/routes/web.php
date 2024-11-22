@@ -36,17 +36,17 @@ Route::controller(StaticController::class)->group(function () {
 
 // Comments
 Route::controller(CommentController::class)->group(function () {
-	Route::delete('/comments/{id}', 'delete');
-	Route::patch('/comments/{id}', 'update');
+	Route::delete('/comments/{id}', 'delete')->middleware('auth');
+	Route::patch('/comments/{id}', 'update')->middleware('auth');
 });
 
 // Answers
 Route::controller(AnswerController::class)->group(function () {
 	Route::get('/my-answers', 'myAnswers')->name('my-answers')->middleware('auth');
 
-	Route::put('/answers', 'create');
-	Route::delete('/answers/{id}', 'delete');
-	Route::patch('/answers/{id}', 'update');
+	Route::put('/answers', 'create')->middleware('auth');
+	Route::delete('/answers/{id}', 'delete')->middleware('auth');
+	Route::patch('/answers/{id}', 'update')->middleware('auth');
 });
 
 // Questions
@@ -58,8 +58,8 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');
 
 	Route::get('/questions/{id}', 'show');
-	Route::delete('/questions/{id}', 'delete');
-	Route::patch('/questions/{id}', 'update');
+	Route::delete('/questions/{id}', 'delete')->middleware('auth');
+	Route::patch('/questions/{id}', 'update')->middleware('auth');
 });
 
 // Users
@@ -67,7 +67,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
 	Route::put('/profile', 'update')->name('profile.update')->middleware('auth');
-	Route::delete('/profile', 'destroy')->name('profile.destroy')->middleware('auth');
+	Route::delete('/profile', 'delete')->name('profile.destroy')->middleware('auth');
 
 	Route::get('/user/{id}', 'showPublicProfile')->name('public.profile');
 });
