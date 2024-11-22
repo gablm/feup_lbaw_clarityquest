@@ -1,8 +1,11 @@
 @php
-$profile_pic = Auth::user()->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
 $post = $question->post;
+$user = $post->user;
+
+$profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
+
 $owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
-$elevated = Auth::user()->isElevated();
+$elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
 <article data-id="{{ $question->id }}">

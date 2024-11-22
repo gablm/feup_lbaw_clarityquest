@@ -1,10 +1,12 @@
 @php
-$profile_pic = Auth::user()->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
-
 $post = $answer->post;
-$owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
+$user = $post->user;
+
+$profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
+
 $q_owner = $answer->question->post->user && Auth::check() && $answer->question->post->user->id == Auth::user()->id;
-$elevated = Auth::user()->isElevated();
+$owner = $user && Auth::check() && $user->id == Auth::user()->id;
+$elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
 <article class="mt-2" data-id="{{ $post->id }}">
