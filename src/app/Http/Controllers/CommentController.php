@@ -28,6 +28,7 @@ class CommentController extends Controller
 
 		$this->authorize('delete', $comment);
 
+		$comment->post->delete();
 		$comment->delete();
 
 		return;

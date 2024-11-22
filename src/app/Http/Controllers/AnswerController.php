@@ -75,6 +75,7 @@ class AnswerController extends Controller
 
 		$this->authorize('delete', $answer);
 
+		$answer->post->delete();
 		$answer->delete();
 
 		return;

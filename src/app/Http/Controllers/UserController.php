@@ -20,8 +20,8 @@ class UserController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-
-        return view('users.mine');
+		
+		return $this->showPublicProfile(Auth::user()->id);
     }
     /**
      * Show the form for editing the profile.

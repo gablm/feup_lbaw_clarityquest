@@ -88,6 +88,7 @@ class QuestionController extends Controller
 
 		$this->authorize('delete', $question);
 
+		$question->post->delete();
 		$question->delete();
 
 		return redirect('/')->withSucess('Question deleted!');
