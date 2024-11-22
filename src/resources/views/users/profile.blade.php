@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto p-6">
-    <div class="bg-white shadow-md rounded-lg p-8">
+    <div class="p-8">
       
         <div class="flex items-center mb-8">
             <img 

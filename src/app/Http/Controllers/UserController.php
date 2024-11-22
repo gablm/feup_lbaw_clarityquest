@@ -21,7 +21,7 @@ class UserController extends Controller
             return redirect()->route('login');
         }
 
-        return view('pages.profile');
+        return view('users.mine');
     }
     /**
      * Show the form for editing the profile.
@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function edit()
     {
-        return view('pages.editprofile');
+        return view('users.edit');
     }
 
     /**
@@ -129,7 +129,7 @@ class UserController extends Controller
         $answers = $user->answersPosted()->latest()->get();
 
         // Pass data to the view
-        return view('pages.public-profile', [
+        return view('users.profile', [
             'user' => $user,
             'questions' => $questions,
             'answers' => $answers,
