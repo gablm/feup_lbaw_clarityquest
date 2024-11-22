@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User; 
 
 class UserController extends Controller
 {
@@ -114,5 +116,27 @@ class UserController extends Controller
         $allActivity = $comments->merge($answers)->merge($votes)->sortByDesc('created_at')->take(10);
 
         return view('home', ['activities' => $allActivity]);
+    }
+
+    
+    public function showPublicProfile($id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        // Fetch the user by ID
+        $user = User::findOrFail($id);
+
+        // Fetch related data
+        $questions = $user->questionsCreated()->latest()->get();
+        $answers = $user->answersPosted()->latest()->get();
+
+        // Pass data to the view
+        return view('pages.public-profile', [
+            'user' => $user,
+            'questions' => $questions,
+            'answers' => $answers,
+        ]);
     }
 }
