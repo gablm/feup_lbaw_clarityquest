@@ -28,7 +28,7 @@
                 <a href="{{ url('/profile') }}" class="nav">
 					<img
 					@if (Auth::user()->profile_pic)
-						src="{{ asset($user->profile_pic) }}"
+						src="{{ asset(Auth::user()->profile_pic) }}"
 					@else
 						src="{{ url('img/default_pic.png') }}"
 					@endif

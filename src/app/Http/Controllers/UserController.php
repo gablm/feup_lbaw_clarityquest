@@ -59,7 +59,7 @@ class UserController extends Controller
                 $user->profile_pic = null;
             }
         } elseif ($request->hasFile('profile_pic')) {
-            if ($user->profile_pic) {
+            if ($user->profile_pic && file_exists($user->profile_pic)) {
                 unlink(public_path($user->profile_pic));
             }
             $file = $request->file('profile_pic');

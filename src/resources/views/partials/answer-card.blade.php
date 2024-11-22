@@ -12,17 +12,18 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 	<a href={{ url('/questions/' . $answer->question->id) }}>
 		<div class="flex flex-col p-4">
 			<div class="flex flex-row justify-between space-x-6 items-center text-gray-500 text-sm mb-1">
-				<div class="flex flex-row">
+				<div class="flex flex-row items-center">
 					<img
 						src="{{ $profile_pic }}"
 						alt="Profile Picture"
-						class="w-4 h-4 rounded-full object-cover">
+						class="w-5 h-5 rounded-full object-cover">
 					<span class="ml-1">{{ $post->user->name ?? "[REDACTED]" }}</span>
 				</div>
+				<span class="text-gray-500 text-sm">On question: {{ $answer->question->title }}</span>
 				<span>{{ $post->creationFTime() }}</span>
 			</div>
-			<h5 class="text-lg font-semibold">{{ $answer->question->title }}</h5>
 			<p class="text-gray-700 mb-3 mt-1">{{ $post->text }}</p>
+			
 			<div class="flex flex-row justify-between space-x-6 text-gray-500 text-sm">
 				<div>
 					<i class="fa-solid fa-up-down"></i>
