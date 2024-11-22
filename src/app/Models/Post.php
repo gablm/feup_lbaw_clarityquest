@@ -64,13 +64,15 @@ class Post extends Model
         return $this->hasMany(Edition::class, 'post_id');
     }
 
-	public function creationDate() : string
+	public function creationFTime() : string
 	{
-		return explode(" ", $this->created_at)[0];
-	}
+		$date = date('Y-m-d', time());
+		$year = date('Y', );
+		$time = explode(" ", $this->created_at);
 
-	public function creationTime() : string
-	{
-		return explode(" ", $this->created_at)[1];
+		if ($date == $time[0])
+			return $this->created_at->format("H:i");
+
+		return $this->created_at->format("d/m/Y H:i");
 	}
 }

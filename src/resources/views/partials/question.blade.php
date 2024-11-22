@@ -6,37 +6,43 @@ $elevated = Auth::user()->isElevated();
 @endphp
 
 <article data-id="{{ $question->id }}">
-	<h2 class="text-4xl font-semibold">{{ $question->title }}</h2>
-	<p class="text-gray-700 my-3">{{ $post->text }}</p>
-	<div class="flex justify-between items-center">
-	<div class="flex">
-			<div class="space-x-1">
-				<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
-				<span>{{ $post->votes }}</span>
-				<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
-			</div>
-			<a href=# class="tool-link">
-				<i class="fa-solid fa-plus"></i>
-				<span class="max-sm:hidden ml-1">Comment</span>
-			</a>
-			@if ($owner == false && $post->user)
-			<a href=# class="tool-link">
-				<i class="fa-solid fa-flag"></i>
-				<span class="max-sm:hidden ml-1">Report</span>
-			</a>
-			@endif
+	<div class="flex flex-row justify-between items-center text-gray-500 text-sm mb-2">
+		<div class="flex flex-row">
+			<img
+				src="{{ $profile_pic }}"
+				alt="Profile Picture"
+				class="w-4 h-4 rounded-full object-cover">
+			<span class="ml-1">{{ $question->post->user->name ?? "[REDACTED]" }}</span>
 		</div>
+		<span>{{ $post->creationFTime() }}</span>
+	</div>
+	<h2 class="text-4xl font-semibold ml-3">{{ $question->title }}</h2>
+	<p class="text-gray-700 my-3 ml-3">{{ $post->text }}</p>
+	<div class="flex items-center">
+		<div class="space-x-1">
+			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
+			<span>{{ $post->votes }}</span>
+			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
+		</div>
+		<a href=# class="tool-link">
+			<i class="fa-solid fa-plus"></i>
+			<span class="max-sm:hidden ml-1">Comment</span>
+		</a>
+		@if ($owner == false && $post->user)
+		<a href=# class="tool-link">
+			<i class="fa-solid fa-flag"></i>
+			<span class="max-sm:hidden ml-1">Report</span>
+		</a>
+		@endif
 		@if ($owner || $elevated)
-		<div>
-			<a href=# class="tool-link">
-				<i class="fa-solid fa-pencil"></i>
-				<span class="max-md:hidden ml-1">Edit</span>
-			</a>
-			<a href=# class="tool-link text-red-500">
-				<i class="fa-solid fa-trash"></i>
-				<span class="max-md:hidden ml-1">Delete</span>
-			</a>
-		</div>
+		<a href=# class="tool-link">
+			<i class="fa-solid fa-pencil"></i>
+			<span class="max-md:hidden ml-1">Edit</span>
+		</a>
+		<a href=# class="tool-link text-red-500">
+			<i class="fa-solid fa-trash"></i>
+			<span class="max-md:hidden ml-1">Delete</span>
+		</a>
 		@endif
 	</div>
 

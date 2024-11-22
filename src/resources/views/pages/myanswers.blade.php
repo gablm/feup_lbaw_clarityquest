@@ -12,18 +12,7 @@
         @else
             <div class="space-y-4">
                 @foreach($answers as $answer)
-                    <div class="bg-white shadow-md rounded-lg p-4">
-                        <h3 class="text-xl font-semibold mb-2">Question: {{ $answer->question->title }}</h3>
-                        <p class="text-gray-700 mb-2">{{ $answer->text }}</p>
-                        <div class="text-gray-500 text-sm mb-2">
-                            <span>Score: {{ $answer->post->votes }}</span> |
-                            <span>Upvotes: {{ $answer->post->positiveVotes() }}</span> |
-                            <span>Downvotes: {{ $answer->post->negativeVotes() }}</span>
-                        </div>
-                        <div class="text-gray-500 text-sm">
-                            <span>Answered on {{ $answer->created_at->format('M d, Y') }}</span>
-                        </div>
-                    </div>
+                    @include('partials.answer-card', $answer)
                 @endforeach
             </div>
         @endif
