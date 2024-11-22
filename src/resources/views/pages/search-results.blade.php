@@ -1,24 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex flex-row">
+<div class="flex flex-row flex-grow">
+    <!-- Sidebar -->
+    @include('partials.sidebar')
 
-    <section class="bg-gray-100 px-4">
-        @include('partials.sidebar')
-    </section>
-
-    <div class="container mx-auto col-span-9 p-4">
-        <h1 class="text-2xl font-bold">Search Results</h1>
-        <p>Showing results for: <strong>{{ $query }}</strong></p>
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+        <h2 class="text-2xl font-semibold mb-4">Search Results</h2>
+        <p class="text-gray-700">Showing results for: <strong>{{ $query }}</strong></p>
 
         @if($results->isEmpty())
-            <p class="text-gray-700 mt-4">No results found.</p>
+        <p class="text-gray-700 mt-4">No results found.</p>
         @else
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                @foreach($results as $question)
-                    @include('partials.question', ['question' => $question, 'mine' => false, 'details' => true])
-                @endforeach
-            </div>
+        <div class="space-y-4 mt-4"> <!-- Vertical list format -->
+            @foreach($results as $question)
+                @include('partials.question-card', $question)
+            @endforeach
+        </div>
         @endif
     </div>
 </div>
