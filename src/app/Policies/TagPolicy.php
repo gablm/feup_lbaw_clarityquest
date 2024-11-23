@@ -2,13 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TagPolicy
 {
-	use HandlesAuthorization;
-	
     /**
      * Determine whether the user can create models.
      */
