@@ -115,7 +115,7 @@ function sendCreateTagRequest() {
 	let tagList = document.querySelector('#tag-list');
 	let text = document.querySelector('#tag-name');
 
-	sendAjaxRequest('PUT', '/tags', { text: text.value },
+	sendAjaxRequest('PUT', '/tags', { name: text.value },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
