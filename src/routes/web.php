@@ -31,7 +31,7 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
 	Route::get('/search', 'search')->name('search');
-	Route::get('/admin', 'admin')->name('search');
+	Route::get('/admin', 'admin')->name('admin');
 });
 
 // Comments

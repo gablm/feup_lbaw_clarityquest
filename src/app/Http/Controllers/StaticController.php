@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Report;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StaticController extends Controller
@@ -80,8 +81,11 @@ class StaticController extends Controller
 		return view('pages.search', ['questions' => $questions, 'users' => $users, 'query' => $query]);
 	}
 
-	public function admin(Request $request)
+	public function admin()
 	{
+		if (!Auth::check() || !Auth::user()->isElevated())
+            return redirect('/');
+
 		$users = User::all();
 
 		$reports = Report::all();
