@@ -3,15 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-use App\Models\Post;
 use App\Models\Question;
-use App\Models\Answer;
-use App\Models\Comment;
-use App\Models\Vote;
-use App\Models\Tag;
-use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class StaticController extends Controller
 {
@@ -20,7 +15,6 @@ class StaticController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    
     public function index()
     {
         $topQuestions = Question::getTopQuestions();
@@ -28,6 +22,7 @@ class StaticController extends Controller
 
         return view('pages.home', compact('topQuestions', 'latestQuestions'));
     }
+
     /**
      * Show the about page.
      *
@@ -37,8 +32,53 @@ class StaticController extends Controller
     {
         return view('pages.about');
     }
+
     public function contacts()
     {
         return view('pages.contacts');
     }
+
+	public function search(Request $request)
+	{
+		// Get the search query from the request
+		$query = $request->input('search');
+
+		// If the query is empty, return an empty result set
+		if (empty($query)) {
+			return view('pages.search-results', ['results' => [], 'query' => $query]);
+		}
+
+		$modifiedQuery = implode(
+			' | ',
+			array_map(fn($term) => $term . ':*', explode(' ', $query))
+		);
+
+		// Perform a full-text search on the Question table
+		$questions = Question::select(
+			'id',
+			'title',
+			DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank') // Compute rank based on search
+		)
+			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery]) // Match the tsvectors column
+			->orderByDesc('rank') // Order by relevance rank
+			->get();
+
+		$users = User::select(
+			'id',
+			'username',
+			'name',
+			'profile_pic',
+			DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank') // Compute rank based on search
+		)
+			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery]) // Match the tsvectors column
+			->orderByDesc('rank') // Order by relevance rank
+			->get();
+
+		// Return the search results to the view
+		return view('pages.search', ['questions' => $questions, 'users' => $users, 'query' => $query]);
+	}
+
+	public function admin(Request $request) {
+
+	}
 }

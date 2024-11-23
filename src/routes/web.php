@@ -30,6 +30,8 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
+	Route::get('/search', 'search')->name('search');
+	Route::get('/admin', 'admin')->name('search');
 });
 
 // Comments
@@ -87,6 +89,3 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-
-// Search
-Route::get('/search', [SearchController::class, 'index'])->name('search');
