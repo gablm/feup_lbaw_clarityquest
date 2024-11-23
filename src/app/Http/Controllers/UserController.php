@@ -66,7 +66,7 @@ class UserController extends Controller
 				unlink(public_path($user->profile_pic));
 
 			$file = $request->file('profile_pic');
-			$filename = time() . '_' . $user->id . $file->getExtension();
+			$filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
 			$file->move(public_path('profile_pics'), $filename);
 
 			$user->profile_pic = 'profile_pics/' . $filename;
