@@ -24,7 +24,7 @@ $comment_count = $question->comments->count();
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
 		<div class="flex flex-row space-x-2 mt-2">
-			<textarea class="auth focus:outline-none focus:shadow-outline" id="answer-text" type="textarea" name="text" required></textarea>
+			<textarea class="auth focus:outline-none focus:shadow-outline resize-none" id="answer-text" type="textarea" name="text" required></textarea>
 			<button type="submit" class="nav-main text-blue-700" onclick="sendCreateAnswerRequest()">
 				<i class="fa-solid fa-plus"></i>
 				<span class="max-sm:hidden ml-1">Add Answer</span>

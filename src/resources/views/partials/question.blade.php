@@ -21,8 +21,8 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		</a>
 		<span>{{ $post->creationFTime() }}</span>
 	</div>
-	<h2 class="text-4xl font-semibold ml-3">{{ $question->title }}</h2>
-	<p class="text-gray-700 my-3 ml-3">{{ $question->post->text }}</p>
+	<h2 class="text-4xl font-semibold pl-3 break-words">{{ $question->title }}</h2>
+	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
 	<div class="flex items-center">
 		<div class="space-x-1">
 			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
@@ -71,7 +71,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				</div>
 				<div class="mb-4">
 					<label class="auth" for="description">Description</label>
-					<textarea class="auth focus:outline-none focus:shadow-outline" id="description" type="textarea" name="description" required>{{ $question->post->text }}</textarea>
+					<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="10" id="description" type="textarea" name="description" required>{{ $question->post->text }}</textarea>
 				</div>
 				<div class="mt-4 flex space-x-2 justify-end">
 					<button class="modal-close tool-link" onclick="closeEditQuestionModal()">Cancel</button>

@@ -21,8 +21,8 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				</div>
 				<span>{{ $post->creationFTime() }}</span>
 			</div>
-			<h5 class="text-lg font-semibold">{{ $question->title }}</h5>
-			<p class="text-gray-700 mb-3 mt-1">{{ \Illuminate\Support\Str::limit($post->text, 150, '...') }}</p>
+			<h5 class="text-lg font-semibold break-words">{{ $question->title }}</h5>
+			<p class="text-gray-700 mb-3 mt-1 break-words">{{ \Illuminate\Support\Str::limit($post->text, 150, '...') }}</p>
 			<div class="flex flex-row justify-between space-x-6 text-gray-500 text-sm">
 				<div>
 					<i class="fa-solid fa-up-down"></i>

@@ -25,8 +25,6 @@ use App\Http\Controllers\SearchController;
 |
 */
 
-Route::get('/followed-tags', [TagController::class, 'followedTags'])->name('followed-tags')->middleware('auth');
-
 // Static
 Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
@@ -60,6 +58,12 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::get('/questions/{id}', 'show');
 	Route::delete('/questions/{id}', 'delete')->middleware('auth');
 	Route::patch('/questions/{id}', 'update')->middleware('auth');
+});
+
+// Tags
+Route::controller(TagController::class)->group(function () {
+	Route::get('/followed-tags', 'followedTags')->name('followed-tags')->middleware('auth');
+	Route::get('/tags/{id}', 'show');
 });
 
 // Users

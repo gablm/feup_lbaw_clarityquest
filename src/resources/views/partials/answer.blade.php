@@ -25,7 +25,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		<a class="ml-4 tag-link">Marked as correct</a>
 		@endif
 	</div>
-	<p class="text-gray-700 my-2 ml-3">{{ $post->text }}</p>
+	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex before:items-center">
 		<div class="space-x-1">
 			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
@@ -65,7 +65,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<div class="modal-content py-4 text-left px-6">
 				<p class="text-2xl font-bold mb-4">Edit Answer</p>
 				<div class="mb-4">
-					<textarea class="auth focus:outline-none focus:shadow-outline" id="text" type="textarea" name="text" required>{{ $answer->post->text }}</textarea>
+					<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text" type="textarea" name="text" required>{{ $answer->post->text }}</textarea>
 				</div>
 				<div class="mt-4 flex space-x-2 justify-end">
 					<button class="modal-close tool-link" onclick="closeEditAnswerModal()">Cancel</button>
