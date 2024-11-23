@@ -13,8 +13,6 @@ class UserController extends Controller
 {
 	/**
 	 * Show the user's profile.
-	 *
-	 * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
 	 */
 	public function profile()
 	{
@@ -24,10 +22,9 @@ class UserController extends Controller
 
 		return $this->showPublicProfile(Auth::user()->id);
 	}
+
 	/**
 	 * Show the form for editing the profile.
-	 *
-	 * @return \Illuminate\View\View
 	 */
 	public function edit()
 	{
@@ -55,35 +52,39 @@ class UserController extends Controller
 		$user->email = $request->email;
 		$user->bio = $request->bio;
 
-		if ($request->has('remove_profile_pic') && $request->remove_profile_pic) {
-			if ($user->profile_pic) {
+		if ($request->has('remove_profile_pic') && $request->remove_profile_pic)
+		{
+			if ($user->profile_pic)
+			{
 				unlink(public_path($user->profile_pic));
 				$user->profile_pic = null;
 			}
-		} elseif ($request->hasFile('profile_pic')) {
-			if ($user->profile_pic && file_exists($user->profile_pic)) {
+		} 
+		elseif ($request->hasFile('profile_pic'))
+		{
+			if ($user->profile_pic && file_exists($user->profile_pic))
 				unlink(public_path($user->profile_pic));
-			}
+
 			$file = $request->file('profile_pic');
-			$filename = time() . '_' . $file->getClientOriginalName();
+			$filename = time() . '_' . $user->id . $file->getExtension();
 			$file->move(public_path('profile_pics'), $filename);
+
 			$user->profile_pic = 'profile_pics/' . $filename;
 		}
 
-		if ($request->password) {
+		if ($request->password)
 			$user->password = Hash::make($request->password);
-		}
 
 		$user->save();
 
-		return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+		return redirect()->route('profile')
+			->with('success', 'Profile updated successfully.');
 	}
 
 	public function activity()
 	{
-		if (!Auth::check()) {
+		if (!Auth::check())
 			return redirect()->route('login');
-		}
 
 		$user = Auth::user();
 
@@ -117,7 +118,6 @@ class UserController extends Controller
 
 		return view('home', ['activities' => $allActivity]);
 	}
-
 
 	public function showPublicProfile(string $id)
 	{
