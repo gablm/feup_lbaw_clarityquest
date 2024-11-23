@@ -238,11 +238,13 @@ CREATE FUNCTION users_search_update()
 RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A') 
+			|| setweight(to_tsvector('english', NEW.name), 'B');
     END IF;
     IF TG_OP = 'UPDATE' THEN
         IF (NEW.username <> OLD.username) THEN
             NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
+				|| setweight(to_tsvector('english', NEW.name), 'B');
         END IF;
     END IF;
     RETURN NEW;
