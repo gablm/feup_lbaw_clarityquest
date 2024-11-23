@@ -77,7 +77,7 @@ function sendEditQuestionRequest() {
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
-			
+
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
@@ -88,16 +88,43 @@ function sendEditQuestionRequest() {
 function showEditQuestionModal() {
 	let question = document.querySelector('#question');
 	let modal = question.querySelector('#edit');
-	
+
 	modal.classList.remove('hidden');
 }
 
-function closeEditQuestionModal()
-{
+function closeEditQuestionModal() {
 	let question = document.querySelector('#question');
 	let modal = question.querySelector('#edit');
-	
+
 	modal.classList.add('hidden');
+}
+
+function showCreateTagModal() {
+	let modal = document.querySelector('#tag-create');
+
+	modal.classList.remove('hidden');
+}
+
+function closeCreateTagModal() {
+	let modal = document.querySelector('#tag-create');
+
+	modal.classList.add('hidden');
+}
+
+function sendCreateTagRequest() {
+	let tagList = document.querySelector('#tag-list');
+	let text = document.querySelector('#tag-name');
+
+	sendAjaxRequest('PUT', '/tags', { text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			tagList.prepend(doc.body.firstChild);
+		});
 }
 
 function sendCreateAnswerRequest() {
@@ -111,8 +138,7 @@ function sendCreateAnswerRequest() {
 	sendAjaxRequest('PUT', '/answers', { id: id, text: text.value },
 		(request) => {
 			if (request.readyState != 4) return;
-			if (request.status != 200)
-			{
+			if (request.status != 200) {
 				errorBox.classList.remove('hidden');
 				return;
 			}
@@ -127,8 +153,7 @@ function sendCreateAnswerRequest() {
 		});
 }
 
-function deleteAnswer(object)
-{
+function deleteAnswer(object) {
 	let confirmed = confirm('Are you sure you want to delete this answer? This action cannot be undone.');
 	if (confirmed == false) return;
 
@@ -136,25 +161,24 @@ function deleteAnswer(object)
 	let answer = document.querySelector('#answer[data-id="' + id + '"]');
 	let answer_count = document.querySelector('#question-answer-count');
 
-	sendAjaxRequest('DELETE', '/answers/' + id, { },
+	sendAjaxRequest('DELETE', '/answers/' + id, {},
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
 			answer.remove();
-			answer_count.textContent= answer_count.textContent - 1;
+			answer_count.textContent = answer_count.textContent - 1;
 		});
 }
 
-function deleteComment(object)
-{
+function deleteComment(object) {
 	let confirmed = confirm('Are you sure you want to delete this comment? This action cannot be undone.');
 	if (confirmed == false) return;
 
 	let id = object.getAttribute('data-id');
 	let comment = document.querySelector('#comment[data-id="' + id + '"]');
 
-	sendAjaxRequest('DELETE', '/comments/' + id, { },
+	sendAjaxRequest('DELETE', '/comments/' + id, {},
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
@@ -166,14 +190,13 @@ function deleteComment(object)
 function showEditAnswerModal(id) {
 	let answer = document.querySelector('#answer[data-id="' + id + '"]');
 	let modal = answer.querySelector('#answer-edit');
-	
+
 	modal.classList.remove('hidden');
 }
 
-function closeEditAnswerModal()
-{
+function closeEditAnswerModal() {
 	let modal = document.querySelector('#answer-edit:not(.hidden)');
-	
+
 	modal.classList.add('hidden');
 }
 
@@ -185,7 +208,7 @@ function sendEditAnswerRequest(id) {
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
-			
+
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
@@ -196,14 +219,13 @@ function sendEditAnswerRequest(id) {
 function showEditCommentModal(id) {
 	let answer = document.querySelector('#comment[data-id="' + id + '"]');
 	let modal = answer.querySelector('#comment-edit');
-	
+
 	modal.classList.remove('hidden');
 }
 
-function closeEditCommentModal()
-{
+function closeEditCommentModal() {
 	let modal = document.querySelector('#comment-edit:not(.hidden)');
-	
+
 	modal.classList.add('hidden');
 }
 
@@ -215,7 +237,7 @@ function sendEditCommentRequest(id) {
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
-			
+
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 

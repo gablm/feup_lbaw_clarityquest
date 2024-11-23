@@ -40,6 +40,15 @@ Route::controller(CommentController::class)->group(function () {
 	Route::patch('/comments/{id}', 'update')->middleware('auth');
 });
 
+// Tags
+Route::controller(TagController::class)->group(function () {
+	Route::get('/tags/{id}', 'show')->middleware('auth');
+
+	Route::put('/tags', 'create')->middleware('auth');
+	Route::delete('/tags/{id}', 'delete')->middleware('auth');
+	Route::patch('/tags/{id}', 'update')->middleware('auth');
+});
+
 // Answers
 Route::controller(AnswerController::class)->group(function () {
 	Route::get('/my-answers', 'myAnswers')->name('my-answers')->middleware('auth');
