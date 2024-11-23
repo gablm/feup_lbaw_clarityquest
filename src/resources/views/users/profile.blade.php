@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6">
+<div class="container mx-auto p-6" onload="showProfileTab('questions')">
 	<div class="p-8">
 		<div class="flex items-center justify-between mb-8">
 			<div class="flex items-center space-x-6">
@@ -54,8 +54,8 @@
 				<li class="mr-4">
 					<button
 						id="questions-tab"
-						class="tab-btn bg-blue-100 text-blue-600 border-b-2 border-blue-600 px-4 py-2 rounded-t-lg"
-						onclick="showTab('questions')">
+						class="tab-btn bg-blue-100 text-blue-600 border-b-2 border-blue-600 px-4 py-2 rounded-t-lg hover:bg-blue-200"
+						onclick="showProfileTab('questions')">
 						Posted Questions
 					</button>
 				</li>
@@ -63,7 +63,7 @@
 					<button
 						id="answers-tab"
 						class="tab-btn bg-gray-100 text-gray-600 border-b-2 border-transparent px-4 py-2 rounded-t-lg hover:bg-gray-200"
-						onclick="showTab('answers')">
+						onclick="showProfileTab('answers')">
 						Posted Answers
 					</button>
 				</li>
@@ -101,26 +101,4 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	function showTab(tab) {
-
-		document.getElementById('questions-section').classList.add('hidden');
-		document.getElementById('answers-section').classList.add('hidden');
-
-
-		document.querySelectorAll('.tab-btn').forEach(btn => {
-			btn.classList.remove('bg-blue-100', 'text-blue-600', 'border-blue-600');
-			btn.classList.add('bg-gray-100', 'text-gray-600', 'border-transparent');
-		});
-
-		document.getElementById(`${tab}-section`).classList.remove('hidden');
-		document.getElementById(`${tab}-tab`).classList.add('bg-blue-100', 'text-blue-600', 'border-blue-600');
-	}
-
-
-	document.addEventListener('DOMContentLoaded', () => showTab('questions'));
-</script>
-
-
 @endsection
