@@ -50,6 +50,23 @@ function showProfileTab(tab) {
 	elem.classList.remove('bg-gray-100', 'text-gray-600', 'border-transparent', 'hover:bg-gray-200');
 }
 
+function showAdminTab(tab) {
+	document.getElementById('reports-section').classList.add('hidden');
+	document.getElementById('users-section').classList.add('hidden');
+	document.getElementById('tags-section').classList.add('hidden');
+
+	document.querySelectorAll('.tab-btn').forEach(btn => {
+		btn.classList.remove('bg-blue-100', 'text-blue-600', 'border-blue-600', 'hover:bg-blue-200');
+		btn.classList.add('bg-gray-100', 'text-gray-600', 'border-transparent', 'hover:bg-gray-200');
+	});
+
+	document.getElementById(`${tab}-section`).classList.remove('hidden');
+
+	let elem = document.getElementById(`${tab}-tab`);
+	elem.classList.add('bg-blue-100', 'text-blue-600', 'border-blue-600', 'hover:bg-blue-200');
+	elem.classList.remove('bg-gray-100', 'text-gray-600', 'border-transparent', 'hover:bg-gray-200');
+}
+
 function sendEditQuestionRequest() {
 	let question = document.querySelector('#question');
 	let id = question.getAttribute('data-id');

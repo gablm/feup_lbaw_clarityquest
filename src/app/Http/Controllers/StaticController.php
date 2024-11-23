@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Question;
+use App\Models\Report;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -78,7 +80,18 @@ class StaticController extends Controller
 		return view('pages.search', ['questions' => $questions, 'users' => $users, 'query' => $query]);
 	}
 
-	public function admin(Request $request) {
+	public function admin(Request $request)
+	{
+		$users = User::all();
 
+		$reports = Report::all();
+		$tags = Tag::all();
+
+		// Pass data to the view
+		return view('pages.admin', [
+			'users' => $users,
+			'reports' => $reports,
+			'tags' => $tags,
+		]);
 	}
 }
