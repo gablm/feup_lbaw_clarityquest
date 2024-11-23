@@ -7,6 +7,6 @@ enum Permission: string
 {
     case Blocked = 'BLOCKED';
     case Regular = 'REGULAR';
-    case Moderator = 'MODDERATOR';
+    case Moderator = 'MODERATOR';
 	case Admin = 'ADMIN';
 }

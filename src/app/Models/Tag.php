@@ -10,9 +10,6 @@ class Tag extends Model
 {
     use HasFactory;
 
-    // Define the table associated with the model
-    protected $table = 'tags';
-
     // Define the primary key for the model
     protected $primaryKey = 'id';
 
@@ -25,7 +22,7 @@ class Tag extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'name'
     ];
 
     /**
@@ -63,7 +60,7 @@ class Tag extends Model
         return $this->belongsToMany(User::class, 'followtag', 'tag_id', 'user_id');
     }
    
-      /**
+    /**
      * Get all questions associated with the tag. its defined for
      * post but app logic should ensure its only questions
      */

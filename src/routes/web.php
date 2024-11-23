@@ -42,6 +42,7 @@ Route::controller(CommentController::class)->group(function () {
 
 // Tags
 Route::controller(TagController::class)->group(function () {
+	Route::get('/followed-tags', 'followedTags')->name('followed-tags')->middleware('auth');
 	Route::get('/tags/{id}', 'show')->middleware('auth');
 
 	Route::put('/tags', 'create')->middleware('auth');
@@ -69,12 +70,6 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::get('/questions/{id}', 'show');
 	Route::delete('/questions/{id}', 'delete')->middleware('auth');
 	Route::patch('/questions/{id}', 'update')->middleware('auth');
-});
-
-// Tags
-Route::controller(TagController::class)->group(function () {
-	Route::get('/followed-tags', 'followedTags')->name('followed-tags')->middleware('auth');
-	Route::get('/tags/{id}', 'show');
 });
 
 // Users

@@ -25,7 +25,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		<a class="ml-4 tag-link">Marked as correct</a>
 		@endif
 	</div>
-	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
+	<p class="text-gray-700 pb-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex before:items-center">
 		<div class="space-x-1">
 			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
