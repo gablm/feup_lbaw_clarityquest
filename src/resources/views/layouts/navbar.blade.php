@@ -24,24 +24,29 @@ $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('im
 			</li>
 			@if (Auth::check())
 			<li class="relative">
-				<a href="#" id="inboxDropdown" class="nav">
-					<button class="nav-secondary">
-						<i class="fa-solid fa-envelope"></i>
-						<span class="max-sm:hidden">Inbox</span>
-					</button>
-				</a>
+				<div class="relative inline-block text-left">
+					<div>
+						<button class="nav-secondary" onclick="toggleNotificationDropdown()">
+							<i class="fa-solid fa-envelope"></i>
+							<span class="max-sm:hidden">Inbox</span>
+						</button>
+					</div>
+					<div id="notification-dropdown" class="hidden absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+						<h1 class="block px-4 pb-2 pt-3 text-md font-bold">Notifications</h1>
+					</div>
+				</div>
 			</li>
 			<li>
 				<div class="relative inline-block text-left">
 					<div>
-						<button href="{{ url('/profile') }}" class="nav" onclick="toggleUserDropdown()">
+						<button class="nav" onclick="toggleUserDropdown()">
 							<img
 								src="{{ $profile_pic }}"
 								alt="Profile Picture"
-								class="w-10 h-10 rounded-full object-cover">
+								class="ml-1 w-10 h-10 rounded-full object-cover">
 						</button>
 					</div>
-					<div id="user-dropdown" class="hidden absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+					<div id="user-dropdown" class="hidden absolute right-0 z-10 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
 						<div>
 							<a href="{{ route('profile') }}" class="block px-4 pb-2 pt-3 text-sm text-gray-700 hover:bg-gray-200 hover:rounded-t-md">Profile</a>
 							@if ($user->isElevated())

@@ -18,7 +18,18 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function toggleUserDropdown() {
+	let otherDropdown = document.querySelector('#notification-dropdown');
+	otherDropdown.classList.add('hidden');
+
 	let dropdown = document.querySelector('#user-dropdown');
+	dropdown.classList.toggle('hidden');
+}
+
+function toggleNotificationDropdown() {
+	let otherDropdown = document.querySelector('#user-dropdown');
+	otherDropdown.classList.add('hidden');
+
+	let dropdown = document.querySelector('#notification-dropdown');
 	dropdown.classList.toggle('hidden');
 }
 
