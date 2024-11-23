@@ -11,98 +11,97 @@ use App\Providers\RouteServiceProvider;
 
 class UserController extends Controller
 {
-    /**
-     * Show the user's profile.
-     *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     */
-    public function profile()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-		
+	/**
+	 * Show the user's profile.
+	 *
+	 * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function profile()
+	{
+		if (!Auth::check()) {
+			return redirect()->route('login');
+		}
+
 		return $this->showPublicProfile(Auth::user()->id);
-    }
-    /**
-     * Show the form for editing the profile.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function edit()
-    {
-        return view('users.edit');
-    }
+	}
+	/**
+	 * Show the form for editing the profile.
+	 *
+	 * @return \Illuminate\View\View
+	 */
+	public function edit()
+	{
+		return view('users.edit');
+	}
 
-    /**
-     * Update the user's profile.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request)
-    {
-        $user = Auth::user();
+	/**
+	 * Update a user's profile.
+	 */
+	public function update(Request $request, string $id)
+	{
+		$user = User::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'bio' => 'nullable|string|max:1000',
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
+		$this->authorize('update', $user);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->bio = $request->bio;
+		$request->validate([
+			'name' => 'required|string|max:255',
+			'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+			'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+			'bio' => 'nullable|string|max:1000',
+			'password' => 'nullable|string|min:8|confirmed',
+		]);
 
-        if ($request->has('remove_profile_pic') && $request->remove_profile_pic) {
-            if ($user->profile_pic) {
-                unlink(public_path($user->profile_pic));
-                $user->profile_pic = null;
-            }
-        } elseif ($request->hasFile('profile_pic')) {
-            if ($user->profile_pic && file_exists($user->profile_pic)) {
-                unlink(public_path($user->profile_pic));
-            }
-            $file = $request->file('profile_pic');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('profile_pics'), $filename);
-            $user->profile_pic = 'profile_pics/' . $filename;
-        }
+		$user->name = $request->name;
+		$user->email = $request->email;
+		$user->bio = $request->bio;
 
-        if ($request->password) {
-            $user->password = Hash::make($request->password);
-        }
+		if ($request->has('remove_profile_pic') && $request->remove_profile_pic) {
+			if ($user->profile_pic) {
+				unlink(public_path($user->profile_pic));
+				$user->profile_pic = null;
+			}
+		} elseif ($request->hasFile('profile_pic')) {
+			if ($user->profile_pic && file_exists($user->profile_pic)) {
+				unlink(public_path($user->profile_pic));
+			}
+			$file = $request->file('profile_pic');
+			$filename = time() . '_' . $file->getClientOriginalName();
+			$file->move(public_path('profile_pics'), $filename);
+			$user->profile_pic = 'profile_pics/' . $filename;
+		}
 
-        $user->save();
+		if ($request->password) {
+			$user->password = Hash::make($request->password);
+		}
 
-        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
-    }
+		$user->save();
 
-    public function activity()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+		return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+	}
 
-        $user = Auth::user();
+	public function activity()
+	{
+		if (!Auth::check()) {
+			return redirect()->route('login');
+		}
 
-        $comments = $user->commentsOnPosts()->get()->map(function ($comment) {
-            $comment->activity_type = 'comment';
-            return $comment;
-        });
+		$user = Auth::user();
 
-        $answers = $user->answersToQuestions()->get()->map(function ($answer) {
-            $answer->activity_type = 'answer';
-            return $answer;
-        });
+		$comments = $user->commentsOnPosts()->get()->map(function ($comment) {
+			$comment->activity_type = 'comment';
+			return $comment;
+		});
 
-        $votes = $user->votesOnPosts()->get()->map(function ($vote) {
-            $vote->activity_type = 'vote';
-            return $vote;
-        });
-        /*
+		$answers = $user->answersToQuestions()->get()->map(function ($answer) {
+			$answer->activity_type = 'answer';
+			return $answer;
+		});
+
+		$votes = $user->votesOnPosts()->get()->map(function ($vote) {
+			$vote->activity_type = 'vote';
+			return $vote;
+		});
+		/*
         $medals = collect([
             ['type' => 'posts_upvoted', 'count' => $user->postsUpvotedMedals(), 'created_at' => $user->medals->updated_at],
             ['type' => 'posts_created', 'count' => $user->postsCreatedMedals(), 'created_at' => $user->medals->updated_at],
@@ -114,42 +113,47 @@ class UserController extends Controller
         });*/
 
 
-        $allActivity = $comments->merge($answers)->merge($votes)->sortByDesc('created_at')->take(10);
+		$allActivity = $comments->merge($answers)->merge($votes)->sortByDesc('created_at')->take(10);
 
-        return view('home', ['activities' => $allActivity]);
-    }
+		return view('home', ['activities' => $allActivity]);
+	}
 
-    
-    public function showPublicProfile($id)
-    {
-        // Fetch the user by ID
-        $user = User::findOrFail($id);
 
-        // Fetch related data
-        $questions = $user->questionsCreated()->latest()->get();
-        $answers = $user->answersPosted()->latest()->get();
+	public function showPublicProfile(string $id)
+	{
+		// Fetch the user by ID
+		$user = User::findOrFail($id);
 
-        // Pass data to the view
-        return view('users.profile', [
-            'user' => $user,
-            'questions' => $questions,
-            'answers' => $answers,
-        ]);
-    }
+		// Fetch related data
+		$questions = $user->questionsCreated()->latest()->get();
+		$answers = $user->answersPosted()->latest()->get();
+
+		// Pass data to the view
+		return view('users.profile', [
+			'user' => $user,
+			'questions' => $questions,
+			'answers' => $answers,
+		]);
+	}
 
 	/**
-     * Delete the user.
-     */
-	public function delete(Request $request)
+	 * Delete a user.
+	 */
+	public function delete(Request $request, string $id)
 	{
-		$user = Auth::user();
+		$user = User::findOrFail($id);
+
+		$this->authorize('delete', $user);
+
+		$curr = Auth::user();
 		$user->delete();
 
-		Auth::logout();
-		
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect(RouteServiceProvider::HOME)
-            ->withSuccess('You have logged out successfully!');
+		if ($curr->id == $user->id) {
+			Auth::logout();
+			$request->session()->invalidate();
+			$request->session()->regenerateToken();
+			return redirect(RouteServiceProvider::HOME)
+				->withSuccess('You have logged out successfully!');
+		}
 	}
 }

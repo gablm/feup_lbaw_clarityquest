@@ -4,9 +4,9 @@
 <div class="container mx-auto p-4">
 	<div class="bg-white shadow-md rounded-lg p-6">
 		<h2 class="text-2xl font-semibold mb-4">Edit Profile</h2>
-		<form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+		<form method="POST" action="{{ url('/users/' . Auth::user()->id) }}" enctype="multipart/form-data">
 			@csrf
-			@method('PUT')
+			@method('PATCH')
 
 			@if ($errors->any())
 			<div class="mb-4">

@@ -66,17 +66,17 @@ Route::controller(QuestionController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
-	Route::put('/profile', 'update')->name('profile.update')->middleware('auth');
-	Route::delete('/profile', 'delete')->name('profile.destroy')->middleware('auth');
-
-	Route::get('/user/{id}', 'showPublicProfile')->name('public.profile');
+	
+	Route::get('/users/{id}', 'showPublicProfile');
+	Route::patch('/users/{id}', 'update')->middleware('auth');
+	Route::delete('/users/{id}', 'delete')->middleware('auth');
 });
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
+    Route::post('/logout', 'logout')->name('logout');
 });
 
 Route::controller(RegisterController::class)->group(function () {

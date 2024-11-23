@@ -37,7 +37,7 @@
 						Log Out
 					</button>
 				</form>
-				<form method="POST" action="{{ route('profile.destroy') }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+				<form method="POST" action="{{ url('/users/' . Auth::user()->id) }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
 					@csrf
 					@method('DELETE')
 					<button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
