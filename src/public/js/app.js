@@ -17,6 +17,11 @@ function sendAjaxRequest(method, url, data, handler) {
 	request.send(encodeForAjax(data));
 }
 
+function toggleUserDropdown() {
+	let dropdown = document.querySelector('#user-dropdown');
+	dropdown.classList.toggle('hidden');
+}
+
 function sendEditQuestionRequest() {
 	let question = document.querySelector('#question');
 	let id = question.getAttribute('data-id');

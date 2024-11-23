@@ -1,48 +1,69 @@
+@php
+
+$user = Auth::user();
+$profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
+
+@endphp
+
 <nav class="fixed w-screen bg-white z-0 shadow-lg px-4">
-    <div class="flex justify-between items-center">
-        <a href="{{ url('/') }}" class="flex items-center">
-            <img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
-        </a>
-        <form class="flex items-center w-[30vw] space-x-1" action="{{ route('search') }}"  method="GET">
-            <input type="search" name='search' placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}" >
-            <button type="submit" class="nav-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-        </form>
-        <ul class="flex items-center space-x-3">
-            <li>
-                <a href="{{ url('/') }}">
-                    <button class="nav-secondary">Home</button>
-                </a>
-            </li>
-            @if (Auth::check())
-            <li class="relative">
-                <a href="#" id="inboxDropdown" class="nav">
-                    <button class="nav-secondary">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span class="max-sm:hidden">Inbox</span>
-                    </button>
-                </a>
-            </li>
-            <li>
-                <a href="{{ url('/profile') }}" class="nav">
-					<img
-					@if (Auth::user()->profile_pic)
-						src="{{ asset(Auth::user()->profile_pic) }}"
-					@else
-						src="{{ url('img/default_pic.png') }}"
-					@endif
-						alt="Profile Picture"
-						class="w-10 h-10 rounded-full object-cover">
-                </a>
-            </li>
-            @else
-            <li>
-                <a href="{{ url('/login') }}">
-                    <button class="nav-main">Login</button>
-                </a>
-            </li>
-            @endif
-        </ul>
-    </div>
+	<div class="flex justify-between items-center">
+		<a href="{{ url('/') }}" class="flex items-center">
+			<img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
+		</a>
+		<form class="flex items-center w-[30vw] space-x-1" action="{{ route('search') }}" method="GET">
+			<input type="search" name='search' placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}">
+			<button type="submit" class="nav-search">
+				<i class="fa-solid fa-magnifying-glass"></i>
+			</button>
+		</form>
+		<ul class="flex items-center space-x-3">
+			<li>
+				<a href="{{ url('/') }}">
+					<button class="nav-secondary">Home</button>
+				</a>
+			</li>
+			@if (Auth::check())
+			<li class="relative">
+				<a href="#" id="inboxDropdown" class="nav">
+					<button class="nav-secondary">
+						<i class="fa-solid fa-envelope"></i>
+						<span class="max-sm:hidden">Inbox</span>
+					</button>
+				</a>
+			</li>
+			<li>
+				<div class="relative inline-block text-left">
+					<div>
+						<button href="{{ url('/profile') }}" class="nav" onclick="toggleUserDropdown()">
+							<img
+								src="{{ $profile_pic }}"
+								alt="Profile Picture"
+								class="w-10 h-10 rounded-full object-cover">
+						</button>
+					</div>
+					<div id="user-dropdown" class="hidden absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+						<div>
+							<a href="{{ route('profile') }}" class="block px-4 pb-2 pt-3 text-sm text-gray-700 hover:bg-gray-200 hover:rounded-t-md">Profile</a>
+							@if ($user->isElevated())
+							<a href="{{ route('admin') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Admin Panel</a>
+							@endif
+						</div>
+						<form method="POST" action="{{ route('logout') }}">
+							@csrf
+							<a href="#" class="block px-4 pt-2 pb-3 text-sm text-red-500 hover:bg-gray-200 hover:rounded-b-md" onclick="this.parentElement.submit()">
+								Log Out
+							</a>
+						</form>
+					</div>
+				</div>
+			</li>
+			@else
+			<li>
+				<a href="{{ url('/login') }}">
+					<button class="nav-main">Login</button>
+				</a>
+			</li>
+			@endif
+		</ul>
+	</div>
 </nav>

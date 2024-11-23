@@ -29,7 +29,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<span>{{ $post->votes }}</span>
 			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
 		</div>
-		@if ($owner == false && $post->user)
+		@if ($owner == false && $post->user && Auth::check())
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
 			<span class="ml-1">Report</span>
