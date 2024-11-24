@@ -22,7 +22,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
 			</div>
 		</a>
-		<span>{{ $post->creationFTime() }}{{$is_edited}}</span>
+		<span>{{ $post->creationFTime() }} {{ $is_edited }}</span>
 	</div>
 	<h2 class="text-4xl font-semibold pl-3 break-words">{{ $question->title }}</h2>
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
@@ -33,7 +33,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
 		</div>
 		@if (Auth::check())
-		<button class="tool-link">
+		<button onclick="showCreateCommentModal({{ $question->id }})" class="tool-link">
 			<i class="fa-solid fa-plus"></i>
 			<span class="max-sm:hidden ml-1">Comment</span>
 		</button>

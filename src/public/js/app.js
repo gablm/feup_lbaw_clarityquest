@@ -248,3 +248,39 @@ function sendEditCommentRequest(id) {
 		});
 	closeEditCommentModal();
 }
+
+function showCreateCommentModal(id) {
+	let modal = document.querySelector('#add-comment');
+	modal.setAttribute('data-id', id);
+
+	modal.classList.remove('hidden');
+}
+
+function closeCreateCommentModal() {
+	let modal = document.querySelector('#add-comment');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	text.value = "";
+}
+
+function sendCreateCommentRequest() {
+	let modal = document.querySelector('#add-comment');
+	let text = modal.querySelector('#text');
+
+	let id = modal.getAttribute('data-id');
+	let list = document.querySelector(`#comment-list-${id}`)
+
+	sendAjaxRequest('PUT', '/comments/', { id: id, text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			list.prepend(doc.body.firstChild);
+			modal.classList.add('hidden');
+			text.value = "";
+		});
+}

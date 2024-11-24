@@ -14,13 +14,11 @@ $comment_count = $question->comments->count();
 	<div data-id="{{ $question->id }}" class="flex flex-col container mx-auto p-8">
 		@include('partials.question', $question)
 
-		@if ($comment_count)
-		<div class="py-4 pl-4">
+		<div id="comment-list-{{ $question->id }}" class="pt-2 pl-4">
 			@foreach ($question->comments as $comment)
 			@include('partials.comment', $comment)
 			@endforeach
 		</div>
-		@endif
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
 		<div class="flex flex-row space-x-2 mt-2">
@@ -37,6 +35,19 @@ $comment_count = $question->comments->count();
 			@foreach ($question->answers as $answer)
 			@include('partials.answer', $answer)
 			@endforeach
+		</div>
+		<div id="add-comment" class="hidden modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+			<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+			<div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+				<div class="modal-content py-4 text-left px-6">
+					<p class="text-2xl font-bold mb-4">Add Comment</p>
+					<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text" type="textarea" name="text" required></textarea>
+					<div class="mt-4 flex space-x-2 justify-end">
+						<button class="modal-close tool-link" onclick="closeCreateCommentModal()">Cancel</button>
+						<button class="nav-main" onclick="sendCreateCommentRequest()">Comment</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

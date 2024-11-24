@@ -36,6 +36,8 @@ Route::controller(StaticController::class)->group(function () {
 
 // Comments
 Route::controller(CommentController::class)->group(function () {
+	Route::put('/comments', 'create')->middleware('auth');
+	
 	Route::delete('/comments/{id}', 'delete')->middleware('auth');
 	Route::patch('/comments/{id}', 'update')->middleware('auth');
 });
