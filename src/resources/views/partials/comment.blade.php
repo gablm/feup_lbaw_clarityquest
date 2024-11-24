@@ -28,9 +28,9 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex items-center">
 		<div class="space-x-1">
-			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
-			<span>{{ $post->votes }}</span>
-			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
+			<button onclick="sendVoteRequest({{ $comment->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
+			<span id="votes-{{ $comment->id }}" class="vote-count">{{ $comment->post->votes }}</span>
+			<button onclick="sendVoteRequest({{ $comment->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
 		</div>
 		@if ($owner == false && $post->user && Auth::check())
 		<a href=# class="tool-link">

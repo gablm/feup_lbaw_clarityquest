@@ -248,7 +248,7 @@ function sendCreateCommentRequest() {
 	let text = modal.querySelector('#text');
 
 	let id = modal.getAttribute('data-id');
-	let list = document.querySelector(`#comment-list-${id}`)
+	let list = document.querySelector(`#comment-list-${id}`);
 
 	sendAjaxRequest('PUT', '/comments/', { id: id, text: text.value },
 		(request) => {
@@ -291,19 +291,15 @@ function sendCreateTagRequest() {
 			closeCreateTagModal();
 		});
 }
- 
-function sendVoteRequest(positive) { let post = event.target.closest('.post'); let postId = post.getAttribute('data-id');
-	sendAjaxRequest('POST', '/questions/' + postId + '/votes', { positive: positive },
+
+function sendVoteRequest(id, positive) {
+	let count = document.querySelector(`#votes-${id}`);
+
+	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? 1 : -1 },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
-	
-			let voteCount = post.querySelector('.vote-count');
-			voteCount.textContent = parseInt(voteCount.textContent) + (positive ? 1 : -1);
+
+			count.textContent = JSON.parse(request.responseText).votes;
 		});
-	}
-
-function sendUpvoteRequest() { sendVoteRequest(true); }
-
-function sendDownvoteRequest() { sendVoteRequest(false); }
-
+}
