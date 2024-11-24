@@ -188,61 +188,60 @@ function deleteComment(object) {
 		});
 }
 
-function showEditAnswerModal(id) {
-	let answer = document.querySelector('#answer[data-id="' + id + '"]');
-	let modal = answer.querySelector('#answer-edit');
-
-	modal.classList.remove('hidden');
-}
-
-function closeEditAnswerModal() {
-	let modal = document.querySelector('#answer-edit:not(.hidden)');
-
-	modal.classList.add('hidden');
-}
-
-function sendEditAnswerRequest(id) {
-	let answer = document.querySelector('#answer[data-id="' + id + '"]');
-	let text = answer.querySelector('#text');
-
-	sendAjaxRequest('PATCH', '/answers/' + id, { text: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			answer.parentElement.replaceChild(doc.body.firstChild, answer);
-		});
-	closeEditAnswerModal();
-}
-
-function showEditCommentModal(id, content) {
-	let modal = document.querySelector('#edit-comment');
+function showEditPostModal(type, id, content) {
+	let modal = document.querySelector('#edit-post');
 	modal.setAttribute('data-id', id);
+	modal.setAttribute('data-type', type);
 
 	let text = modal.querySelector('#text');
 	text.value = content;
+
+	let title = modal.querySelector('#edit-title');
+	switch (type) {
+		case 'comment':
+			title.value = 'Edit Comment';
+			break;
+		case 'answer':
+			title.value = 'Edit Answer';
+			break;
+	}
 
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
 }
 
-function closeEditCommentModal() {
-	let modal = document.querySelector('#edit-comment');
+function closeEditPostModal() {
+	let modal = document.querySelector('#edit-post');
+	let text = modal.querySelector('#text');
+	let title = modal.querySelector('#edit-title');
 
 	modal.removeAttribute('data-id');
+	modal.removeAttribute('data-type');
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
 	text.value = "";
+	title.value = "Edit";
 }
 
-function sendEditCommentRequest(id) {
-	let answer = document.querySelector('#comment[data-id="' + id + '"]');
-	let text = answer.querySelector('#text');
+function sendEditPostRequest() {
+	let modal = document.querySelector('#edit-post');
+	let text = modal.querySelector('#text');
+	let id = modal.getAttribute('data-id');
+	let type = modal.getAttribute('data-type');
+	let route, post;
 
-	sendAjaxRequest('PATCH', '/comments/' + id, { text: text.value },
+	switch (type) {
+		case 'comment':
+			post = document.querySelector('#comment[data-id="' + id + '"]');
+			route = '/comments/';
+			break;
+		case 'answer':
+			post = document.querySelector('#answer[data-id="' + id + '"]');
+			route = '/answers/';
+			break;
+	}
+
+	sendAjaxRequest('PATCH', route + id, { text: text.value },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
@@ -250,9 +249,9 @@ function sendEditCommentRequest(id) {
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
-			answer.parentElement.replaceChild(doc.body.firstChild, answer);
+			post.parentElement.replaceChild(doc.body.firstChild, post);
+			closeEditPostModal();
 		});
-	closeEditCommentModal();
 }
 
 function showCreateCommentModal(id) {

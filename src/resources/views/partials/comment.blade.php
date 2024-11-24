@@ -39,7 +39,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 		</a>
 		@endif
 		@if ($owner || $elevated)
-		<button onclick="showEditCommentModal({{ $post->id }}, '{{ $post->text }}')" class="tool-link">
+		<button onclick="showEditPostModal('comment', {{ $post->id }}, '{{ $post->text }}')" class="tool-link">
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-sm:hidden ml-1">Edit</span>
 		</button>

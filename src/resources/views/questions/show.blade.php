@@ -49,17 +49,17 @@ $comment_count = $question->comments->count();
 				</div>
 			</div>
 		</div>
-		<div id="edit-comment" class="hidden modal modal-style">
+		<div id="edit-post" class="hidden modal modal-style">
 			<div class="modal-overlay modal-bg"></div>
 			<div class="modal-container modal-container">
 				<div class="modal-content py-4 text-left px-6">
-					<p class="text-2xl font-bold mb-4">Edit Comment</p>
+					<p id="edit-title" class="text-2xl font-bold mb-4">Edit ??</p>
 					<div class="mb-4">
 						<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text" type="textarea" name="text" required></textarea>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" onclick="closeEditCommentModal()">Cancel</button>
-						<button class="nav-main" onclick="sendEditCommentRequest()">Save</button>
+						<button class="modal-close tool-link" onclick="closeEditPostModal()">Cancel</button>
+						<button class="nav-main" onclick="sendEditPostRequest()">Save</button>
 					</div>
 				</div>
 			</div>
