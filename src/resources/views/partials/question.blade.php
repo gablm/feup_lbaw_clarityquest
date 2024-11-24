@@ -63,6 +63,26 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		@endif
 		@endif
 	</div>
+	<div id="edit" class="hidden modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+		<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+		<div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+			<div class="modal-content py-4 text-left px-6">
+				<p class="text-2xl font-bold mb-4">Edit</p>
+				<div class="mb-4">
+					<label class="auth" for="title">Title</label>
+					<input class="auth focus:outline-none focus:shadow-outline" id="title" type="text" name="title" value="{{ $question->title }}" required>
+				</div>
+				<div class="mb-4">
+					<label class="auth" for="description">Description</label>
+					<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="10" id="description" type="textarea" name="description" required>{{ $question->post->text }}</textarea>
+				</div>
+				<div class="mt-4 flex space-x-2 justify-end">
+					<button class="modal-close tool-link" onclick="closeEditQuestionModal()">Cancel</button>
+					<button class="nav-main" onclick="sendEditQuestionRequest()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	@if ($question->tags->count())
 	<div class="mt-2">
 		@foreach($question->tags as $tag)
