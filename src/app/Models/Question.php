@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -9,8 +10,6 @@ use Illuminate\Support\Facades\DB;
 class Question extends Model
 {
     use HasFactory;
-
-	public $timestamps = false;
 
     protected $fillable = [
         'title',
@@ -43,12 +42,14 @@ class Question extends Model
 
     /**
      * Get the tags for the question.
+     * Get the tags for the question.
      */
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'posttag', 'post_id', 'tag_id');
     }
 
+  
     /**
      * Get the top 10 questions sorted by score.
      *
@@ -62,6 +63,7 @@ class Question extends Model
             ->limit(10)
             ->get();
     }
+    
     /**
      * Get the latest 10 questions sorted by creation date.
      *
@@ -69,11 +71,13 @@ class Question extends Model
      */
     public static function getLatestQuestions()
     {
+      
         return self::select('questions.*')
             ->join('posts', 'questions.id', '=', 'posts.id')
             ->orderByDesc('posts.created_at')
             ->limit(10)
             ->get();
     }
+    
     
 }
