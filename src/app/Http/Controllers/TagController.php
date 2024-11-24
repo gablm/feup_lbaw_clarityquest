@@ -36,7 +36,7 @@ class TagController extends Controller
      */
     public function create(Request $request)
     {
-		$this->authorize('create');
+		//$this->authorize('create');
 
         $request->validate([
 			'name' => 'required|string|max:64'
@@ -46,7 +46,7 @@ class TagController extends Controller
 			'name' => $request->name
 		]);
 
-        return view('tags.show', [
+        return view('partials.tag-card', [
 			'tag' => $tag
 		]);
     }

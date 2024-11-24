@@ -82,8 +82,8 @@ function sendEditQuestionRequest() {
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
 			question.parentElement.replaceChild(doc.body.firstChild, question);
+			closeEditQuestionModal();
 		});
-	closeEditQuestionModal();
 }
 
 function showEditQuestionModal() {
@@ -98,34 +98,6 @@ function closeEditQuestionModal() {
 	let modal = question.querySelector('#edit');
 
 	modal.classList.add('hidden');
-}
-
-function showCreateTagModal() {
-	let modal = document.querySelector('#tag-create');
-
-	modal.classList.remove('hidden');
-}
-
-function closeCreateTagModal() {
-	let modal = document.querySelector('#tag-create');
-
-	modal.classList.add('hidden');
-}
-
-function sendCreateTagRequest() {
-	let tagList = document.querySelector('#tag-list');
-	let text = document.querySelector('#tag-name');
-
-	sendAjaxRequest('PUT', '/tags', { name: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			tagList.prepend(doc.body.firstChild);
-		});
 }
 
 function sendCreateAnswerRequest() {
@@ -290,18 +262,49 @@ function sendCreateCommentRequest() {
 			closeCreateCommentModal();
 		});
 }
- 
-function sendVoteRequest(positive) { let post = event.target.closest('.post'); let postId = post.getAttribute('data-id');
+
+function showCreateTagModal() {
+	let modal = document.querySelector('#tag-create');
+
+	modal.classList.remove('hidden');
+}
+
+function closeCreateTagModal() {
+	let modal = document.querySelector('#tag-create');
+
+	modal.classList.add('hidden');
+}
+
+function sendCreateTagRequest() {
+	let tagList = document.querySelector('#tag-list');
+	let text = document.querySelector('#tag-name');
+
+	sendAjaxRequest('PUT', '/tags', { name: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			tagList.prepend(doc.body.firstChild);
+			closeCreateTagModal();
+		});
+}
+
+function sendVoteRequest(positive) {
+	let post = event.target.closest('.post'); let postId = post.getAttribute('data-id');
 	sendAjaxRequest('POST', '/questions/' + postId + '/votes', { positive: positive },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
-	
+
 			let voteCount = post.querySelector('.vote-count');
 			voteCount.textContent = parseInt(voteCount.textContent) + (positive ? 1 : -1);
 		});
-	}
+}
 
-	function sendUpvoteRequest() { sendVoteRequest(true); }
+function sendUpvoteRequest() { sendVoteRequest(true); }
 
 function sendDownvoteRequest() { sendVoteRequest(false); }
+
