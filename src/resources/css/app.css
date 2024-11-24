@@ -71,7 +71,7 @@
 		@apply fixed w-full h-full top-0 left-0 items-center justify-center;
 	}
 
-	div.modal-container {
+	div.modal-cont {
 		@apply bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto;
 	}
 }

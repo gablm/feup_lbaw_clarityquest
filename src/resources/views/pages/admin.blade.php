@@ -33,7 +33,7 @@
 			</ul>
 		</div>
 
-		<div id="reports-section" class="tab-content hidden">
+		<div id="reports-section" class="tab-content">
 			@if($reports->isEmpty())
 			<p class="pl-4 text-gray-700">No reposts! YAY</p>
 			@else
@@ -58,7 +58,7 @@
 			</div>
 			@endif
 		</div>
-		<div id="tags-section" class="tab-content">
+		<div id="tags-section" class="tab-content hidden">
 			<button onclick="showCreateTagModal()" class="ml-4 mb-4 nav-main">
 				<i class="fa-solid fa-plus"></i>
 				<span class="max-sm:hidden ml-1">Create</span>
@@ -78,15 +78,15 @@
 					</div>
 				</div>
 			</div>
-			@if($tags->isEmpty())
-			<p class="pl-4 text-gray-700">No tags found.</p>
-			@else
 			<div id="tag-list" class="space-y-4">
+				@if($tags->isEmpty())
+				<p class="pl-4 text-gray-700">No tags found.</p>
+				@endif
 				@foreach($tags as $tag)
 				@include('partials.tag-card', $tag)
 				@endforeach
 			</div>
-			@endif
+
 		</div>
 	</div>
 </div>
