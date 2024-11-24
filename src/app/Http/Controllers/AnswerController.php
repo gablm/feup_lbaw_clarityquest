@@ -18,9 +18,8 @@ class AnswerController extends Controller
      */
     public function myAnswers()
     {
-        if (!Auth::check()) {
+        if (!Auth::check())
             return redirect()->route('login');
-        }
 
         $user = Auth::user();
         $answers = $user->answersPosted()->with('question')->get();
