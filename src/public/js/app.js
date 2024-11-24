@@ -154,12 +154,8 @@ function sendCreateAnswerRequest() {
 		});
 }
 
-<<<<<<< Updated upstream
 function deleteAnswer(object) {
-=======
-function deleteAnswer(object)
-{
->>>>>>> Stashed changes
+
 	let confirmed = confirm('Are you sure you want to delete this answer? This action cannot be undone.');
 	if (confirmed == false) return;
 
