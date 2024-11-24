@@ -155,7 +155,6 @@ function sendCreateAnswerRequest() {
 }
 
 function deleteAnswer(object) {
-
 	let confirmed = confirm('Are you sure you want to delete this answer? This action cannot be undone.');
 	if (confirmed == false) return;
 
@@ -219,17 +218,24 @@ function sendEditAnswerRequest(id) {
 	closeEditAnswerModal();
 }
 
-function showEditCommentModal(id) {
-	let answer = document.querySelector('#comment[data-id="' + id + '"]');
-	let modal = answer.querySelector('#comment-edit');
+function showEditCommentModal(id, content) {
+	let modal = document.querySelector('#edit-comment');
+	modal.setAttribute('data-id', id);
+
+	let text = modal.querySelector('#text');
+	text.value = content;
 
 	modal.classList.remove('hidden');
+	modal.classList.add('flex');
 }
 
 function closeEditCommentModal() {
-	let modal = document.querySelector('#comment-edit:not(.hidden)');
+	let modal = document.querySelector('#edit-comment');
 
+	modal.removeAttribute('data-id');
 	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
 }
 
 function sendEditCommentRequest(id) {
@@ -254,6 +260,7 @@ function showCreateCommentModal(id) {
 	modal.setAttribute('data-id', id);
 
 	modal.classList.remove('hidden');
+	modal.classList.add('flex');
 }
 
 function closeCreateCommentModal() {
@@ -261,6 +268,7 @@ function closeCreateCommentModal() {
 
 	modal.removeAttribute('data-id');
 	modal.classList.add('hidden');
+	modal.classList.remove('flex');
 	text.value = "";
 }
 
@@ -280,7 +288,6 @@ function sendCreateCommentRequest() {
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
 			list.prepend(doc.body.firstChild);
-			modal.classList.add('hidden');
-			text.value = "";
+			closeCreateCommentModal();
 		});
 }
