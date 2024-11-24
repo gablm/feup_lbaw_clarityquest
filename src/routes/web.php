@@ -12,6 +12,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
 
 /*
@@ -74,6 +75,11 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::patch('/questions/{id}', 'update')->middleware('auth');
 });
 
+// Posts
+Route::controller(PostController::class)->group(function () {
+	Route::post('/posts/{id}', 'vote')->middleware('auth');
+});
+
 // Users
 Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
@@ -95,4 +101,3 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-Route::post('/questions/{id}/votes', [UserController::class, 'vote'])->name('questions.vote')->middleware('auth');

@@ -28,9 +28,9 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
 	<div class="flex items-center">
 		<div class="space-x-1">
-            <a href="javascript:void(0);" onclick="sendUpvoteRequest()" class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
-            <span class="vote-count">{{ $question->post->votes }}</span>
-            <a href="javascript:void(0);" onclick="sendDownvoteRequest()" class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
+            <button onclick="sendVoteRequest({{ $question->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
+            <span id="votes-{{ $question->id }}" class="vote-count">{{ $question->post->votes }}</span>
+            <button onclick="sendVoteRequest({{ $question->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
         </div>
 		@if (Auth::check())
 		<button onclick="showCreateCommentModal({{ $question->id }})" class="tool-link">

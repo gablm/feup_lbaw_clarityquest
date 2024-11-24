@@ -33,9 +33,9 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	<p class="text-gray-700 pb-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex before:items-center">
 		<div class="space-x-1">
-			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
-			<span>{{ $post->votes }}</span>
-			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
+			<button onclick="sendVoteRequest({{ $answer->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
+			<span id="votes-{{ $answer->id }}" class="vote-count">{{ $question->post->votes }}</span>
+			<button onclick="sendVoteRequest({{ $answer->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
 		</div>
 		@if (Auth::check())
 		<button onclick="showCreateCommentModal({{ $answer->id }})" class="tool-link">
