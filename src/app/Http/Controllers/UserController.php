@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Vote;
+use App\Models\Post;
 use App\Providers\RouteServiceProvider;
+
 
 class UserController extends Controller
 {
@@ -156,4 +160,52 @@ class UserController extends Controller
 				->withSuccess('You have logged out successfully!');
 		}
 	}
+
+	/**
+     * Vote on a question.
+     */
+	public function vote(Request $request, $id)
+    {
+        $request->validate([
+            'positive' => 'required|boolean',
+        ]);
+
+        $user = Auth::user();
+        $positive = $request->positive;
+
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        DB::transaction(function () use ($user, $id, $positive) {
+			Log::debug('Inside transaction', ['user_id' => $user->id, 'post_id' => $id, 'positive' => $positive]);
+
+            // Check if the user has already voted on this post
+            $vote = Vote::where('user_id', $user->id)->where('post_id', $id)->first();
+            $post = Post::findOrFail($id);
+
+            if ($vote) {
+                // If the vote type is different, update the vote
+                if ($vote->positive != $positive) {
+                    $vote->positive = $positive;
+                    $vote->save();
+
+                    $post->votes += $positive ? 2 : -2; // Change from -1 to +1 or +1 to -1
+                    $post->save();
+                }
+            } else {
+                // Create a new vote
+                Vote::create([
+                    'user_id' => $user->id,
+                    'post_id' => $id,
+                    'positive' => $positive,
+                ]);
+				
+                Log::debug('New vote created', ['vote_id' => $vote->id]);
+
+                // Update the vote count on the post
+                $post->votes += $positive ? 1 : -1;
+                $post->save();
+            }
+        });
+
+        return response()->json(['success' => true]);
+    }
 }

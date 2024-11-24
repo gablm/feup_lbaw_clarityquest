@@ -11,7 +11,7 @@ $owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
 $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
-<article id="question" data-id="{{ $question->id }}">
+<article id="question" data-id="{{ $question->id }}" class="post">
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-md mb-2">
 		<a class="tool-link" href="{{ $user ? url('/user/' . $user->id) : '/' }}">
 			<div class="flex flex-row items-center">
@@ -28,10 +28,10 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
 	<div class="flex items-center">
 		<div class="space-x-1">
-			<a href=# class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
-			<span>{{ $post->votes }}</span>
-			<a href=# class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
-		</div>
+            <a href="javascript:void(0);" onclick="sendUpvoteRequest()" class="vote-link fa-solid fa-up-long hover:text-red-600"></a>
+            <span class="vote-count">{{ $question->post->votes }}</span>
+            <a href="javascript:void(0);" onclick="sendDownvoteRequest()" class="vote-link fa-solid fa-down-long hover:text-blue-500"></a>
+        </div>
 		@if (Auth::check())
 		<button onclick="showCreateCommentModal({{ $question->id }})" class="tool-link">
 			<i class="fa-solid fa-plus"></i>
