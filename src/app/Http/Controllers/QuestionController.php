@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\Edition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
@@ -36,31 +37,32 @@ class QuestionController extends Controller
      */
     public function create(Request $request)
     {
-		$user = Auth::user();
-
+        $user = Auth::user();
+    
         $request->validate([
-			'title' => 'required|string|max:64',
-            'description' => 'required|string|max:10000'
+            'title' => 'required|string|max:64|unique:questions,title',  // Ensure unique title for questions
+            'description' => 'required|string|max:10000',
         ]);
-
-        DB::transaction(function () use ($request, $user) {
-            // Create the post
-            $post = Post::create([
-                'text' => $request->text,
-                'user_id' => $user->id,
-            ]);
-
-            // Create the question
-            Question::create([
-                'title' => $request->title,
-                'post_id' => $post->id,
-            ]);
-        });
-        
-        return redirect("/questions/$question->id")
-			->withSuccess('Question created!');
-    }
-
+    
+        try {
+            $question = DB::transaction(function () use ($request, $user) {
+                $post = Post::create([
+                    'text' => $request->description,
+                    'user_id' => $user->id
+                ]);
+    
+                return Question::create([
+                    'title' => $request->title,
+                    'id' => $post->id
+                ]);
+            });
+    
+            return redirect("/questions/{$question->id}")
+                ->withSuccess('Question created!');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred while creating the question.']);
+        }
+    }    
 	/**
      * Display a create form.
      */
@@ -90,12 +92,14 @@ class QuestionController extends Controller
 	public function delete(string $id)
 	{
 		$question = Question::findOrFail($id);
+        $this->authorize('delete', $question);
 
-		$this->authorize('delete', $question);
-
-		$question->post->delete();
-		$question->delete();
-
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        DB::transaction(function () use ($question) {
+            $question->post->delete();
+            $question->delete();
+        });
+        
 		return redirect('/')->withSucess('Question deleted!');
 	}
 
@@ -113,21 +117,26 @@ class QuestionController extends Controller
 			'title' => 'required|string|max:64',
             'description' => 'required|string|max:10000'
         ]);
-        $old_title = $question->title;
-        $question->title = $request->title;
-        $old_text = $post->text;
-		$post->text = $request->description;
 
-        $question->save();
-		$post->save();
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-        Edition::create([
-            'post_id' => $question->id,
-            'old_title' => $old_title, 
-            'new_title' => $question->title, 
-            'old' => $old_text, 
-            'new' => $request->description,
-        ]);
+        DB::transaction(function () use ($request, $post, $question) {
+            $old_title = $question->title;
+            $question->title = $request->title;
+            $old_text = $post->text;
+            $post->text = $request->description;
+
+            $question->save();
+            $post->save();
+
+            Edition::create([
+                'post_id' => $question->id,
+                'old_title' => $old_title, 
+                'new_title' => $question->title, 
+                'old' => $old_text, 
+                'new' => $request->description,
+            ]);
+        });
 
         return view('partials.question', [
 			'question' => $question

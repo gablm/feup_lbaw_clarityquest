@@ -132,6 +132,7 @@ WHERE post_id = $post_id AND EXISTS (
 );
 
 END TRANSACTION;
+--code has till here
 
 -- Edit user profile
 -- Using REPEATABLE READ to ensure consistency while editing user profile details.

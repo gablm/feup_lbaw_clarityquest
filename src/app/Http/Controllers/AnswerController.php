@@ -8,6 +8,8 @@ use App\Models\Question;
 use App\Models\Edition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use \Exception;
 
 class AnswerController extends Controller
 {
@@ -44,27 +46,35 @@ class AnswerController extends Controller
      */
     public function create(Request $request)
     {
-		$user = Auth::user();
+        $user = Auth::user();
 
         $request->validate([
             'text' => 'required|string|max:10000',
-			'id' => 'required|string'
+            'id' => 'required|integer|exists:questions,id',
         ]);
 
-		$question = Question::findOrFail($request->id);
+        $question = Question::findOrFail($request->id);
 
-		$post = Post::create([
-			'text' => $request->text,
-			'user_id' => $user->id
-		]);
+        try {
+            $answer = DB::transaction(function () use ($request, $user, $question) {
+                $post = Post::create([
+                    'text' => $request->text,
+                    'user_id' => $user->id,
+                ]);
 
-        $answer = Answer::create([
-            'id' => $post->id,
-			'question_id' => $question->id
-        ]);
+                return Answer::create([
+                    'id' => $post->id,
+                    'question_id' => $question->id,
+                ]);
+            });
 
-        return view('partials.answer', ['answer' => $answer]);
+            return view('partials.answer', ['answer' => $answer]);
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred while creating the answer.']);
+        }
     }
+
 
 	/**
      * Delete a answer.
@@ -72,11 +82,14 @@ class AnswerController extends Controller
 	public function delete(string $id)
 	{
 		$answer = Answer::findOrFail($id);
+        $this->authorize('delete', $answer);
 
-		$this->authorize('delete', $answer);
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-		$answer->post->delete();
-		$answer->delete();
+        DB::transaction(function () use ($answer) {
+            $answer->post->delete();
+            $answer->delete();
+        });
 
 		return;
 	}
@@ -94,19 +107,24 @@ class AnswerController extends Controller
         $request->validate([
 			'text' => 'required|string|max:10000'
         ]);
-        $old_text = $post->text;
-		$post->text = $request->text;
 
-		$post->save();
-		$answer->save();
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-        Edition::create([
-            'post_id' => $answer->id,
-            'old_title' => null, 
-            'new_title' => null, 
-            'old' => $old_text, 
-            'new' => $request->text,
-        ]);
+        DB::transaction(function () use ($request, $post, $answer) {
+            $old_text = $post->text;
+            $post->text = $request->text;
+
+            $post->save();
+            $answer->save();
+
+            Edition::create([
+                'post_id' => $answer->id,
+                'old_title' => null, 
+                'new_title' => null, 
+                'old' => $old_text, 
+                'new' => $request->text,
+            ]);
+        });
 
         return view('partials.answer', [
 			'answer' => $answer
