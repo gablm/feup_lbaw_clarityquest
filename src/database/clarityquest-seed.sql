@@ -309,7 +309,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_post_votes
-AFTER INSERT OR UPDATE ON "votes"
+AFTER INSERT OR UPDATE OR DELETE ON "votes"
 FOR EACH ROW
 EXECUTE FUNCTION update_post_votes();
 

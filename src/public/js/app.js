@@ -295,11 +295,11 @@ function sendCreateTagRequest() {
 function sendVoteRequest(id, positive) {
 	let count = document.querySelector(`#votes-${id}`);
 
-	sendAjaxRequest('POST', '/posts/' + id, { positive: positive },
+	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? 1 : -1 },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
-			count.textContent = parseInt(count.textContent) + (positive ? 1 : -1);
+			count.textContent = JSON.parse(request.responseText).votes;
 		});
 }

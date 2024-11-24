@@ -29,7 +29,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	<div class="flex items-center">
 		<div class="space-x-1">
 			<button onclick="sendVoteRequest({{ $comment->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
-			<span id="votes-{{ $comment->id }}" class="vote-count">{{ $question->post->votes }}</span>
+			<span id="votes-{{ $comment->id }}" class="vote-count">{{ $comment->post->votes }}</span>
 			<button onclick="sendVoteRequest({{ $comment->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
 		</div>
 		@if ($owner == false && $post->user && Auth::check())
