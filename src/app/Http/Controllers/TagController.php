@@ -46,7 +46,7 @@ class TagController extends Controller
 			'name' => $request->name
 		]);
 
-        return view('tags.show', [
+        return view('partials.tag-card', [
 			'tag' => $tag
 		]);
     }

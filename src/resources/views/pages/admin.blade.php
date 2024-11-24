@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container mx-auto p-6" onload="showAdminTab('tags')">
-	<div class="p-8">
-		<h2 class="text-2xl font-semibold mb-4">Administration Panel</h2>
+	<div class="p-8 pt-4">
+		<h2 class="text-2xl font-semibold mb-8">Administration Panel</h2>
 		<div class="mb-6 border-b border-gray-200">
 			<ul class="flex flex-row space-x-4 -mb-px text-lg font-medium">
 				<li>
