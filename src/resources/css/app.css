@@ -35,7 +35,7 @@
 		@apply appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight;
 	}
 
-	a.auth-link {
+	.auth-link {
 		@apply mr-2 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800;
 	}
 
@@ -47,19 +47,19 @@
 		@apply text-black mb-3;
 	}
 
-	a.tag-link {
+	.tag-link {
 		@apply inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded;
 	}
 
-	a.side-link {
+	.side-link {
 		@apply block px-3 py-2 rounded text-base font-medium text-gray-700 hover:bg-gray-200;
 	}
 
-	a.vote-link {
+	.vote-link {
 		@apply px-3 py-2 rounded text-gray-700 hover:bg-gray-200;
 	}
 
-	a.tool-link, button.tool-link {
+	.tool-link, .tool-link {
 		@apply px-3 py-1 rounded hover:bg-gray-200;
 	}
 
