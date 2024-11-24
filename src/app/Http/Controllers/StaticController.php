@@ -11,12 +11,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\Post;
-use App\Models\Answer;
-use App\Models\Comment;
-use App\Models\Vote;
-use App\Models\Notification;
-
 class StaticController extends Controller
 {
     /**
@@ -24,7 +18,6 @@ class StaticController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    
     public function index()
     {
         $topQuestions = Question::getTopQuestions();

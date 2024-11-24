@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use App\Models\Comment;
+use App\Models\Post;
+use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -47,14 +51,9 @@ class CommentController extends Controller
         $request->validate([
 			'text' => 'required|string|max:10000'
         ]);
-<<<<<<< Updated upstream
-
-		$post->text = $request->text;
-=======
         
         $old_text = $post->text;
         $post->text = $request->text;
->>>>>>> Stashed changes
 
 		$post->save();
 		$comment->save();
@@ -71,40 +70,33 @@ class CommentController extends Controller
 			'comment' => $comment
 		]);
     }
-<<<<<<< Updated upstream
-}
-=======
 
     /**
      * Create a new comment.
      */
     public function create(Request $request)
     {
+		$user = Auth::user();
+
         $request->validate([
             'text' => 'required|string|max:1000',
-            'postId' => 'required|integer',
+            'id' => 'required|string'
         ]);
 
-        $user = Auth::user();
+		$ownerPost = Post::findOrFail($request->id);
 
-        // Check if the postId exists in either the Question or Answer table
-        $isQuestion = Question::where('id', $request->postId)->exists();
-        $isAnswer = Answer::where('id', $request->postId)->exists();
+		$post = Post::create([
+			'text' => $request->text,
+			'user_id' => $user->id
+		]);
 
-        if (!$isQuestion && !$isAnswer) {
-            return response()->json(['error' => 'Invalid post ID'], 400);
-        }
-
-        $comment = new Comment();
-        $comment->text = $request->text;
-        $comment->post_id = $request->postId;
-        $comment->user_id = $user->id;
-        $comment->save();
-
+        $comment = Comment::create([
+            'id' => $post->id,
+			'post_id' => $ownerPost->id
+        ]);
 
         return view('partials.comment', [
             'comment' => $comment
         ]);
     }
 }
->>>>>>> Stashed changes
