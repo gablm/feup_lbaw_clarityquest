@@ -43,16 +43,20 @@ class QuestionController extends Controller
             'description' => 'required|string|max:10000'
         ]);
 
-		$post = Post::create([
-			'text' => $request->description,
-			'user_id' => $user->id
-		]);
+        DB::transaction(function () use ($request, $user) {
+            // Create the post
+            $post = Post::create([
+                'text' => $request->text,
+                'user_id' => $user->id,
+            ]);
 
-        $question = Question::create([
-			'title' => $request->title,
-            'id' => $post->id
-        ]);
-
+            // Create the question
+            Question::create([
+                'title' => $request->title,
+                'post_id' => $post->id,
+            ]);
+        });
+        
         return redirect("/questions/$question->id")
 			->withSuccess('Question created!');
     }

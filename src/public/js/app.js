@@ -290,3 +290,18 @@ function sendCreateCommentRequest() {
 			closeCreateCommentModal();
 		});
 }
+ 
+function sendVoteRequest(positive) { let post = event.target.closest('.post'); let postId = post.getAttribute('data-id');
+	sendAjaxRequest('POST', '/questions/' + postId + '/votes', { positive: positive },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+	
+			let voteCount = post.querySelector('.vote-count');
+			voteCount.textContent = parseInt(voteCount.textContent) + (positive ? 1 : -1);
+		});
+	}
+
+	function sendUpvoteRequest() { sendVoteRequest(true); }
+
+function sendDownvoteRequest() { sendVoteRequest(false); }

@@ -95,3 +95,4 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+Route::post('/questions/{id}/votes', [UserController::class, 'vote'])->name('questions.vote')->middleware('auth');
