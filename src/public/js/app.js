@@ -262,7 +262,6 @@ function sendCreateCommentRequest() {
 			closeCreateCommentModal();
 		});
 }
-<<<<<<< HEAD
 
 function showCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
