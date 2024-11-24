@@ -199,10 +199,10 @@ function showEditPostModal(type, id, content) {
 	let title = modal.querySelector('#edit-title');
 	switch (type) {
 		case 'comment':
-			title.value = 'Edit Comment';
+			title.textContent = 'Edit Comment';
 			break;
 		case 'answer':
-			title.value = 'Edit Answer';
+			title.textContent = 'Edit Answer';
 			break;
 	}
 
@@ -220,7 +220,7 @@ function closeEditPostModal() {
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
 	text.value = "";
-	title.value = "Edit";
+	title.textContent = "Edit ??";
 }
 
 function sendEditPostRequest() {
