@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
+use Carbon\Carbon;
 class Post extends Model
 {
     use HasFactory;
@@ -75,4 +75,15 @@ class Post extends Model
 
 		return $this->created_at->format("d/m/Y H:i");
 	}
+
+     /**
+     * Check if the question has been edited and return the most recent edition's timestamp.
+     *
+     * @return string|null
+     */
+    public function isEdited()
+    {
+        $latestEdition = $this->editions()->latest('made_at')->first();
+        return $latestEdition ? Carbon::parse($latestEdition->made_at)->format('d/m/Y H:i') : null;
+    }
 }

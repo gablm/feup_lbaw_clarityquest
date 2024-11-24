@@ -83,6 +83,7 @@ function sendEditQuestionRequest() {
 
 			question.parentElement.replaceChild(doc.body.firstChild, question);
 		});
+	closeEditQuestionModal();
 }
 
 function showEditQuestionModal() {
@@ -153,7 +154,12 @@ function sendCreateAnswerRequest() {
 		});
 }
 
+<<<<<<< Updated upstream
 function deleteAnswer(object) {
+=======
+function deleteAnswer(object)
+{
+>>>>>>> Stashed changes
 	let confirmed = confirm('Are you sure you want to delete this answer? This action cannot be undone.');
 	if (confirmed == false) return;
 
@@ -214,6 +220,7 @@ function sendEditAnswerRequest(id) {
 
 			answer.parentElement.replaceChild(doc.body.firstChild, answer);
 		});
+	closeEditAnswerModal();
 }
 
 function showEditCommentModal(id) {
@@ -243,4 +250,5 @@ function sendEditCommentRequest(id) {
 
 			answer.parentElement.replaceChild(doc.body.firstChild, answer);
 		});
+	closeEditCommentModal();
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Answer;
 use App\Models\Post;
 use App\Models\Question;
+use App\Models\Edition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -94,11 +95,19 @@ class AnswerController extends Controller
         $request->validate([
 			'text' => 'required|string|max:10000'
         ]);
-
+        $old_text = $post->text;
 		$post->text = $request->text;
 
 		$post->save();
 		$answer->save();
+
+        Edition::create([
+            'post_id' => $answer->id,
+            'old_title' => null, 
+            'new_title' => null, 
+            'old' => $old_text, 
+            'new' => $request->text,
+        ]);
 
         return view('partials.answer', [
 			'answer' => $answer

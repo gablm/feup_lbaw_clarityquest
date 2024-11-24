@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Question;
+use App\Models\Edition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -108,12 +109,21 @@ class QuestionController extends Controller
 			'title' => 'required|string|max:64',
             'description' => 'required|string|max:10000'
         ]);
-
+        $old_title = $question->title;
         $question->title = $request->title;
+        $old_text = $post->text;
 		$post->text = $request->description;
 
         $question->save();
 		$post->save();
+
+        Edition::create([
+            'post_id' => $question->id,
+            'old_title' => $old_title, 
+            'new_title' => $question->title, 
+            'old' => $old_text, 
+            'new' => $request->description,
+        ]);
 
         return view('partials.question', [
 			'question' => $question

@@ -7,6 +7,11 @@ $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('im
 $q_owner = $answer->question->post->user && Auth::check() && $answer->question->post->user->id == Auth::user()->id;
 $owner = $user && Auth::check() && $user->id == Auth::user()->id;
 $elevated = Auth::check() && Auth::user()->isElevated();
+
+
+$edited_at = $answer->post->isEdited();
+$is_edited = $edited_at ? " [edited at $edited_at]" : "";
+
 @endphp
 
 <article id="answer" class="mt-2" data-id="{{ $post->id }}">
@@ -20,7 +25,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
 			</div>
 		</a>
-		<span>{{ $post->creationFTime() }}</span>
+		<span>{{ $post->creationFTime() }}{{$is_edited}}</span>
 		@if($answer->correct)
 		<a class="ml-4 tag-link">Marked as correct</a>
 		@endif

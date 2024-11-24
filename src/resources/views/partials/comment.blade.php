@@ -7,6 +7,9 @@ $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('im
 $owner = $user && Auth::check() && $user->id == Auth::user()->id;
 $elevated = Auth::check() && Auth::user()->isElevated();
 
+$edited_at = $comment->post->isEdited();
+$is_edited = $edited_at ? " [edited at $edited_at]" : "";
+
 @endphp
 
 <article id="comment" class="mt-2" data-id="{{ $post->id }}">
@@ -20,7 +23,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
 			</div>
 		</a>
-		<span>{{ $post->creationFTime() }}</span>
+		<span>{{ $post->creationFTime() }}{{$is_edited}}</span>
 	</div>
 	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex items-center">

@@ -4,6 +4,9 @@ $user = $post->user;
 
 $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
 
+$edited_at = $question->post->isEdited();
+$is_edited = $edited_at ? " [edited at $edited_at]" : "";
+
 $owner = $post->user && Auth::check() && $post->user->id == Auth::user()->id;
 $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
@@ -19,7 +22,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
 			</div>
 		</a>
-		<span>{{ $post->creationFTime() }}</span>
+		<span>{{ $post->creationFTime() }}{{$is_edited}}</span>
 	</div>
 	<h2 class="text-4xl font-semibold pl-3 break-words">{{ $question->title }}</h2>
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
