@@ -510,3 +510,136 @@ INSERT INTO PostTag (post_id, tag_id) VALUES
 (9, 2),
 (10, 5),
 (10, 3);
+
+INSERT INTO FollowQuestion (user_id, question_id) VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 3),
+(5, 3),
+(5, 4),
+(6, 4),
+(1, 5),
+(2, 5),
+(1, 6),
+(2, 6),
+(4, 7),
+(5, 7),
+(3, 8),
+(6, 8),
+(1, 9),
+(2, 9),
+(4, 10),
+(5, 10);
+
+INSERT INTO "posts" (text, user_id, created_at) VALUES
+('The best practices for securing a web application include using HTTPS, validating input, and implementing proper authentication mechanisms.', 2, '2023-08-16 09:00:00'),
+('Blockchain works by decentralizing data across a network of computers, making it secure through consensus protocols.', 4, '2023-09-03 10:30:00'),
+('AI has the potential to transform healthcare by improving diagnosis, personalizing treatment, and automating tasks.', 5, '2023-10-12 15:00:00'),
+('Europe offers a variety of must-visit places such as Paris, Rome, and Amsterdam, each rich in history and culture.', 1, '2023-07-21 08:00:00'),
+('To prepare the perfect sourdough bread, you need to carefully manage your starter and monitor the fermentation process.', 5, '2023-05-26 10:00:00'),
+('Stock market investing can be approached by diversifying your portfolio, doing thorough research, and understanding risk.', 3, '2023-11-02 14:00:00'),
+('Landscape photography involves capturing natural scenes using techniques like proper lighting and composition.', 5, '2023-03-19 13:00:00'),
+('In my view, for beginners, Python is an excellent programming language due to its simple syntax and large community support.', 2, '2023-06-14 07:45:00'),
+('Staying consistent with fitness goals requires a good routine, tracking progress, and setting achievable milestones.', 1, '2023-04-06 11:30:00'),
+('Challenges in remote work include managing time effectively, dealing with isolation, and maintaining productivity.', 6, '2023-02-28 14:10:00'),
+('An alternative way to secure web applications is by focusing on zero-trust architecture.', 5, '2023-08-16 14:30:00'),
+('Blockchain technology is used to store transactions securely in a distributed ledger.', 6, '2023-09-04 11:20:00'),
+('AI in healthcare helps with predictive diagnostics and patient care management.', 1, '2023-10-13 12:30:00'),
+('Europe is known for its diverse cultures and historical landmarks that attract millions of tourists each year.', 2, '2023-07-22 09:30:00'),
+('When making sourdough bread, hydration is key to getting the perfect crumb texture.', 3, '2023-05-27 13:20:00'),
+('Investing in stocks requires understanding market trends and having a long-term perspective.', 4, '2023-11-03 16:00:00'),
+('To improve landscape photography, focus on the golden hour for the best lighting.', 1, '2023-03-20 12:45:00'),
+('The best programming language for beginners is Python because of its readability and vast support libraries.', 4, '2023-06-15 10:10:00');
+
+INSERT INTO "answers" (id, question_id, correct) VALUES
+(11, 1, TRUE),
+(12, 2, FALSE),
+(13, 3, FALSE),
+(14, 4, FALSE),
+(15, 5, FALSE),
+(16, 6, FALSE),
+(17, 7, FALSE),
+(18, 8, TRUE),
+(19, 9, FALSE),
+(20, 10, FALSE),
+(21, 1, FALSE),
+(22, 2, FALSE),
+(23, 3, TRUE),
+(24, 4, FALSE),
+(25, 5, FALSE),
+(26, 6, FALSE),
+(27, 7, TRUE),
+(28, 8, FALSE);
+
+INSERT INTO FollowTag (user_id, tag_id) VALUES
+(1, 1),
+(1, 4),
+(2, 2),
+(2, 6),
+(3, 3),
+(3, 5),
+(4, 7),
+(4, 10),
+(5, 1),
+(5, 8),
+(6, 2),
+(6, 9),
+(6, 11);
+
+INSERT INTO "posts" (text, user_id, created_at) VALUES
+('I think using HTTPS is a must for any web application.', 3, '2023-08-16 10:00:00'),
+('Blockchain can revolutionize many industries, not just finance.', 4, '2023-09-03 12:00:00'),
+('AI could help doctors make more accurate diagnoses faster.', 2, '2023-10-13 09:30:00'),
+('Europe has so much culture and history to offer, it’s a dream destination!', 5, '2023-07-22 16:30:00'),
+('Sourdough bread is amazing, but it takes a lot of patience!', 6, '2023-06-25 14:45:00'),
+('Investing in stocks can be risky, but it’s also very rewarding in the long run.', 2, '2023-11-03 13:15:00'),
+('Landscape photography really changes when you focus on the light.', 4, '2023-03-22 18:00:00'),
+('Python is very beginner-friendly, I agree with this suggestion.', 5, '2023-06-16 08:50:00'),
+('Setting clear goals is so important for staying consistent with fitness.', 6, '2023-04-10 17:00:00'),
+('Remote work can be great, but you need strong self-discipline to stay productive.', 1, '2023-02-28 15:30:00');
+
+INSERT INTO "posts" (text, user_id, created_at) VALUES
+('I agree that HTTPS is crucial for security, but don’t forget about input validation!', 3, '2023-08-16 11:00:00'),
+('Blockchain works by decentralizing data across a network of computers, making it secure through consensus protocols.', 5, '2023-09-03 13:00:00'),
+('AI is great, but it should never replace the human touch in healthcare.', 4, '2023-10-13 10:30:00'),
+('Europe really does have something for every type of traveler.', 6, '2023-07-22 17:00:00'),
+('Sourdough bread is delicious but takes time to perfect.', 1, '2023-06-25 15:15:00'),
+('Understanding market trends is essential before investing in stocks.', 3, '2023-11-03 14:00:00'),
+('Landscape photography gets so much better with natural light.', 5, '2023-03-22 19:00:00'),
+('Python is definitely great for beginners.', 6, '2023-06-16 09:30:00'),
+('Staying consistent with your fitness routine is key to seeing results.', 1, '2023-04-10 18:00:00'),
+('Remote work isn’t for everyone, but it can be effective with the right tools.', 4, '2023-02-28 16:00:00');
+
+INSERT INTO "comments" (id, post_id) VALUES
+(29, 1),
+(30, 2),
+(31, 3),
+(32, 4),
+(33, 5),
+(34, 6),
+(35, 7),
+(36, 8),
+(37, 9),
+(38, 10);
+
+INSERT INTO "comments" (id, post_id) VALUES
+(39, 11),
+(40, 12),
+(41, 13),
+(42, 14),
+(43, 15),
+(44, 16),
+(45, 17),
+(46, 18),
+(47, 19),
+(48, 20);
+
+
+--votes
+--medals
+--reports
+--notifications
+--notificationpost
+--notificationuser
+--editions
