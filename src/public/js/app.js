@@ -400,6 +400,31 @@ function followTag(button) {
 		});
 }
 
+function markAsCorrect(answerId) {
+    sendAjaxRequest('POST', `/answers/${answerId}/correct`, {},
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status != 200) return;
+
+            let response = JSON.parse(request.responseText);
+            if (response.success) {
+                document.querySelectorAll('.mark-as-correct-btn').forEach(button => {
+                    button.remove();
+                });
+
+                document.querySelectorAll('.correct-answer').forEach(element => {
+                    element.classList.remove('correct-answer', 'text-green-500');
+                    element.textContent = '';
+                });
+
+                let answerElement = document.querySelector(`#answer-${answerId}`);
+                answerElement.querySelector('.answer-status').classList.add('correct-answer', 'text-green-500');
+                answerElement.querySelector('.answer-status').textContent = 'Correct Answer';
+            }
+        });
+		location.reload();
+}
+
 function deleteUser(id) {
 	let confirmed = confirm('Are you sure you want to delete this user? This action cannot be undone.');
 	if (confirmed == false) return;
