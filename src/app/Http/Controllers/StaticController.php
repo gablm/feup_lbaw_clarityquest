@@ -107,4 +107,12 @@ class StaticController extends Controller
 			'tags' => $tags,
 		]);
 	}
+
+	 /**
+     * Show the main features page.
+     */
+    public function mainFeatures()
+    {
+        return view('pages.main-features');
+    }
 }
