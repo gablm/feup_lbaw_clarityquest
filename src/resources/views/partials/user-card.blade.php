@@ -33,10 +33,10 @@ $profile_pic = $user->profile_pic ? asset($user->profile_pic) : url('img/default
 				@endif
 			</button>
 			@if (Auth::user()->isAdmin())
-			<button onclick="showEditUserModal({{ $user->id }})" class="tool-link">
+			<a href="{{ url('/users/' . $user->id . '/edit') }}" class="tool-link">
 				<i class="fa-solid fa-pencil"></i>
 				<span class="max-md:hidden ml-1">Edit</span>
-			</button>
+			</a>
 			<button onclick="deleteUser({{ $user->id }})" class="tool-link text-red-500">
 				<i class="fa-solid fa-trash"></i>
 				<span class="max-md:hidden ml-1">Delete</span>

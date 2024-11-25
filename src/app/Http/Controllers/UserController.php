@@ -6,11 +6,8 @@ use App\Enum\User\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\Vote;
-use App\Models\Post;
 use App\Providers\RouteServiceProvider;
 
 
@@ -33,7 +30,22 @@ class UserController extends Controller
 	 */
 	public function edit()
 	{
-		return view('users.edit');
+		return view('users.edit', [
+			'user' => Auth::user()
+		]);
+	}
+
+	/**
+	 * Show the form for editing the profile.
+	 */
+	public function editOther(string $id)
+	{
+		$user = User::findOrFail($id);
+        $this->authorize('update', $user);
+
+		return view('users.edit', [
+			'user' => $user
+		]);
 	}
 
 	/**
@@ -84,7 +96,7 @@ class UserController extends Controller
             $user->save();
         });
 
-        return redirect()->route('profile')
+        return redirect("/users/{$user->id}")
             ->with('success', 'Profile updated successfully.');
     }
 
