@@ -333,3 +333,43 @@ function deleteTag(id) {
 			tag.remove();
 		});
 }
+
+function showEditTagModal(id, content) {
+	let modal = document.querySelector('#edit-tag');
+	modal.setAttribute('data-id', id);
+
+	let text = modal.querySelector('#text');
+	text.value = content;
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeEditTagModal() {
+	let modal = document.querySelector('#edit-tag');
+	let text = modal.querySelector('#text');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
+}
+
+function sendEditTagRequest() {
+	let modal = document.querySelector('#edit-tag');
+	let text = modal.querySelector('#text');
+	let id = modal.getAttribute('data-id');
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+
+	sendAjaxRequest('PATCH', '/tags/' + id, { name: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			tag.parentElement.replaceChild(doc.body.firstChild, tag);
+			closeEditTagModal();
+		});
+}

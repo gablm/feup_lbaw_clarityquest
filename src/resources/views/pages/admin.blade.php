@@ -78,6 +78,21 @@
 					</div>
 				</div>
 			</div>
+			<div id="edit-tag" class="hidden modal modal-style">
+				<div class="modal-overlay modal-bg"></div>
+				<div class="modal-container modal-cont">
+					<div class="modal-content py-4 text-left px-6">
+						<p id="edit-title" class="text-2xl font-bold mb-4">Edit Tag</p>
+						<div class="mb-4">
+							<input class="auth focus:outline-none focus:shadow-outline resize-none" id="text" type="textarea" name="text" required>
+						</div>
+						<div class="mt-4 flex space-x-2 justify-end">
+							<button class="modal-close tool-link" onclick="closeEditTagModal()">Cancel</button>
+							<button class="nav-main" onclick="sendEditTagRequest()">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div id="tag-list" class="space-y-4">
 				@if($tags->isEmpty())
 				<p class="pl-4 text-gray-700">No tags found.</p>
