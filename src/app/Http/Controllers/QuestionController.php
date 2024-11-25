@@ -216,7 +216,7 @@ class QuestionController extends Controller
         }
 
         $tagName = trim($request->tag);
-
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         DB::transaction(function () use ($question, $tagName) {
             $tag = Tag::firstOrCreate(['name' => $tagName]);
             $question->tags()->attach($tag->id);
@@ -243,7 +243,7 @@ class QuestionController extends Controller
         }
 
         $tagName = trim($request->tag);
-
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         DB::transaction(function () use ($question, $tagName) {
             $tag = Tag::where('name', $tagName)->first();
             if ($tag) {
