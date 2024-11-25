@@ -130,4 +130,32 @@ class AnswerController extends Controller
 			'answer' => $answer
 		]);
     }
+
+    /**
+     * Create Notification
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'question_id' => 'required|exists:questions,id',
+            'content' => 'required|string|max:255',
+        ]);
+
+        $answer = Answer::create([
+            'question_id' => $validated['question_id'],
+            'content' => $validated['content'],
+            'user_id' => auth()->id(),
+        ]);
+
+        // Notify the question owner
+        $questionOwnerId = $answer->question->user_id;
+
+        Notification::create([
+            'receiver' => $questionOwnerId,
+            'description' => 'Your question has a new answer.',
+            'type' => 'RESPONSE',
+        ]);
+
+        return redirect()->back()->with('success', 'Answer added.');
+    }
 }
