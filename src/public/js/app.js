@@ -440,8 +440,8 @@ function deleteUser(id) {
 		});
 }
 
-function blockUser(button) {
-	let id = button.getAttribute('data-id');;
+function blockUser(id) {
+	let user = document.querySelector('#user[data-id="' + id + '"]');
 
 	sendAjaxRequest('PATCH', '/users/' + id + '/block', {},
 		(request) => {
@@ -451,6 +451,6 @@ function blockUser(button) {
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
-			button.parentElement.replaceChild(doc.body.firstChild, button);
+			user.parentElement.replaceChild(doc.body.firstChild, user);
 		});
 }

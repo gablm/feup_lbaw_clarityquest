@@ -183,12 +183,14 @@ class UserController extends Controller
 
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         DB::transaction(function () use ($user) {
-            $user->role = Permission::Blocked;
+            $user->role = $user->role == Permission::Blocked 
+				? Permission::Regular : Permission::Blocked;
 			$user->save();
         });
 
-		return view('partials.block-btn', [
-			'user' => $user
+		return view('partials.user-card', [
+			'user' => $user,
+			'panel' => true
 		]);
     }
 }
