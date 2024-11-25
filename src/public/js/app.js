@@ -355,19 +355,19 @@ function closeTagModal() {
     modal.classList.add('hidden');
 }
 
+function deleteTag(id) {
+	let confirmed = confirm('Are you sure you want to delete this tag? This action cannot be undone.');
+	if (confirmed == false) return;
 
-function showDeleteTagModal() {
-    let modal = document.querySelector('#tag-delete');
-    modal.classList.remove('hidden');
-}
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
 
-function closeDeleteTagModal() {
-    let modal = document.querySelector('#tag-delete');
-    modal.classList.add('hidden');
-}
+	sendAjaxRequest('DELETE', '/tags/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
 
-function confirmDeleteTag(tagName) {
-    return confirm(`Are you sure you want to delete the tag "${tagName}"? This action cannot be undone.`);
+			tag.remove();
+		});
 }
 
 function followQuestion(button) {
