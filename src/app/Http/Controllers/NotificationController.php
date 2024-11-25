@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Notification;
 
 class NotificationController extends Controller
 {
@@ -28,7 +29,7 @@ class NotificationController extends Controller
             ->orderBy('sent_at', 'desc')
             ->get();
 
-        return view('notifications.index', compact('notifications'));
+        return view('pages.notifications', compact('notifications'));
     }
 
     /**

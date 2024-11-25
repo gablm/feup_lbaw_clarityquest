@@ -32,7 +32,7 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
-	Route::get('/search', 'search')->name('search');
+	Route::get('/search', 'search')->name('search'); 
 	Route::get('/admin', 'admin')->name('admin');
 });
 
@@ -106,7 +106,7 @@ Route::controller(RegisterController::class)->group(function () {
 
 // Notifications
 Route::controller(NotificationController::class)->group(function () {
-    Route::get('/notifications', 'index')->name('notifications.index')->middleware('auth');
+    Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
     Route::get('/notifications/recent', 'recent')->name('notifications.recent')->middleware('auth');
     Route::post('/notifications/{id}/read', 'markAsRead')->name('notifications.read')->middleware('auth');
 });
