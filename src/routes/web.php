@@ -61,6 +61,8 @@ Route::controller(AnswerController::class)->group(function () {
 	Route::put('/answers', 'create')->middleware('auth');
 	Route::delete('/answers/{id}', 'delete')->middleware('auth');
 	Route::patch('/answers/{id}', 'update')->middleware('auth');
+
+	Route::post('/answers/{id}/correct', 'markAsCorrect')->name('answers.markAsCorrect')->middleware('auth');
 });
 
 // Questions
