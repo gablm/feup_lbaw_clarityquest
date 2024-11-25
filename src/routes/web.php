@@ -88,6 +88,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/users/{id}', 'showPublicProfile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::delete('/users/{id}', 'delete')->middleware('auth');
+	Route::get('/user/{id}', [UserController::class, 'showPublicProfile'])->name('public.profile');
 });
 
 // Authentication

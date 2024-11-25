@@ -18,11 +18,13 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm mb-2">
 		<a class="tool-link" href="{{ $user ? url('/user/' . $user->id) : '/' }}">
 			<div class="flex flex-row items-center">
-				<img
-					src="{{ $profile_pic }}"
-					alt="Profile Picture"
-					class="w-6 h-6 rounded-full object-cover">
-				<span class="ml-2">{{ $user->name ?? "[REDACTED]" }}</span>
+				<a href="{{ route('public.profile', ['id' => $post->user->id]) }}" class="flex items-center">
+					<img
+						src="{{ $profile_pic }}"
+						alt="Profile Picture"
+						class="w-5 h-5 rounded-full object-cover">
+					<span class="ml-2">{{ $post->user->name ?? "[REDACTED]" }}</span>
+				</a>
 			</div>
 		</a>
 		<span>{{ $post->creationFTime() }} {{ $is_edited }}</span>
