@@ -32,11 +32,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	</div>
 	<p class="text-gray-700 pb-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex before:items-center">
-		<div class="space-x-1">
-			<button onclick="sendVoteRequest({{ $answer->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
-			<span id="votes-{{ $answer->id }}" class="vote-count">{{ $answer->post->votes }}</span>
-			<button onclick="sendVoteRequest({{ $answer->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
-		</div>
+		@include('partials.vote', ['id' => $answer->id, 'votes' => $answer->post->votes])
 		@if (Auth::check())
 		<button onclick="showCreateCommentModal({{ $answer->id }})" class="tool-link">
 			<i class="fa-solid fa-plus"></i>

@@ -27,11 +27,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	</div>
 	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex items-center">
-		<div class="space-x-1">
-			<button onclick="sendVoteRequest({{ $comment->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
-			<span id="votes-{{ $comment->id }}" class="vote-count">{{ $comment->post->votes }}</span>
-			<button onclick="sendVoteRequest({{ $comment->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
-		</div>
+		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes])
 		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
