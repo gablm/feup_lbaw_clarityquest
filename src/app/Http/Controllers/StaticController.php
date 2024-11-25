@@ -98,4 +98,9 @@ class StaticController extends Controller
 			'tags' => $tags,
 		]);
 	}
+
+	  public function mainFeatures()
+    {
+        return view('main-features');
+    }
 }
