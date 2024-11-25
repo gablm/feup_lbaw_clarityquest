@@ -169,7 +169,5 @@ class UserController extends Controller
             return redirect(RouteServiceProvider::HOME)
                 ->withSuccess('You have logged out successfully!');
         }
-
-        return redirect()->back()->with('success', 'User deleted successfully.');
     }
 }
