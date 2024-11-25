@@ -365,9 +365,11 @@ function closeDeleteTagModal() {
     let modal = document.querySelector('#tag-delete');
     modal.classList.add('hidden');
 }
+
 function confirmDeleteTag(tagName) {
     return confirm(`Are you sure you want to delete the tag "${tagName}"? This action cannot be undone.`);
 }
+
 function followQuestion(button) {
 	let id = button.getAttribute('data-id');
 
