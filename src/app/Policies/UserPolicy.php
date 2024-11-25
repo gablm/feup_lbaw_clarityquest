@@ -30,4 +30,13 @@ class UserPolicy
 		
         return $has_role || ($is_owner && !$is_blocked);
     }
+
+	/**
+     * Determine whether the user can block the model.
+     */
+    public function block(User $user, User $user2): bool
+    {
+        return $user->isAdmin() &&
+			$user2->isAdmin() == false;
+    }
 }

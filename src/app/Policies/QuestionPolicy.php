@@ -9,11 +9,19 @@ use App\Models\User;
 class QuestionPolicy
 {
     /**
+     * Determine whether the user can view the model.
+     */
+    public function show(?User $user, Question $question): bool
+    {
+        return $user == null || $user->isBlocked() == false;
+    }
+
+    /**
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
-        return $user->role != Permission::Blocked;
+        return $user->isBlocked() == false;
     }
 
     /**

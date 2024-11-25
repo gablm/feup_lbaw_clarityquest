@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\User\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +36,7 @@ class UserController extends Controller
 		return view('users.edit');
 	}
 
-		/**
+	/**
 	 * Update a user's profile.
 	 */
 	public function update(Request $request, string $id)
@@ -169,5 +170,25 @@ class UserController extends Controller
             return redirect(RouteServiceProvider::HOME)
                 ->withSuccess('You have logged out successfully!');
         }
+    }
+
+	/**
+	 * Blocks a user.
+	 */
+	public function block(string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $this->authorize('block', $user);
+
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        DB::transaction(function () use ($user) {
+            $user->role = Permission::Blocked;
+			$user->save();
+        });
+
+		return view('partials.block-btn', [
+			'user' => $user
+		]);
     }
 }

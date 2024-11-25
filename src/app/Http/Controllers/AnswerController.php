@@ -36,6 +36,8 @@ class AnswerController extends Controller
 	{
 		$answer = Answer::findOrFail($id);
 
+		$this->authorize('show', $answer);
+
 		return view('partials.answer', [
 			'answer' => $answer
 		]);

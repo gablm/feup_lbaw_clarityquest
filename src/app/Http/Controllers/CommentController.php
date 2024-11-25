@@ -19,6 +19,8 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
+		$this->authorize('show', $comment);
+
 		return view('partials.comment', [
 			'comment' => $comment
 		]);
@@ -32,6 +34,7 @@ class CommentController extends Controller
 		$comment = Comment::findOrFail($id);
 
 		$this->authorize('delete', $comment);
+
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
         DB::transaction(function () use ($comment) {

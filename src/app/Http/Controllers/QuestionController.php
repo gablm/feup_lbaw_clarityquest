@@ -92,6 +92,9 @@ class QuestionController extends Controller
 	public function show(string $id)
 	{
 		$question = Question::findOrFail($id);
+		
+		$this->authorize('show', $question);
+
         $tags = Tag::orderBy('name')->get();
 
 		return view('questions.show', [
@@ -113,6 +116,7 @@ class QuestionController extends Controller
 			$question->post->delete();
 			$question->delete();
 		});
+
 		return redirect('/')->withSucess('Question deleted!');
 	}
 
@@ -162,10 +166,11 @@ class QuestionController extends Controller
 	{
 		$user = Auth::user();
 
-		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-		$question = DB::transaction(function () use ($user, $id) {
-			$question = Question::findOrFail($id);
+		$question = Question::findOrFail($id);
+		$this->authorize('show', $question);
 
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+		DB::transaction(function () use ($user, $question) {
 			$exists = DB::table('followquestion')
 				->where('user_id', $user->id)
 				->where('question_id', $question->id)
@@ -176,21 +181,17 @@ class QuestionController extends Controller
 					->where('user_id', $user->id)
 					->where('question_id', $question->id)
 					->delete();
-				return $question;
+				return;
 			}
 
 			DB::table('followquestion')->insert([
 				'user_id' => $user->id,
 				'question_id' => $question->id
 			]);
-
-			return $question;
 		});
-        $tags = Tag::orderBy('name')->get();
 
 		return view('partials.follow-btn', [
-			'question' => $question,
-            'tags' => $tags,
+			'question' => $question
 		]);
 	}
 
@@ -205,6 +206,7 @@ class QuestionController extends Controller
 
         $user = Auth::user();
         $question = Question::findOrFail($id);
+		$this->authorize('show', $question);
 
         if ($user->id !== $question->post->user_id && !$user->isElevated()) {
             return redirect()->back()->with('error', 'You do not have permission to add a tag to this question.');
@@ -231,6 +233,7 @@ class QuestionController extends Controller
 
         $user = Auth::user();
         $question = Question::findOrFail($id);
+		$this->authorize('show', $question);
 
         if ($user->id !== $question->post->user_id && !$user->isElevated()) {
             return redirect()->back()->with('error', 'You do not have permission to remove a tag from this question.');

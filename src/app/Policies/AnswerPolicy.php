@@ -11,9 +11,9 @@ class AnswerPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Answer $answer): bool
+    public function view(?User $user, Answer $answer): bool
     {
-        return $user == null || $user->is_blocked == false;
+        return $user == null || $user->isBlocked() == false;
     }
 
     /**
@@ -21,7 +21,7 @@ class AnswerPolicy
      */
     public function create(User $user): bool
     {
-        return $user->is_blocked == false;
+        return $user->isBlocked() == false;
     }
 
     /**
@@ -31,7 +31,7 @@ class AnswerPolicy
     {
         $has_role = $user->isAdmin();
 		$is_owner = $user->id == $answer->post->user_id;
-		$is_blocked = $user->role == Permission::Blocked;
+		$is_blocked = $user->isBlocked();
 		
         return $has_role || ($is_owner && !$is_blocked);
     }
@@ -44,7 +44,7 @@ class AnswerPolicy
 		$has_role = $user->role == Permission::Admin
 			|| $user->role == Permission::Moderator;
 		$is_owner = $user->id == $answer->post->user_id;
-		$is_blocked = $user->role == Permission::Blocked;
+		$is_blocked = $user->isBlocked();
 
         return $has_role || ($is_owner && !$is_blocked);
     }
