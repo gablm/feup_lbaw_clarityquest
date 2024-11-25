@@ -85,10 +85,10 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
 	
-	Route::get('/users/{id}', 'showPublicProfile');
+	Route::get('/users/{id}', 'showPublicProfile')->name('public.profile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::delete('/users/{id}', 'delete')->middleware('auth');
-	Route::get('/user/{id}', [UserController::class, 'showPublicProfile'])->name('public.profile');
+	
 });
 
 // Authentication
