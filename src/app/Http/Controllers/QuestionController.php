@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Edition;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -42,28 +43,36 @@ class QuestionController extends Controller
 		$user = Auth::user();
 
 		$request->validate([
-			'title' => 'required|string|max:64|unique:questions,title',  // Ensure unique title for questions
+			'title' => 'required|string|max:64',
 			'description' => 'required|string|max:10000',
+			'tags' => 'required'
 		]);
 
-		try {
-			$question = DB::transaction(function () use ($request, $user) {
-				$post = Post::create([
-					'text' => $request->description,
-					'user_id' => $user->id
-				]);
+		$question = DB::transaction(function () use ($request, $user) {
+			$post = Post::create([
+				'text' => $request->description,
+				'user_id' => $user->id
+			]);
 
-				return Question::create([
-					'title' => $request->title,
-					'id' => $post->id
-				]);
-			});
+			$question = Question::create([
+				'title' => $request->title,
+				'id' => $post->id
+			]);
 
-			return redirect("/questions/{$question->id}")
-				->withSuccess('Question created!');
-		} catch (\Exception $e) {
-			return back()->withErrors(['error' => 'An error occurred while creating the question.']);
-		}
+			foreach ($request->tags as $tag_id) {
+				$tag = Tag::findOrFail($tag_id);
+
+				DB::table('posttag')->insert([
+					'post_id' => $post->id,
+					'tag_id' => $tag->id
+				]);
+			}
+
+			return $question;
+		});
+
+		return redirect("/questions/{$question->id}")
+			->withSuccess('Question created!');
 	}
 	/**
 	 * Display a create form.
@@ -73,7 +82,9 @@ class QuestionController extends Controller
 		if (!Auth::check())
 			return redirect('/');
 
-		return view('questions.create');
+		$tags = Tag::all();
+
+		return view('questions.create', ['tags' => $tags]);
 	}
 
 	/**

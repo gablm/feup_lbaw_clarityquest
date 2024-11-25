@@ -287,10 +287,10 @@ function sendCreateTagRequest() {
             let parser = new DOMParser();
             let doc = parser.parseFromString(request.responseText, 'text/html');
 
-            tagList.prepend(doc.body.firstChild);
-            closeCreateTagModal();
-            location.reload();
-        });
+			tagList.prepend(doc.body.firstChild);
+			text.value = "";
+			closeCreateTagModal();
+		});
 }
 
 function sendVoteRequest(id, positive) {

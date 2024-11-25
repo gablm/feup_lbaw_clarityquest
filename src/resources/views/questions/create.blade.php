@@ -28,6 +28,21 @@
 				@endif
 			</div>
 
+			<div class="mb-4">
+				<label class="auth" for="tags">Tags</label>
+				<select name="tags[]" id="tags" class="auth focus:outline-none focus:shadow-outline" multiple>
+					<option selected value="">None</option>
+					@foreach ($tags as $tag)
+					<option value={{ $tag->id }}>{{ $tag->name }}</option>
+					@endforeach
+				</select>
+				@if ($errors->has('tags'))
+				<span class="auth-error bold">
+					{{ $errors->first('tags') }}
+				</span>
+				@endif
+			</div>
+
 			<div class="flex items-center justify-between">
 				<button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
 					Create
