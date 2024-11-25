@@ -466,3 +466,47 @@ INSERT INTO "tags" (name) VALUES
 ('Finance'),
 ('Programming'),
 ('Lifestyle');
+
+INSERT INTO "posts" (text, user_id, created_at) VALUES
+('What are the best practices for securing a web application?', 1, '2023-08-15 14:22:00'),
+('How does blockchain technology work?', 2, '2023-09-02 09:35:00'),
+('What is the impact of AI on healthcare?', 3, '2023-10-10 17:50:00'),
+('What are some must-visit places in Europe?', 4, '2023-07-20 11:05:00'),
+('How do you prepare the perfect sourdough bread?', 5, '2023-05-25 07:30:00'),
+('What are the basics of investing in stocks?', 1, '2023-11-01 16:45:00'),
+('How can I improve my landscape photography skills?', 6, '2023-03-18 12:15:00'),
+('What is the best programming language for beginners?', 2, '2023-06-13 08:20:00'),
+('How can I stay consistent with my fitness goals?', 3, '2023-04-05 10:10:00'),
+('What are the key challenges in remote work?', 4, '2023-02-28 13:55:00');
+
+INSERT INTO "questions" (id, title) VALUES
+(1, 'Best practices for web security'),
+(2, 'Understanding blockchain technology'),
+(3, 'AI and its impact on healthcare'),
+(4, 'Must-visit places in Europe'),
+(5, 'Perfecting sourdough bread'),
+(6, 'Basics of stock market investing'),
+(7, 'Improving landscape photography'),
+(8, 'Programming languages for beginners'),
+(9, 'Consistency in fitness goals'),
+(10, 'Challenges in remote work');
+
+INSERT INTO PostTag (post_id, tag_id) VALUES
+(1, 1),
+(2, 1),
+(2, 5),
+(3, 2),
+(3, 1),
+(4, 5),
+(4, 3),
+(5, 6),
+(5, 4),
+(6, 5),
+(6, 12),
+(7, 11),
+(7, 3),
+(8, 1),
+(9, 10),
+(9, 2),
+(10, 5),
+(10, 3);

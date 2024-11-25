@@ -25,11 +25,13 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			</a>
 		</div>
 		<span>{{ $post->creationFTime() }} {{ $is_edited }}</span>
-		@if ($question->tags->count())
-		@foreach($question->tags as $tag)
-		<span> @include('partials.tag', $tag) </span>
-		@endforeach
-		@endif
+		<div>
+			@if ($question->tags->count())
+			@foreach($question->tags as $tag)
+			@include('partials.tag', $tag)
+			@endforeach
+			@endif
+		</div>
 	</div>
 	<h2 class="text-4xl font-semibold pl-3 break-words">{{ $question->title }}</h2>
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
