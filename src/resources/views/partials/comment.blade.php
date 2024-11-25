@@ -14,7 +14,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 
 <article id="comment" class="mt-2" data-id="{{ $post->id }}">
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm">
-		<a class="tool-link" href="{{ $user ? url('/user/' . $user->id) : '/' }}">
+		<a class="tool-link" href="{{ $user ? url('/users/' . $user->id) : '/' }}">
 			<div class="flex flex-row items-center">
 				<img
 					src="{{ $profile_pic }}"
