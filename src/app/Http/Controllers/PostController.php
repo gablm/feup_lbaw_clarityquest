@@ -20,31 +20,11 @@ class PostController extends Controller
 		]);
 
 		$user = Auth::user();
-		$positive = null;
-		switch ($request->positive)
-		{
-			case "1":
-				$positive = true;
-				break;
-			case "0":
-				$positive = null;
-				break;
-			case "-1":
-				$positive = false;
-				break;
-		}
+		$positive = $request->positive === "true";
 
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 		DB::transaction(function () use ($user, $id, $positive) {
 			$post = Post::findOrFail($id);
-
-			if ($positive == null)
-			{
-				DB::table('votes')
-					->where('user_id', $user->id)
-					->where('post_id', $post->id)->delete();
-				return;
-			}
 
 			DB::table('votes')->updateOrInsert(
 				['user_id' => $user->id, 'post_id' => $post->id],
