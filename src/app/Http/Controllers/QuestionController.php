@@ -144,10 +144,10 @@ class QuestionController extends Controller
 		]);
 	}
 
-	public function follow(Request $request, string $id)
+	public function follow(string $id)
 	{
 		$user = Auth::user();
-		
+
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 		$question = DB::transaction(function () use ($user, $id) {
 			$question = Question::findOrFail($id);
