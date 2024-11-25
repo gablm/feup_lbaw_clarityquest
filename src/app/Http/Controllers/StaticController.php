@@ -99,8 +99,11 @@ class StaticController extends Controller
 		]);
 	}
 
-	  public function mainFeatures()
+	 /**
+     * Show the main features page.
+     */
+    public function mainFeatures()
     {
-        return view('main-features');
+        return view('pages.main-features');
     }
 }
