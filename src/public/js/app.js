@@ -303,3 +303,18 @@ function sendVoteRequest(id, positive) {
 			count.textContent = JSON.parse(request.responseText).votes;
 		});
 }
+
+function followQuestion(button) {
+	let id = button.getAttribute('data-id');
+
+	sendAjaxRequest('POST', '/questions/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			button.parentElement.replaceChild(doc.body.firstChild, button);
+		});
+}

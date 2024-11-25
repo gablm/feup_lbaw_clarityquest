@@ -71,6 +71,7 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');
 
 	Route::get('/questions/{id}', 'show');
+	Route::post('/questions/{id}', 'follow')->middleware('auth');
 	Route::delete('/questions/{id}', 'delete')->middleware('auth');
 	Route::patch('/questions/{id}', 'update')->middleware('auth');
 });

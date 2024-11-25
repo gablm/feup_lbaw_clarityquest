@@ -67,7 +67,6 @@ class Post extends Model
 	public function creationFTime() : string
 	{
 		$date = date('Y-m-d', time());
-		$year = date('Y', );
 		$time = explode(" ", $this->created_at);
 
 		if ($date == $time[0])

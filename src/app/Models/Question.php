@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
 class Question extends Model
@@ -49,6 +50,14 @@ class Question extends Model
         return $this->belongsToMany(Tag::class, 'posttag', 'post_id', 'tag_id');
     }
 
+	/**
+     * Get all the questions that a user follows.
+     */
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'followquestion', 'question_id', 'user_id');
+    }
+
     /**
      * Get the top 10 questions sorted by score.
      *
@@ -75,5 +84,9 @@ class Question extends Model
             ->limit(10)
             ->get();
     }
-    
+
+	public function isFollowed(User $user)
+	{
+		return $this->follows()->where('users.id', $user->id)->exists();
+	}
 }

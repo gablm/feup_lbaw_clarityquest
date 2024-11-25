@@ -28,19 +28,16 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
 	<div class="flex items-center">
 		<div class="space-x-1">
-            <button onclick="sendVoteRequest({{ $question->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
-            <span id="votes-{{ $question->id }}" class="vote-count">{{ $question->post->votes }}</span>
-            <button onclick="sendVoteRequest({{ $question->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
-        </div>
+			<button onclick="sendVoteRequest({{ $question->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
+			<span id="votes-{{ $question->id }}" class="vote-count">{{ $question->post->votes }}</span>
+			<button onclick="sendVoteRequest({{ $question->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
+		</div>
 		@if (Auth::check())
 		<button onclick="showCreateCommentModal({{ $question->id }})" class="tool-link">
 			<i class="fa-solid fa-plus"></i>
 			<span class="max-sm:hidden ml-1">Comment</span>
 		</button>
-		<a href=# class="tool-link">
-			<i class="fa-solid fa-bell"></i>
-			<span class="max-sm:hidden ml-1">Follow</span>
-		</a>
+		@include('partials.follow-btn', $question)
 		@if ($owner == false && $post->user)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
