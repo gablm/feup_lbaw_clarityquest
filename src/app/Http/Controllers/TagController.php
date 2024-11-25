@@ -83,4 +83,39 @@ class TagController extends Controller
 			'tag' => $tag
 		]);
     }
+    
+    /**
+     * Follow or unfollow a tag.
+     */
+    public function follow(string $id)
+    {
+        $user = Auth::user();
+
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        $tag = DB::transaction(function () use ($user, $id) {
+            $tag = Tag::findOrFail($id);
+
+            $exists = DB::table('followtag')
+                ->where('user_id', $user->id)
+                ->where('tag_id', $tag->id)
+                ->exists();
+
+            if ($exists) {
+                DB::table('followtag')
+                    ->where('user_id', $user->id)
+                    ->where('tag_id', $tag->id)
+                    ->delete();
+                return $tag;
+            }
+
+            DB::table('followtag')->insert([
+                'user_id' => $user->id,
+                'tag_id' => $tag->id
+            ]);
+
+            return $tag;
+        });
+
+        return response()->json(['success' => true, 'followed' => !$exists]);
+    }
 }

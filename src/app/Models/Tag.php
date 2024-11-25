@@ -68,4 +68,17 @@ class Tag extends Model
     {
         return $this->belongsToMany(Question::class, 'posttag', 'tag_id', 'post_id', 'id', 'id');
     }
+
+    /**
+     * Get all the tags that a user follows.
+     */
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'followtag', 'tag_id', 'user_id');
+    }
+    
+    public function isFollowed(User $user)
+	{
+		return $this->follows()->where('users.id', $user->id)->exists();
+	}
 }

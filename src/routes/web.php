@@ -51,6 +51,7 @@ Route::controller(TagController::class)->group(function () {
 	Route::put('/tags', 'create')->middleware('auth');
 	Route::delete('/tags/{id}', 'delete')->name('delete')->middleware('auth');
 	Route::patch('/tags/{id}', 'update')->middleware('auth');
+	Route::post('/tags/{id}', 'follow')->middleware('auth');
 });
 
 // Answers
@@ -74,6 +75,10 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::post('/questions/{id}', 'follow')->middleware('auth');
 	Route::delete('/questions/{id}', 'delete')->middleware('auth');
 	Route::patch('/questions/{id}', 'update')->middleware('auth');
+
+	Route::post('/questions/{id}/tags',  'addTag')->middleware('auth');
+	Route::post('/questions/{id}/tags/remove', 'removeTag')->middleware('auth');
+
 });
 
 // Posts
@@ -102,6 +107,3 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-
-Route::post('/questions/{id}/tags', [QuestionController::class, 'addTag'])->middleware('auth');
-Route::post('/questions/{id}/tags/remove', [QuestionController::class, 'removeTag'])->middleware('auth');
