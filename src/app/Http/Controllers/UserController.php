@@ -35,55 +35,57 @@ class UserController extends Controller
 		return view('users.edit');
 	}
 
-	/**
+		/**
 	 * Update a user's profile.
 	 */
 	public function update(Request $request, string $id)
-	{
-		$user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-		$this->authorize('update', $user);
+        $this->authorize('update', $user);
 
-		$request->validate([
-			'name' => 'required|string|max:255',
-			'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-			'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-			'bio' => 'nullable|string|max:1000',
-			'password' => 'nullable|string|min:8|confirmed',
-		]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bio' => 'nullable|string|max:1000',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
 
-		$user->name = $request->name;
-		$user->email = $request->email;
-		$user->bio = $request->bio;
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-		if ($request->has('remove_profile_pic') && $request->remove_profile_pic)
-		{
-			if ($user->profile_pic)
-			{
-				unlink(public_path($user->profile_pic));
-				$user->profile_pic = null;
-			}
-		} 
-		elseif ($request->hasFile('profile_pic'))
-		{
-			if ($user->profile_pic && file_exists($user->profile_pic))
-				unlink(public_path($user->profile_pic));
+        DB::transaction(function () use ($request, $user) {
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->bio = $request->bio;
 
-			$file = $request->file('profile_pic');
-			$filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
-			$file->move(public_path('profile_pics'), $filename);
+            if ($request->has('remove_profile_pic') && $request->remove_profile_pic) {
+                if ($user->profile_pic) {
+                    unlink(public_path($user->profile_pic));
+                    $user->profile_pic = null;
+                }
+            } elseif ($request->hasFile('profile_pic')) {
+                if ($user->profile_pic && file_exists(public_path($user->profile_pic))) {
+                    unlink(public_path($user->profile_pic));
+                }
 
-			$user->profile_pic = 'profile_pics/' . $filename;
-		}
+                $file = $request->file('profile_pic');
+                $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('profile_pics'), $filename);
 
-		if ($request->password)
-			$user->password = Hash::make($request->password);
+                $user->profile_pic = 'profile_pics/' . $filename;
+            }
 
-		$user->save();
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+            }
 
-		return redirect()->route('profile')
-			->with('success', 'Profile updated successfully.');
-	}
+            $user->save();
+        });
+
+        return redirect()->route('profile')
+            ->with('success', 'Profile updated successfully.');
+    }
 
 	public function activity()
 	{
@@ -144,20 +146,30 @@ class UserController extends Controller
 	 * Delete a user.
 	 */
 	public function delete(Request $request, string $id)
-	{
-		$user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-		$this->authorize('delete', $user);
+        $this->authorize('delete', $user);
 
-		$curr = Auth::user();
-		$user->delete();
+        $curr = Auth::user();
 
-		if ($curr->id == $user->id) {
-			Auth::logout();
-			$request->session()->invalidate();
-			$request->session()->regenerateToken();
-			return redirect(RouteServiceProvider::HOME)
-				->withSuccess('You have logged out successfully!');
-		}
-	}
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+
+        DB::transaction(function () use ($user, $curr, $request) {
+            $user->delete();
+
+            if ($curr->id == $user->id) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
+        });
+
+        if ($curr->id == $user->id) {
+            return redirect(RouteServiceProvider::HOME)
+                ->withSuccess('You have logged out successfully!');
+        }
+
+        return redirect()->back()->with('success', 'User deleted successfully.');
+    }
 }
