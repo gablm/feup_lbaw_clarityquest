@@ -13,33 +13,33 @@ use Illuminate\Support\Facades\DB;
 
 class StaticController extends Controller
 {
-    /**
-     * Show the application home page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
-    {
-        $topQuestions = Question::getTopQuestions();
-        $latestQuestions = Question::getLatestQuestions();
+	/**
+	 * Show the application home page.
+	 *
+	 * @return \Illuminate\View\View
+	 */
+	public function index()
+	{
+		$topQuestions = Question::getTopQuestions();
+		$latestQuestions = Question::getLatestQuestions();
 
-        return view('pages.home', compact('topQuestions', 'latestQuestions'));
-    }
+		return view('pages.home', compact('topQuestions', 'latestQuestions'));
+	}
 
-    /**
-     * Show the about page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function aboutUs()
-    {
-        return view('pages.about');
-    }
+	/**
+	 * Show the about page.
+	 *
+	 * @return \Illuminate\View\View
+	 */
+	public function aboutUs()
+	{
+		return view('pages.about');
+	}
 
-    public function contacts()
-    {
-        return view('pages.contacts');
-    }
+	public function contacts()
+	{
+		return view('pages.contacts');
+	}
 
 	public function search(Request $request)
 	{
@@ -77,14 +77,23 @@ class StaticController extends Controller
 			->orderByDesc('rank') // Order by relevance rank
 			->get();
 
+		$tags = Tag::select(
+			'id',
+			'name',
+			DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank') // Compute rank based on search
+		)
+			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery]) // Match the tsvectors column
+			->orderByDesc('rank') // Order by relevance rank
+			->get();
+
 		// Return the search results to the view
-		return view('pages.search', ['questions' => $questions, 'users' => $users, 'query' => $query]);
+		return view('pages.search', ['questions' => $questions, 'users' => $users, 'tags' => $tags, 'query' => $query]);
 	}
 
 	public function admin()
 	{
 		if (!Auth::check() || !Auth::user()->isElevated())
-            return redirect('/');
+			return redirect('/');
 
 		$users = User::all();
 

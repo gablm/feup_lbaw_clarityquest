@@ -10,7 +10,7 @@
 		@else
 		<div class="flex flex-col space-y-4">
 			@foreach($followedTags as $tag)
-			<a href="{{ url('/tags/' . $tag->id) }}" class="tag-big">#{{ $tag->name }}</a>
+			@include('partials.tag-card', ['tag' => $tag, 'panel' => false])
 			@endforeach
 		</div>
 		@endif

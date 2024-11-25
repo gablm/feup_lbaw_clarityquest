@@ -227,7 +227,7 @@ CREATE INDEX answer_question ON "answers" USING hash (question_id);
 -- Full-text Search Indexes --
 --                          --
 
--- Name Search --
+-- Name/Username Search --
 
 -- Add column to "users" to store computed ts_vector.
 ALTER TABLE "users"
@@ -291,6 +291,38 @@ FOR EACH ROW
 EXECUTE PROCEDURE questions_search_update();
 
 CREATE INDEX title_search ON "questions" USING GIN (tsvectors);
+
+--
+-- "tags" search --
+--
+
+-- Add column to "tags" to store computed ts_vector.
+ALTER TABLE "tags"
+ADD COLUMN tsvectors TSVECTOR;
+
+-- Create a function to automatically update ts_vectors for Tags.
+CREATE FUNCTION tags_search_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.name), 'A');
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF (NEW.name <> OLD.name) THEN
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.name), 'A');
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on "tags".
+CREATE TRIGGER tags_search_update
+BEFORE INSERT OR UPDATE ON "tags"
+FOR EACH ROW
+EXECUTE PROCEDURE tags_search_update();
+
+CREATE INDEX tag_search ON "tags" USING GIN (tsvectors);
 
 -----------------------
 -- Triggers and UDFs --
