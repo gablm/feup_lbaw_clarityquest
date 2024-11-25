@@ -188,8 +188,8 @@ CREATE TABLE NotificationPost(
     notification_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
     PRIMARY KEY (notification_id, post_id),
-    FOREIGN KEY (notification_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES "notifications"(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES "notifications"(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE NotificationUser(
@@ -635,11 +635,138 @@ INSERT INTO "comments" (id, post_id) VALUES
 (47, 19),
 (48, 20);
 
+INSERT INTO "votes" (user_id, post_id, positive) VALUES
+(1, 1, TRUE),
+(1, 2, FALSE),
+(1, 3, TRUE),
+(1, 4, TRUE),
+(1, 5, FALSE),
+(1, 6, TRUE),
+(1, 7, TRUE),
+(1, 8, FALSE),
+(1, 9, TRUE),
+(1, 10, TRUE),
+(2, 11, FALSE),
+(2, 12, TRUE),
+(2, 13, TRUE),
+(2, 14, FALSE),
+(2, 15, TRUE),
+(2, 16, FALSE),
+(2, 17, TRUE),
+(2, 18, TRUE),
+(2, 19, FALSE),
+(2, 20, TRUE),
+(3, 21, TRUE),
+(3, 22, FALSE),
+(3, 23, TRUE),
+(3, 24, TRUE),
+(3, 25, FALSE),
+(3, 26, TRUE),
+(3, 27, TRUE),
+(3, 28, FALSE),
+(3, 29, TRUE),
+(3, 30, TRUE),
+(4, 31, FALSE),
+(4, 32, TRUE),
+(4, 33, TRUE),
+(4, 34, FALSE),
+(4, 35, TRUE),
+(4, 36, TRUE),
+(4, 37, FALSE),
+(4, 38, TRUE),
+(4, 39, TRUE),
+(5, 40, TRUE),
+(5, 41, FALSE),
+(5, 42, TRUE),
+(5, 43, TRUE),
+(5, 44, FALSE),
+(5, 45, TRUE),
+(5, 46, TRUE),
+(5, 47, FALSE),
+(5, 48, TRUE),
+(6, 1, FALSE),
+(6, 2, TRUE),
+(6, 3, TRUE),
+(6, 4, FALSE),
+(6, 5, TRUE),
+(6, 6, FALSE),
+(6, 7, TRUE),
+(6, 8, TRUE),
+(6, 9, FALSE),
+(6, 10, TRUE);
 
---votes
---medals
---reports
---notifications
---notificationpost
---notificationuser
---editions
+INSERT INTO "editions" (post_id, old_title, new_title, old, new, made_at) VALUES
+(1, 'What are the best practices for securing a web application?', 'How to secure a web app?', 'The best practices for securing a web application include using HTTPS, validating input, and implementing proper authentication mechanisms.', 'Securing a web app requires careful consideration of authentication, encryption, and input validation.', '2023-08-17 10:30:00'),
+(3, 'What is the impact of AI on healthcare?', 'How AI is Transforming Healthcare', 'AI has the potential to transform healthcare by improving diagnosis, personalizing treatment, and automating tasks.', 'AI is improving healthcare by automating tasks, enhancing diagnostics, and providing personalized treatment plans.', '2023-10-14 09:00:00'),
+(6, 'How do you prepare the perfect sourdough bread?', 'The Art of Sourdough Baking', 'To prepare the perfect sourdough bread, you need to carefully manage your starter and monitor the fermentation process.', 'The key to making perfect sourdough is nurturing your starter and maintaining the right fermentation conditions.', '2023-06-26 11:20:00'),
+(10, 'What are the key challenges in remote work?', 'Overcoming Remote Work Challenges', 'Challenges in remote work include managing time effectively, dealing with isolation, and maintaining productivity.', 'Remote work presents challenges such as time management, isolation, and staying productive in an unstructured environment.', '2023-03-01 10:00:00'),
+(12, NULL, NULL, 'Blockchain works by decentralizing data across a network of computers, making it secure through consensus protocols.', 'Blockchain ensures security by decentralizing data and using consensus mechanisms.', '2023-09-05 09:40:00'),
+(17, NULL, NULL, 'Investing in stocks can be risky, but it’s also very rewarding in the long run.', 'Stock market investing can be risky, but it also offers long-term rewards for informed investors.', '2023-11-04 14:45:00'),
+(22, 'What are some must-visit places in Europe?', 'Top European travel destinations', 'Europe offers a variety of must-visit places such as Paris, Rome, and Amsterdam, each rich in history and culture.', 'Europe is home to some amazing cities like Paris, Rome, and Amsterdam, full of rich history and culture.', '2023-07-23 13:10:00'),
+(25, NULL, NULL, 'Sourdough bread is amazing, but it takes a lot of patience!', 'Sourdough bread is delicious, but it requires time and patience to perfect.', '2023-06-26 14:10:00'),
+(32, NULL, NULL, 'Investing in stocks requires understanding market trends and having a long-term perspective.', 'Stock investing requires a solid understanding of market trends and a patient, long-term approach.', '2023-11-04 15:30:00'),
+(39, NULL, NULL, 'Landscape photography involves capturing natural scenes using techniques like proper lighting and composition.', 'Landscape photography relies on perfecting the lighting, composition, and perspective to capture nature’s beauty.', '2023-03-23 12:30:00');
+
+INSERT INTO "reports" (reason, user_id, post_id, created_at) VALUES
+('Inappropriate content', 3, 2, '2023-09-05 14:30:00'),
+('Spam content', 4, 3, '2023-10-14 12:20:00'),
+('Offensive language', 5, 5, '2023-06-27 15:40:00'),
+('Irrelevant answer', 6, 8, '2023-06-17 11:15:00'),
+('Misleading information', 3, 7, '2023-03-23 16:00:00'),
+('Duplicate content', 4, 9, '2023-02-25 13:30:00'),
+('Rude comment', 5, 10, '2023-03-01 14:25:00'),
+('Incorrect advice', 6, 12, '2023-08-01 10:40:00'),
+('Offensive image', 3, 13, '2023-09-10 17:00:00'),
+('Not relevant to the topic', 4, 14, '2023-07-22 08:45:00'),
+('Personal attack', 5, 15, '2023-06-12 13:50:00'),
+('Does not add value', 6, 16, '2023-08-05 19:00:00'),
+('Spamming links', 3, 18, '2023-09-03 11:20:00'),
+('Unclear and confusing', 4, 20, '2023-02-18 10:30:00'),
+('Inappropriate language', 5, 25, '2023-07-01 16:55:00');
+
+INSERT INTO "medals" (user_id, posts_upvoted, posts_created, questions_created, answers_posted) VALUES
+(1, 5, 5, 3, 2),
+(2, 7, 4, 3, 3),
+(3, 6, 5, 4, 3),
+(4, 4, 5, 3, 2),
+(5, 3, 5, 3, 2),
+(6, 8, 5, 2, 3);
+
+INSERT INTO "notifications" (receiver, description, type, sent_at) VALUES
+(1, 'A new report has been filed regarding post 3.', 'REPORT', '2023-11-15 08:30:00'),
+(2, 'A new report has been filed regarding post 7.', 'REPORT', '2023-11-15 09:15:00'),
+(3, 'A new report has been filed regarding post 15.', 'REPORT', '2023-11-15 10:00:00');
+
+INSERT INTO "notifications" (receiver, description, type, sent_at) VALUES
+(4, 'Your question "What are the best practices for securing a web application?" has received a new answer.', 'RESPONSE', '2023-08-16 10:15:00'),
+(5, 'Your question "What is the impact of AI on healthcare?" has received a new answer.', 'RESPONSE', '2023-10-13 10:00:00'),
+(6, 'Your question "What are some must-visit places in Europe?" has received a new answer.', 'RESPONSE', '2023-07-22 17:15:00');
+
+INSERT INTO "notifications" (receiver, description, type, sent_at) VALUES
+(3, 'Your answer to "How does blockchain technology work?" has received a new comment.', 'RESPONSE', '2023-09-03 12:45:00'),
+(4, 'Your answer to "How do you prepare the perfect sourdough bread?" has received a new comment.', 'RESPONSE', '2023-06-25 15:30:00');
+
+INSERT INTO "notifications" (receiver, description, type, sent_at) VALUES
+(1, 'System maintenance scheduled for tonight at midnight. Expect some downtime.', 'OTHER', '2023-11-15 11:00:00'),
+(2, 'System maintenance is complete. Everything is back to normal.', 'OTHER', '2023-11-15 14:00:00');
+
+INSERT INTO NotificationUser (notification_id, user_id) VALUES
+(1, 1),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 3),
+(8, 4),
+(9, 1),
+(10, 2);
+
+INSERT INTO NotificationPost (notification_id, post_id) VALUES
+(1, 3),
+(2, 7),
+(3, 15),
+(4, 1),
+(5, 3),
+(6, 4),
+(7, 2),
+(8, 5);
