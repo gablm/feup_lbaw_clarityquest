@@ -9,6 +9,9 @@
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-semibold mb-4">Search Results</h2>
         <p class="text-gray-700">Showing results for: <strong>{{ $query }}</strong></p>
+		@if($questions->isEmpty() && $users->isEmpty() && $tags->isEmpty())
+		<p class="text-gray-700 mt-4">No results found.</p>
+		@endif
         @if(!$questions->isEmpty())
 		<h2 class="text-md font-semibold my-4">Questions</h2>
         <div class="space-y-4 mt-4">
