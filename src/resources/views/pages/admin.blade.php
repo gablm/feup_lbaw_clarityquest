@@ -41,9 +41,7 @@
 			@else
 			<div class="space-y-4">
 				@foreach($reports as $report)
-				<div>
-					Report 1
-				</div>
+				@include('partials.report-card', $report)
 				@endforeach
 			</div>
 			@endif
@@ -60,7 +58,6 @@
 			</div>
 			@endif
 		</div>
-		
 		
 		<div id="tags-section" class="tab-content hidden">
 		@if (Auth::user()->isAdmin())
