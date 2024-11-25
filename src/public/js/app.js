@@ -399,3 +399,18 @@ function followTag(button) {
 			button.parentElement.replaceChild(doc.body.firstChild, button);
 		});
 }
+
+function deleteUser(id) {
+	let confirmed = confirm('Are you sure you want to delete this user? This action cannot be undone.');
+	if (confirmed == false) return;
+
+	let user = document.querySelector('#user[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/users/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			user.remove();
+		});
+}

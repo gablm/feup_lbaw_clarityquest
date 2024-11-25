@@ -25,7 +25,7 @@
 		@else
 		<div class="space-y-4 mt-4">
             @foreach($users as $user)
-                @include('partials.user-card', $user)
+			@include('partials.user-card', ['user' => $user, 'panel' => false])
             @endforeach
         </div>
         @endif
