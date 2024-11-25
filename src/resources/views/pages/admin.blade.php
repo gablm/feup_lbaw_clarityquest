@@ -102,7 +102,14 @@
 				<p class="pl-4 text-gray-700">No tags found.</p>
 				@endif
 				@foreach($tags as $tag)
-				@include('partials.tag-card', $tag)
+				<div class="flex justify-between items-center p-4 bg-white shadow-md rounded-lg">
+					<span>#{{ $tag->name }}</span>
+					<form method="POST" action="{{ url('/tags/' . $tag->id) }}" onsubmit="return confirmDeleteTag('{{ $tag->name }}')">
+						@csrf
+						@method('DELETE')
+						<button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+					</form>
+				</div>
 				@endforeach
 			</div>
 		</div>

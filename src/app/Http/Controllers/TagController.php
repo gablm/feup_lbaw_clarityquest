@@ -20,7 +20,7 @@ class TagController extends Controller
     }
 
 	/**
-     * Display a comment.
+     * Display a tag.
      */
     public function show(string $id)
     {
@@ -52,7 +52,7 @@ class TagController extends Controller
     }
 
 	/**
-     * Delete a comment.
+     * Delete a tag.
      */
 	public function delete(string $id)
 	{
@@ -63,7 +63,7 @@ class TagController extends Controller
 	}
 
 	/**
-     * Update a comment.
+     * Update a tag.
      */
     public function update(Request $request, string $id)
     {

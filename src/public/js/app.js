@@ -276,20 +276,21 @@ function closeCreateTagModal() {
 }
 
 function sendCreateTagRequest() {
-	let tagList = document.querySelector('#tag-list');
-	let text = document.querySelector('#tag-name');
+    let tagList = document.querySelector('#tag-list');
+    let text = document.querySelector('#tag-name');
 
-	sendAjaxRequest('PUT', '/tags', { name: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
+    sendAjaxRequest('PUT', '/tags', { name: text.value },
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status != 200) return;
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(request.responseText, 'text/html');
 
-			tagList.prepend(doc.body.firstChild);
-			closeCreateTagModal();
-		});
+            tagList.prepend(doc.body.firstChild);
+            closeCreateTagModal();
+            location.reload();
+        });
 }
 
 function sendVoteRequest(id, positive) {
@@ -301,36 +302,6 @@ function sendVoteRequest(id, positive) {
 			if (request.status != 200) return;
 
 			count.textContent = JSON.parse(request.responseText).votes;
-		});
-}
-
-function followQuestion(button) {
-	let id = button.getAttribute('data-id');
-
-	sendAjaxRequest('POST', '/questions/' + id, { },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			button.parentElement.replaceChild(doc.body.firstChild, button);
-		});
-}
-
-function deleteTag(id) {
-	let confirmed = confirm('Are you sure you want to delete this tag? This action cannot be undone.');
-	if (confirmed == false) return;
-
-	let tag = document.querySelector('#tag[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/tags/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			tag.remove();
 		});
 }
 
@@ -371,5 +342,43 @@ function sendEditTagRequest() {
 
 			tag.parentElement.replaceChild(doc.body.firstChild, tag);
 			closeEditTagModal();
+		});
+}
+
+function showTagModal() {
+    let modal = document.querySelector('#tag-modal');
+    modal.classList.remove('hidden');
+}
+
+function closeTagModal() {
+    let modal = document.querySelector('#tag-modal');
+    modal.classList.add('hidden');
+}
+
+
+function showDeleteTagModal() {
+    let modal = document.querySelector('#tag-delete');
+    modal.classList.remove('hidden');
+}
+
+function closeDeleteTagModal() {
+    let modal = document.querySelector('#tag-delete');
+    modal.classList.add('hidden');
+}
+function confirmDeleteTag(tagName) {
+    return confirm(`Are you sure you want to delete the tag "${tagName}"? This action cannot be undone.`);
+}
+function followQuestion(button) {
+	let id = button.getAttribute('data-id');
+
+	sendAjaxRequest('POST', '/questions/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			button.parentElement.replaceChild(doc.body.firstChild, button);
 		});
 }

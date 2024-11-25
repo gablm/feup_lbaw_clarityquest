@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Question;
 use App\Models\Edition;
 use App\Models\User;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -81,9 +82,11 @@ class QuestionController extends Controller
 	public function show(string $id)
 	{
 		$question = Question::findOrFail($id);
+        $tags = Tag::orderBy('name')->get();
 
 		return view('questions.show', [
-			'question' => $question
+			'question' => $question,
+            'tags' => $tags
 		]);
 	}
 
@@ -100,7 +103,6 @@ class QuestionController extends Controller
 			$question->post->delete();
 			$question->delete();
 		});
-
 		return redirect('/')->withSucess('Question deleted!');
 	}
 
@@ -111,6 +113,7 @@ class QuestionController extends Controller
 	{
 		$question = Question::findOrFail($id);
 		$post = $question->post;
+        $tags = Tag::orderBy('name')->get();
 
 		$this->authorize('update', $question);
 
@@ -140,7 +143,8 @@ class QuestionController extends Controller
 		});
 
 		return view('partials.question', [
-			'question' => $question
+			'question' => $question,
+            'tags' => $tags,
 		]);
 	}
 
@@ -172,9 +176,65 @@ class QuestionController extends Controller
 
 			return $question;
 		});
+        $tags = Tag::orderBy('name')->get();
 
 		return view('partials.follow-btn', [
-			'question' => $question
+			'question' => $question,
+            'tags' => $tags,
 		]);
 	}
+
+    /**
+     * Add a tag to a question.
+     */
+    public function addTag(Request $request, $id)
+    {
+        $request->validate([
+            'tag' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+        $question = Question::findOrFail($id);
+
+        if ($user->id !== $question->post->user_id && !$user->isElevated()) {
+            return redirect()->back()->with('error', 'You do not have permission to add a tag to this question.');
+        }
+
+        $tagName = trim($request->tag);
+
+        DB::transaction(function () use ($question, $tagName) {
+            $tag = Tag::firstOrCreate(['name' => $tagName]);
+            $question->tags()->attach($tag->id);
+        });
+
+        return redirect()->back()->with('success', 'Tag added successfully.');
+    }
+
+    /**
+     * Remove a tag from a question.
+     */
+    public function removeTag(Request $request, $id)
+    {
+        $request->validate([
+            'tag' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+        $question = Question::findOrFail($id);
+
+        if ($user->id !== $question->post->user_id && !$user->isElevated()) {
+            return redirect()->back()->with('error', 'You do not have permission to remove a tag from this question.');
+        }
+
+        $tagName = trim($request->tag);
+
+        DB::transaction(function () use ($question, $tagName) {
+            $tag = Tag::where('name', $tagName)->first();
+            if ($tag) {
+                $question->tags()->detach($tag->id);
+            }
+        });
+
+        return redirect()->back()->with('success', 'Tag removed successfully.');
+    }
 }

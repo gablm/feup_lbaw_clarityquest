@@ -49,7 +49,7 @@ Route::controller(TagController::class)->group(function () {
 	Route::get('/tags/{id}', 'show')->middleware('auth');
 
 	Route::put('/tags', 'create')->middleware('auth');
-	Route::delete('/tags/{id}', 'delete')->middleware('auth');
+	Route::delete('/tags/{id}', 'delete')->name('delete')->middleware('auth');
 	Route::patch('/tags/{id}', 'update')->middleware('auth');
 });
 
@@ -102,3 +102,6 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+Route::post('/questions/{id}/tags', [QuestionController::class, 'addTag'])->middleware('auth');
+Route::post('/questions/{id}/tags/remove', [QuestionController::class, 'removeTag'])->middleware('auth');
