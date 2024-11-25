@@ -32,7 +32,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 			<span id="votes-{{ $comment->id }}" class="vote-count">{{ $comment->post->votes }}</span>
 			<button onclick="sendVoteRequest({{ $comment->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
 		</div>
-		@if ($owner == false && $post->user && Auth::check())
+		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
 			<span class="ml-1">Report</span>

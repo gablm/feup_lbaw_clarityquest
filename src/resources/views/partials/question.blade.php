@@ -38,10 +38,10 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 			<span class="max-sm:hidden ml-1">Comment</span>
 		</button>
 		@include('partials.follow-btn', $question)
-		@if ($owner == false && $post->user)
+		@if ($owner == false && $post->user && Auth::user()->isElevated() == false)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
-			<span class="max-sm:hidden ml-1">Report</span>
+			<span class="max-md:hidden ml-1">Report</span>
 		</a>
 		@endif
 		@if ($owner || $elevated)

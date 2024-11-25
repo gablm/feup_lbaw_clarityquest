@@ -43,7 +43,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 			<span class="max-sm:hidden ml-1">Comment</span>
 		</button>
 		@endif
-		@if ($owner == false && $post->user)
+		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
 			<span class="max-sm:hidden ml-1">Report</span>
