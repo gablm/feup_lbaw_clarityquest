@@ -21,8 +21,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        $has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+        $has_role = $has_role = $user->isAdmin();;
 		$is_owner = $user->id == $comment->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 		

@@ -21,8 +21,7 @@ class QuestionPolicy
      */
     public function update(User $user, Question $question): bool
     {
-        $has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+        $has_role = $has_role = $user->isAdmin();;
 		$is_owner = $user->id == $question->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 		

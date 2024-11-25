@@ -29,8 +29,7 @@ class AnswerPolicy
      */
     public function update(User $user, Answer $answer): bool
     {
-        $has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+        $has_role = $user->isAdmin();
 		$is_owner = $user->id == $answer->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 		

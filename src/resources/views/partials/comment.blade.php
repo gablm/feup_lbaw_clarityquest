@@ -38,11 +38,13 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 			<span class="ml-1">Report</span>
 		</a>
 		@endif
-		@if ($owner || $elevated)
+		@if ($owner || (Auth::check() && Auth::user()->isAdmin()))
 		<button onclick="showEditPostModal('comment', {{ $post->id }}, '{{ $post->text }}')" class="tool-link">
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-sm:hidden ml-1">Edit</span>
 		</button>
+		@endif
+		@if ($owner || $elevated)
 		<button data-id="{{ $comment->post->id }}" onclick="deleteComment(this)" class="tool-link text-red-500">
 			<i class="fa-solid fa-trash"></i>
 			<span class="max-md:hidden ml-1">Delete</span>

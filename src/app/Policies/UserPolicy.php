@@ -12,8 +12,7 @@ class UserPolicy
      */
     public function update(User $user, User $user2): bool
     {
-        $has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+        $has_role = $has_role = $user->isAdmin();;
 		$is_owner = $user->id == $user2->id;
 		$is_blocked = $user->role == Permission::Blocked;
 		
@@ -25,8 +24,7 @@ class UserPolicy
      */
     public function delete(User $user, User $user2): bool
     {
-		$has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+		$has_role = $user->isAdmin();
 		$is_owner = $user->id == $user2->id;
 		$is_blocked = $user->role == Permission::Blocked;
 		

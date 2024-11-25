@@ -54,10 +54,10 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 		</a>
 		@endif
 		@if ($owner || $elevated)
-		<a href="javascript:void(0);" class="tool-link" onclick="showTagModal()">
+		<button class="tool-link" onclick="showTagModal()">
 			<i class="fa-solid fa-tags"></i>
-			<span class="max-sm:hidden ml-1">Manage Tags</span>
-		</a>
+			<span class="max-lg:hidden ml-1">Manage Tags</span>
+		</button>
 		@endif
 		<div id="tag-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
 			<div class="bg-white rounded-lg p-6 w-1/3">
@@ -92,11 +92,13 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 				</ul>
 			</div>
 		</div>
-		@if ($owner || $elevated)
+		@if ($owner || (Auth::check() && Auth::user()->isAdmin()))
 		<button class="tool-link" onclick="showEditQuestionModal()">
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-md:hidden ml-1">Edit</span>
 		</button>
+		@endif
+		@if ($owner || $elevated)
 		<form method="POST" action="{{ url('/questions/'. $question->id)}}" onsubmit="return confirm('Are you sure you want to delete this question? This action cannot be undone.');">
 			@csrf
 			@method('DELETE')
