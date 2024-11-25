@@ -50,7 +50,7 @@ http://127.0.0.1:8000/
 
 ## Deploying the project on FEUP's servers
 
-- Set up the development evnironment
+- Set up the development environment
 
 - Login to GitLab's Container Registry (using FEUP VPN/network):
 ```bash
@@ -62,11 +62,11 @@ docker login gitlab.up.pt:5050
 ./upload_image.sh
 ```
 
-### Testing your image
+### Testing the image
 
 - After publishing, the image can be tested locally using:
 ```bash
-docker run -d --name lbawYYXX -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24125
+docker run -d --name lbaw2425 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24125
 ```
 
 ## References
