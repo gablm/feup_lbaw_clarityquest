@@ -132,4 +132,25 @@ class AnswerController extends Controller
 			'answer' => $answer
 		]);
     }
+    /**
+     * Mark an answer as correct.
+     */
+    public function markAsCorrect(string $id)
+    {
+        $answer = Answer::findOrFail($id);
+        $question = $answer->question;
+
+        $this->authorize('update', $question);
+
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+
+        DB::transaction(function () use ($answer, $question) {
+            $question->answers()->update(['correct' => false]);
+
+            $answer->correct = true;
+            $answer->save();
+        });
+
+        return redirect()->back()->with('success', 'Answer marked as correct.');
+    }
 }

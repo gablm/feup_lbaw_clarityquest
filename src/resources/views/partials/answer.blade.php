@@ -49,11 +49,11 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 			<span class="max-sm:hidden ml-1">Report</span>
 		</a>
 		@endif
-		@if ($q_owner && $answer->correct == false)
-		<a href=# class="tool-link text-blue-700">
-			<i class="fa-solid fa-check"></i>
-			<span class="max-md:hidden ml-1">Mark as Correct</span>
-		</a>
+		@if ($q_owner && !$answer->correct)
+			<a href="javascript:void(0);" onclick="markAsCorrect({{ $answer->id }})" class="tool-link text-blue-700 mark-as-correct-btn">
+				<i class="fa-solid fa-check"></i>
+				<span class="max-md:hidden ml-1">Mark as Correct</span>
+			</a>
 		@endif
 		@if ($owner || (Auth::check() && Auth::user()->isAdmin()))
 		<button onclick="showEditPostModal('answer', {{ $post->id }}, '{{ $post->text }}')" class="tool-link">
