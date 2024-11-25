@@ -23,8 +23,8 @@
 					@if($user->bio)
 					<p class="text-gray-700 text-lg mt-2">{{ $user->bio }}</p>
 					@endif
+					<p class="text-gray-700 text-lg mt-2">{{ $user->password }}</p>
 				</div>
-
 			</div>
 			<div class="flex flex-col space-y-2 items-end">
 				@if (Auth::check() && Auth::user()->id == $user->id)

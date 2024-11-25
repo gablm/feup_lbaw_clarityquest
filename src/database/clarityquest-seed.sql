@@ -243,7 +243,7 @@ BEGIN
     END IF;
     IF TG_OP = 'UPDATE' THEN
         IF (NEW.username <> OLD.username) THEN
-            NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A');
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A')
 				|| setweight(to_tsvector('english', NEW.name), 'B');
         END IF;
     END IF;
@@ -388,3 +388,81 @@ CREATE TRIGGER trigger_update_medals_answers_posted
 AFTER INSERT ON "answers"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
+
+--------------
+-- Populate --
+--------------
+
+INSERT INTO "users" (username, email, name, password, profile_pic, bio, role)
+VALUES 
+	(
+		'admin',
+		'admin@clarityquest.com',
+		'John Admin',
+		'$2y$10$X8PeRk9GNXZjh4EtXEoxLu8j.2/7.0zA5f9/F/aNMfLfud8k.sEuu',
+		'profile_pics\1732553856_1.jpg',
+		'Software developer and coffee enthusiast.',
+		'ADMIN'
+	),
+	(
+		'mod',
+		'mod@clarityquest.com',
+		'Jane Moderator',
+		'$2y$10$1hTUkpDuo.2B4cJ8kLe2P.Sd4oHogLZQCNpZQ7yiqH7QZqD9buz.W',
+		'profile_pics\1732553768_2.jpg',
+		'Graphic designer. Love art and traveling.',
+		'MODERATOR'
+	),
+	(
+		'androe',
+		'andy.monroe@gmail.com',
+		'Andy Monroe',
+		'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+		NULL,
+		'PhD student researching Cancer.',
+		'REGULAR'
+	),
+	(
+    	'sarah1984',
+    	'sarah.connor1984@gmail.com',
+    	'Sarah Connor',
+    	'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+    	NULL,
+    	'Cybersecurity expert and technology enthusiast.',
+    	'REGULAR'
+	),
+	(
+    	'mikejo',
+    	'mike.jones@example.com',
+    	'Mike Jones',
+    	'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+    	NULL,
+    	'Aspiring chef, food blogger, and recipe creator.',
+    	'REGULAR'
+	),
+	(
+    	'lenachez',
+    	'elena.sanchez@outlook.com',
+    	'Elena Sanchez',
+    	'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+    	NULL,
+    	'Freelance photographer specializing in landscapes.',
+    	'REGULAR'
+	);
+
+INSERT INTO "tags" (name) VALUES 
+('Technology'),
+('Health'),
+('Education'),
+('Science'),
+('Travel'),
+('Food'),
+('Art'),
+('Music'),
+('Sports'),
+('Fitness'),
+('Photography'),
+('Business'),
+('Finance'),
+('Programming'),
+('Lifestyle');

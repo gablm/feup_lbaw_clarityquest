@@ -61,8 +61,9 @@
 			@endif
 		</div>
 		
-		@if (Auth::user()->isAdmin())
+		
 		<div id="tags-section" class="tab-content hidden">
+		@if (Auth::user()->isAdmin())
 			<button onclick="showCreateTagModal()" class="ml-4 mb-4 nav-main">
 				<i class="fa-solid fa-plus"></i>
 				<span class="max-sm:hidden ml-1">Create</span>
@@ -105,8 +106,8 @@
 				@include('partials.tag-card', $tag)
 				@endforeach
 			</div>
+			@endif
 		</div>
-		@endif
 	</div>
 </div>
 @endsection
