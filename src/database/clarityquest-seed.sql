@@ -417,7 +417,7 @@ VALUES
 		'androe',
 		'andy.monroe@gmail.com',
 		'Andy Monroe',
-		'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+		'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
 		NULL,
 		'PhD student researching Cancer.',
 		'REGULAR'
@@ -426,7 +426,7 @@ VALUES
     	'sarah1984',
     	'sarah.connor1984@gmail.com',
     	'Sarah Connor',
-    	'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+    	'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
     	NULL,
     	'Cybersecurity expert and technology enthusiast.',
     	'REGULAR'
@@ -435,7 +435,7 @@ VALUES
     	'mikejo',
     	'mike.jones@example.com',
     	'Mike Jones',
-    	'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+    	'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
     	NULL,
     	'Aspiring chef, food blogger, and recipe creator.',
     	'REGULAR'
@@ -444,7 +444,7 @@ VALUES
     	'lenachez',
     	'elena.sanchez@outlook.com',
     	'Elena Sanchez',
-    	'$2y$10$AtYOn50lq2EkGLll3ay6aO4Iiwij/qCiUigk/INhnXqi0qZh46Vdu',
+    	'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
     	NULL,
     	'Freelance photographer specializing in landscapes.',
     	'REGULAR'
