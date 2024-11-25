@@ -56,10 +56,9 @@ class TagController extends Controller
      */
 	public function delete(string $id)
 	{
+		//$this->authorize('delete');
+
 		$tag = Tag::findOrFail($id);
-
-		$this->authorize('delete');
-
 		$tag->delete();
 	}
 
@@ -68,10 +67,10 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
+		//$this->authorize('update');
+		
 		$tag = Tag::findOrFail($id);
-
-		$this->authorize('update');
-
+		
         $request->validate([
 			'name' => 'required|string|max:64'
         ]);

@@ -318,3 +318,18 @@ function followQuestion(button) {
 			button.parentElement.replaceChild(doc.body.firstChild, button);
 		});
 }
+
+function deleteTag(id) {
+	let confirmed = confirm('Are you sure you want to delete this tag? This action cannot be undone.');
+	if (confirmed == false) return;
+
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/tags/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			tag.remove();
+		});
+}
