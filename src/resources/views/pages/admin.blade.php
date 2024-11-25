@@ -22,6 +22,7 @@
 						Users
 					</button>
 				</li>
+				@if (Auth::user()->isAdmin())
 				<li>
 					<button
 						id="tags-tab"
@@ -30,6 +31,7 @@
 						Tags
 					</button>
 				</li>
+				@endif
 			</ul>
 		</div>
 
@@ -58,6 +60,8 @@
 			</div>
 			@endif
 		</div>
+		
+		@if (Auth::user()->isAdmin())
 		<div id="tags-section" class="tab-content hidden">
 			<button onclick="showCreateTagModal()" class="ml-4 mb-4 nav-main">
 				<i class="fa-solid fa-plus"></i>
@@ -101,8 +105,8 @@
 				@include('partials.tag-card', $tag)
 				@endforeach
 			</div>
-
 		</div>
+		@endif
 	</div>
 </div>
 @endsection
