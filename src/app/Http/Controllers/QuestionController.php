@@ -229,13 +229,6 @@ class QuestionController extends Controller
         DB::transaction(function () use ($question, $tagName, $user) {
             $tag = Tag::firstOrCreate(['name' => $tagName]);
             $question->tags()->attach($tag->id);
-			foreach ($tag->follows as $follower) {
-				Notification::create([
-					'receiver' => $follower->id,
-					'description' => "A new question titled '{$question->title}' by '{$user->username}' was asked with the tag '{$tag->name}'.",
-					'type' => 'RESPONSE',
-				]);
-			}
         });
 
         return redirect()->back()->with('success', 'Tag added successfully.');
