@@ -708,7 +708,7 @@ paths:
     put:
       operationId: R221
       summary: "R221: Create Tag"
-      description: "Create a new tag. Access: REG"
+      description: "Create a new tag. Access: ADMIN"
       tags:
         - "M02: Q&A"
       requestBody:
@@ -748,7 +748,7 @@ paths:
     delete:
       operationId: R223
       summary: "R223: Delete Tag"
-      description: "Delete a specific tag. Access: REG"
+      description: "Delete a specific tag. Access: ADMIN"
       tags:
         - "M02: Q&A"
       parameters:
@@ -765,7 +765,7 @@ paths:
     patch:
       operationId: R224
       summary: "R224: Update Tag"
-      description: "Update a specific tag. Access: REG"
+      description: "Update a specific tag. Access: ADMIN"
       tags:
         - "M02: Q&A"
       parameters:
