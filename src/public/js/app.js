@@ -454,3 +454,15 @@ function blockUser(id) {
 			user.parentElement.replaceChild(doc.body.firstChild, user);
 		});
 }
+
+function deleteNotification(id) {
+	let notification = document.querySelector('#notification[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/notifications/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			notification.remove();
+		});
+}
