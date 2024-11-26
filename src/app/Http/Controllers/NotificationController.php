@@ -58,18 +58,14 @@ class NotificationController extends Controller
      */
     public function delete($id)
     {
-        try {
-            $notification = Notification::findOrFail($id);
+        
+        $notification = Notification::findOrFail($id);
 
-            if ($notification->receiver !== auth()->id()) {
-                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
-            }
+        
     
-            $notification->delete();
+        $notification->delete();
     
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
-        }
+        return response()->json(['success' => true]);
     }
+        
 }

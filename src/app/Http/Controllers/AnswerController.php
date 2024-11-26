@@ -65,7 +65,7 @@ class AnswerController extends Controller
 
                 Notification::create([
                     'receiver' => $question->post->user_id, // Original poster's ID
-                    'description' => "Your question titled '{$question->title}' has been answered by {$user->username}.",
+                    'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
                     'type' => 'RESPONSE',
                 ]);
 
