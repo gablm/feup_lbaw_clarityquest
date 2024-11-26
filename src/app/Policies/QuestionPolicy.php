@@ -48,4 +48,16 @@ class QuestionPolicy
 
         return $has_role || ($is_owner && !$is_blocked);
     }
+
+	/**
+     * Determine whether the user can delete the model.
+     */
+    public function tags(User $user, Question $question): bool
+    {
+		$has_role = $user->isElevated();
+		$is_owner = $user->id == $question->post->user_id;
+		$is_blocked = $user->role == Permission::Blocked;
+
+        return $has_role || ($is_owner && !$is_blocked);
+    }
 }

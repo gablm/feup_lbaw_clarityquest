@@ -221,19 +221,16 @@ class QuestionController extends Controller
             'tag' => 'required|string',
         ]);
 
-        $user = Auth::user();
         $question = Question::findOrFail($id);
-		$this->authorize('show', $question);
-
-        if ($user->id !== $question->post->user_id && !$user->isElevated()) {
-            return redirect()->back()->with('error', 'You do not have permission to add a tag to this question.');
-        }
+		$this->authorize('tags', $question);
 
         $tagName = trim($request->tag);
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-        DB::transaction(function () use ($question, $tagName, $user) {
-            $tag = Tag::firstOrCreate(['name' => $tagName]);
-            $question->tags()->attach($tag->id);
+        DB::transaction(function () use ($question, $tagName) {
+            $tag = Tag::where('name', $tagName)->firstOrFail();
+			
+			if (!$question->tags->contains($tag->id))
+            	$question->tags()->attach($tag->id);
         });
 
         return redirect()->back()->with('success', 'Tag added successfully.');
@@ -248,13 +245,8 @@ class QuestionController extends Controller
             'tag' => 'required|string',
         ]);
 
-        $user = Auth::user();
         $question = Question::findOrFail($id);
-		$this->authorize('show', $question);
-
-        if ($user->id !== $question->post->user_id && !$user->isElevated()) {
-            return redirect()->back()->with('error', 'You do not have permission to remove a tag from this question.');
-        }
+		$this->authorize('tags', $question);
 
         $tagName = trim($request->tag);
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
