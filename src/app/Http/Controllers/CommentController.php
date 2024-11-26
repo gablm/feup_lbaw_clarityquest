@@ -110,7 +110,7 @@ class CommentController extends Controller
 
 			Notification::create([
 				'receiver' => $post->user_id,
-				'description' => "Your {$content} has been answered by user '{$user->username}'.",
+				'description' => "Your {$content} received a comment by user '{$user->username}'.",
 				'type' => 'RESPONSE',
 			]);
 
