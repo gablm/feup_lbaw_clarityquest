@@ -100,7 +100,7 @@
 				<p class="pl-4 text-gray-700">No tags found.</p>
 				@endif
 				@foreach($tags as $tag)
-				@include('partials.tag-card', $tag)
+				@include('partials.tag-card', ['tag' => $tag, 'panel' => true])
 				@endforeach
 			</div>
 			@endif
