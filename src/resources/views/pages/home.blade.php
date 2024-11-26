@@ -9,7 +9,7 @@
                 Top Questions
                 <span class="text-sm text-gray-500 relative group">[?]
                     <span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-                        These are the most popular questions based on votes and views.
+                        Here are the most popular questions based on votes and views.
                     </span>
                 </span>
             </h3>
@@ -29,7 +29,7 @@
                 Latest Questions
                 <span class="text-sm text-gray-500 relative group">[?]
                     <span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-                        These are the most recently asked questions.
+                        Here are the most recently asked questions.
                     </span>
                 </span>
             </h3>
