@@ -7,7 +7,7 @@
 			Admin Panel
 			<span class="text-sm text-gray-500 relative group">[?]
 				<span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-					Here is the panel for managing reports, users, and tags.
+					Here is the panel for managing reports, users and tags.
 				</span>
 			</span></h2>
 		<div class="mb-6 border-b border-gray-200">
