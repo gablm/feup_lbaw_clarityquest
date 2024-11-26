@@ -89,7 +89,7 @@ class CommentController extends Controller
     
         $request->validate([
             'text' => 'required|string|max:1000',
-            'id' => 'required|integer|exists:posts,id', // Validate that id corresponds to an existing post
+            'id' => 'required|integer|exists:posts,id', 
         ]);
     
         $ownerPost = Post::findOrFail($request->id);

@@ -14,6 +14,7 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +51,7 @@ Route::controller(TagController::class)->group(function () {
 	Route::get('/tags/{id}', 'show')->middleware('auth');
 
 	Route::put('/tags', 'create')->middleware('auth');
-	Route::delete('/tags/{id}', 'delete')->name('delete')->middleware('auth');
+	Route::delete('/tags/{id}', 'delete')->middleware('auth');
 	Route::patch('/tags/{id}', 'update')->middleware('auth');
 	Route::post('/tags/{id}', 'follow')->middleware('auth');
 });
@@ -111,4 +112,11 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+// Notifications
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
+    Route::get('/notifications/recent', 'recent')->name('notifications.recent')->middleware('auth');
+	Route::delete('/notifications/{id}/delete', [NotificationController::class, 'delete'])->middleware('auth');
 });

@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Edition;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,8 +37,6 @@ class AnswerController extends Controller
 	{
 		$answer = Answer::findOrFail($id);
 
-		$this->authorize('show', $answer);
-
 		return view('partials.answer', [
 			'answer' => $answer
 		]);
@@ -62,6 +61,12 @@ class AnswerController extends Controller
                 $post = Post::create([
                     'text' => $request->text,
                     'user_id' => $user->id,
+                ]);
+
+                Notification::create([
+                    'receiver' => $question->post->user_id, // Original poster's ID
+                    'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
+                    'type' => 'RESPONSE',
                 ]);
 
                 return Answer::create([
