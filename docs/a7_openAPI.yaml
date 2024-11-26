@@ -296,6 +296,12 @@ paths:
       responses:
         "200":
           description: Vote registered successfully
+        "302":
+          description: Redirect after voting
+          headers:
+            Location:
+              schema:
+                type: string
   /followed-questions:
     get:
       operationId: R202
@@ -359,6 +365,12 @@ paths:
       responses:
         "201":
           description: Question created successfully.
+        "302":
+          description: Redirect after question creation
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
   /questions/{id}:
@@ -392,6 +404,12 @@ paths:
       responses:
         "200":
           description: Question followed successfully.
+        "302":
+          description: Redirect after following question
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
     delete:
@@ -473,6 +491,12 @@ paths:
       responses:
         "200":
           description: Tag added to question successfully.
+        "302":
+          description: Redirect after adding tag
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
         "403":
@@ -502,6 +526,12 @@ paths:
       responses:
         "200":
           description: Tag removed successfully
+        "302":
+          description: Redirect after tag removal
+          headers:
+            Location:
+              schema:
+                type: string
   /my-answers:
     get:
       operationId: R212
@@ -538,6 +568,12 @@ paths:
       responses:
         "201":
           description: Answer created successfully.
+        "302":
+          description: Redirect after answer creation
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
   /answers/{id}:
@@ -606,42 +642,54 @@ paths:
       responses:
         "200":
           description: Answer marked as correct successfully.
+        "302":
+          description: Redirect after marking answer as correct
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
         "403":
           description: Forbidden. User not authorized to mark this answer.
   /comments:
     put:
-      operationId: R217
-      summary: "R217: Create Comment"
-      description: "Create a new comment. Access: REG"
-      tags:
-        - "M02: Q&A"
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                content:
-                  type: string
-                related_id:
-                  type: integer
-                related_type:
-                  type: string
-                  enum:
-                    - question
-                    - answer
-              required:
-                - content
-                - related_id
-                - related_type
-      responses:
-        "201":
-          description: Comment created successfully.
-        "401":
-          description: Unauthorized. Authentication required.
+  operationId: R217
+  summary: "R217: Create Comment"
+  description: "Create a new comment. Access: REG"
+  tags:
+    - "M02: Q&A"
+  requestBody:
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+            related_id:
+              type: integer
+            related_type:
+              type: string
+              enum:
+                - question
+                - answer
+          required:
+            - content
+            - related_id
+            - related_type
+  responses:
+    "201":
+      description: Comment created successfully.
+    "302":
+      description: Redirect after comment creation
+      headers:
+        Location:
+          schema:
+            type: string
+    "401":
+      description: Unauthorized. Authentication required.
   /comments/{id}:
     delete:
       operationId: R218
@@ -725,6 +773,12 @@ paths:
       responses:
         "201":
           description: Tag created successfully.
+        "302":
+          description: Redirect after tag creation
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
   /tags/{id}:
@@ -805,6 +859,12 @@ paths:
       responses:
         "200":
           description: Tag followed successfully.
+        "302":
+          description: Redirect after following tag
+          headers:
+            Location:
+              schema:
+                type: string
         "401":
           description: Unauthorized. Authentication required.
   /notifications:
