@@ -118,5 +118,5 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
     Route::get('/notifications/recent', 'recent')->name('notifications.recent')->middleware('auth');
-	Route::delete('/notifications/{id}/delete', [NotificationController::class, 'delete'])->middleware('auth');
+	Route::delete('/notifications/{id}', 'delete')->middleware('auth');
 });
