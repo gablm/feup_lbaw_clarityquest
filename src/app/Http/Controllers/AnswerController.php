@@ -70,6 +70,14 @@ class AnswerController extends Controller
 				'type' => 'RESPONSE',
 			]);
 
+			foreach ($question->follows as $follower) {
+				Notification::create([
+					'receiver' => $follower->id,
+					'description' => "The question titled '{$question->title}' you follow just received a comment by '{$user->username}'.",
+					'type' => 'RESPONSE',
+				]);
+			}
+
 			return Answer::create([
 				'id' => $post->id,
 				'question_id' => $question->id,

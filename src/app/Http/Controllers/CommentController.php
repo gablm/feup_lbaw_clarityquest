@@ -110,10 +110,21 @@ class CommentController extends Controller
 
 			Notification::create([
 				'receiver' => $post->user_id,
-				'description' => "Your {$content} received a comment by user '{$user->username}'.",
+				'description' => "Your {$content} received a comment by '{$user->username}'.",
 				'type' => 'RESPONSE',
 			]);
 
+			if ($question) {
+				foreach ($question->follows as $follower)
+				{
+					Notification::create([
+						'receiver' => $follower->id,
+						'description' => "The {$content} you follow just received a comment by '{$user->username}'.",
+						'type' => 'RESPONSE',
+					]);
+				}
+			}
+			
 			return Comment::create([
 				'id' => $post->id,
 				'post_id' => $ownerPost->id

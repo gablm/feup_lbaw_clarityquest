@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Edition;
+use App\Models\Notification;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -65,6 +66,14 @@ class QuestionController extends Controller
 					'post_id' => $post->id,
 					'tag_id' => $tag->id
 				]);
+
+				foreach ($tag->follows as $follower) {
+					Notification::create([
+						'receiver' => $follower->id,
+						'description' => "A new question titled '{$question->title}' by '{$user->username}' was asked with the tag '{$tag->name}'.",
+						'type' => 'RESPONSE',
+					]);
+				}
 			}
 
 			return $question;
@@ -217,9 +226,16 @@ class QuestionController extends Controller
 
         $tagName = trim($request->tag);
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-        DB::transaction(function () use ($question, $tagName) {
+        DB::transaction(function () use ($question, $tagName, $user) {
             $tag = Tag::firstOrCreate(['name' => $tagName]);
             $question->tags()->attach($tag->id);
+			foreach ($tag->follows as $follower) {
+				Notification::create([
+					'receiver' => $follower->id,
+					'description' => "A new question titled '{$question->title}' by '{$user->username}' was asked with the tag '{$tag->name}'.",
+					'type' => 'RESPONSE',
+				]);
+			}
         });
 
         return redirect()->back()->with('success', 'Tag added successfully.');
