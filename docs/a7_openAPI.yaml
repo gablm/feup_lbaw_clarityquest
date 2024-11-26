@@ -821,7 +821,7 @@ paths:
           description: Unauthorized. Authentication required.
         "403":
           description: Forbidden. User not authorized to view notifications.
-
+  /notifications/{id}:
     delete:
       operationId: R402
       summary: Delete Notification
