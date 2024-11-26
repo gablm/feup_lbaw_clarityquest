@@ -364,7 +364,7 @@ paths:
   /questions/{id}:
     get:
       operationId: R206
-      summary: "R205: Show Question Details"
+      summary: "R206: Show Question Details"
       description: "Retrieve details of a specific question. Access: PUB"
       tags:
         - "M02: Q&A"
