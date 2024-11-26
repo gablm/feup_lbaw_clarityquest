@@ -8,7 +8,14 @@ $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('im
 <div class="container mx-auto p-4">
 	<div class="bg-white shadow-md rounded-lg p-6">
 		@if (Auth::user()->id == $user->id)
-		<h2 class="text-2xl font-semibold mb-4">Edit Profile</h2>
+		<h2 class="text-2xl font-semibold mb-4">
+            Edit Profile
+            <span class="text-sm text-gray-500 relative group">[?]
+                <span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
+                    You can edit your profile fields through this form.
+                </span>
+            </span>
+        </h2>
 		@else
 		<div class="flex space-x-2">
 		<h2 class="text-2xl font-semibold mb-4">Edit Profile</h2>
