@@ -817,20 +817,6 @@ paths:
       responses:
         "200":
           description: A list of notifications retrieved successfully.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    description:
-                      type: string
-                    sent_at:
-                      type: string
-                      format: date-time
         "401":
           description: Unauthorized. Authentication required.
         "403":
