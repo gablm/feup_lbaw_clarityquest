@@ -811,7 +811,7 @@ paths:
     get:
       operationId: R401
       summary: Get User Notifications
-      description: "Fetch a list of notifications for the authenticated user."
+      description: "Fetch a list of notifications for the authenticated user. Access: REG"
       tags:
         - "M04: Notifications"
       responses:
@@ -840,7 +840,7 @@ paths:
     delete:
       operationId: R402
       summary: Delete Notification
-      description: "Delete a specific notification for the authenticated user."
+      description: "Delete a specific notification for the authenticated user. Access: REG"
       tags:
         - "M04: Notifications"
       parameters:
