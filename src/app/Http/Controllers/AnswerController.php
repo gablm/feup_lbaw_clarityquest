@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Edition;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,12 @@ class AnswerController extends Controller
                 $post = Post::create([
                     'text' => $request->text,
                     'user_id' => $user->id,
+                ]);
+
+                Notification::create([
+                    'receiver' => $question->post->user_id, // Original poster's ID
+                    'description' => "Your question titled '{$question->title}' has been answered by {$user->username}.",
+                    'type' => 'RESPONSE',
                 ]);
 
                 return Answer::create([
@@ -129,33 +136,5 @@ class AnswerController extends Controller
         return view('partials.answer', [
 			'answer' => $answer
 		]);
-    }
-
-    /**
-     * Create Notification
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'question_id' => 'required|exists:questions,id',
-            'content' => 'required|string|max:255',
-        ]);
-
-        $answer = Answer::create([
-            'question_id' => $validated['question_id'],
-            'content' => $validated['content'],
-            'user_id' => auth()->id(),
-        ]);
-
-        // Notify the question owner
-        $questionOwnerId = $answer->question->user_id;
-
-        Notification::create([
-            'receiver' => $questionOwnerId,
-            'description' => 'Your question has a new answer.',
-            'type' => 'RESPONSE',
-        ]);
-
-        return redirect()->back()->with('success', 'Answer added.');
     }
 }

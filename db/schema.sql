@@ -174,7 +174,6 @@ CREATE TABLE Notification(
     description TEXT,
     type NotificationType NOT NULL DEFAULT 'OTHER',
     sent_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    read BOOLEAN DEFAULT FALSE, --idk if i can just add this
     FOREIGN KEY (receiver) REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

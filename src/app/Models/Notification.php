@@ -30,7 +30,6 @@ class Notification extends Model
         'description',
         'type',
         'sent_at',
-        'read',
     ];
 
     /**
@@ -50,7 +49,6 @@ class Notification extends Model
     protected $casts = [
         'sent_at' => 'datetime',
         'type' => 'string',
-        'read' => 'boolean',
     ];
 
     /**

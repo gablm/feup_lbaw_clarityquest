@@ -86,7 +86,7 @@ class CommentController extends Controller
     
         $request->validate([
             'text' => 'required|string|max:1000',
-            'id' => 'required|integer|exists:posts,id', // Validate that id corresponds to an existing post
+            'id' => 'required|integer|exists:posts,id', 
         ]);
     
         $ownerPost = Post::findOrFail($request->id);
@@ -97,11 +97,16 @@ class CommentController extends Controller
                     'text' => $request->text,
                     'user_id' => $user->id
                 ]);
-    
-                return Comment::create([
-                    'id' => $post->id,  // Assuming 'id' here refers to the Post's ID
+                
+                
+
+                $comment = Comment::create([
+                    'id' => $post->id, 
                     'post_id' => $ownerPost->id
                 ]);
+                
+
+                return $comment;
             });
     
             return view('partials.comment', [
@@ -113,42 +118,5 @@ class CommentController extends Controller
         }
     }
 
-    /**
-     * Create Notification
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'content' => 'required|string|max:255',
-            'commentable_id' => 'required|integer',
-            'commentable_type' => 'required|string',
-        ]);
-
-        $comment = Comment::create([
-            'content' => $validated['content'],
-            'commentable_id' => $validated['commentable_id'],
-            'commentable_type' => $validated['commentable_type'],
-            'user_id' => auth()->id(),
-        ]);
-
-        // Determine the owner to notify
-        $ownerId = null;
-        if ($validated['commentable_type'] === 'App\Models\Question') {
-            $ownerId = Question::find($validated['commentable_id'])->user_id;
-        } elseif ($validated['commentable_type'] === 'App\Models\Answer') {
-            $ownerId = Answer::find($validated['commentable_id'])->user_id;
-        }
-
-        if ($ownerId && $ownerId !== auth()->id()) {
-            Notification::create([
-                'receiver' => $ownerId,
-                'description' => 'Someone commented on your ' . ($validated['commentable_type'] === 'App\Models\Question' ? 'question' : 'answer') . '.',
-                'type' => 'MENTION',
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Comment added.');
-    }
 }
-
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -12,7 +13,7 @@ class NotificationController extends Controller
      */
     public function recent()
     {
-        $notifications = Notification::where('receiver', auth()->id())
+        $notifications = Notification::where('receiver', Auth::id())
             ->orderBy('sent_at', 'desc')
             ->take(4)
             ->get();
@@ -25,7 +26,7 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notifications = Notification::where('receiver', auth()->id())
+        $notifications = Notification::where('receiver', Auth::id())
             ->orderBy('sent_at', 'desc')
             ->get();
 
@@ -33,16 +34,42 @@ class NotificationController extends Controller
     }
 
     /**
-     * Mark a notification as read.
+     * Create a new notification for a specific user.
+     * 
+     * @param int $receiverId The ID of the user receiving the notification.
+     * @param string $description The notification description.
+     * @param string $type The notification type.
      */
-    public function markAsRead($id)
+    public function create($receiverId, $description, $type = 'OTHER')
     {
-        $notification = Notification::where('id', $id)
-            ->where('receiver', auth()->id())
-            ->firstOrFail();
+        Notification::create([
+            'receiver' => $receiverId,
+            'description' => $description,
+            'type' => $type,
+        ]);
 
-        $notification->update(['read' => true]);
+        return response()->json(['message' => 'Notification created successfully.']);
+    }
 
-        return redirect()->back();
+    /**
+     * Delete a notification for the authenticated user.
+     * 
+     * @param int $id The ID of the notification to delete.
+     */
+    public function delete($id)
+    {
+        try {
+            $notification = Notification::findOrFail($id);
+
+            if ($notification->receiver !== auth()->id()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+    
+            $notification->delete();
+    
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred.'], 500);
+        }
     }
 }
