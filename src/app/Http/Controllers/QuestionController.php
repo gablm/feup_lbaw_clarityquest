@@ -68,10 +68,15 @@ class QuestionController extends Controller
 				]);
 
 				foreach ($tag->follows as $follower) {
-					Notification::create([
+					$notification = Notification::create([
 						'receiver' => $follower->id,
 						'description' => "A new question titled '{$question->title}' by '{$user->username}' was asked with the tag '{$tag->name}'.",
 						'type' => 'RESPONSE',
+					]);
+
+					DB::table('notificationpost')->insert([
+						'notification_id' => $notification->id,
+						'post_id' => $question->id
 					]);
 				}
 			}

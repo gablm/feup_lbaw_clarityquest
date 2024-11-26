@@ -108,23 +108,33 @@ class CommentController extends Controller
 
 			$content = $question ? "question titled '{$question->title}'" : "answer to '{$answer->question->title}'";
 
-			Notification::create([
+			$notification = Notification::create([
 				'receiver' => $post->user_id,
 				'description' => "Your {$content} received a comment by '{$user->username}'.",
 				'type' => 'RESPONSE',
 			]);
 
+			DB::table('notificationpost')->insert([
+				'notification_id' => $notification->id,
+				'post_id' => $question ? $question->id : $answer->question->id
+			]);
+
 			if ($question) {
 				foreach ($question->follows as $follower)
 				{
-					Notification::create([
+					$notification = Notification::create([
 						'receiver' => $follower->id,
 						'description' => "The {$content} you follow just received a comment by '{$user->username}'.",
 						'type' => 'RESPONSE',
 					]);
+
+					DB::table('notificationpost')->insert([
+						'notification_id' => $notification->id,
+						'post_id' => $question ? $question->id : $answer->question->id
+					]);
 				}
 			}
-			
+
 			return Comment::create([
 				'id' => $post->id,
 				'post_id' => $ownerPost->id

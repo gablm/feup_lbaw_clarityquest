@@ -64,17 +64,27 @@ class AnswerController extends Controller
 				'user_id' => $user->id,
 			]);
 
-			Notification::create([
+			$notification = Notification::create([
 				'receiver' => $question->post->user_id,
 				'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
 				'type' => 'RESPONSE',
 			]);
 
+			DB::table('notificationpost')->insert([
+				'notification_id' => $notification->id,
+				'post_id' => $question->id
+			]);
+
 			foreach ($question->follows as $follower) {
-				Notification::create([
+				$notification = Notification::create([
 					'receiver' => $follower->id,
 					'description' => "The question titled '{$question->title}' you follow just received a comment by '{$user->username}'.",
 					'type' => 'RESPONSE',
+				]);
+
+				DB::table('notificationpost')->insert([
+					'notification_id' => $notification->id,
+					'post_id' => $question->id
 				]);
 			}
 
