@@ -267,6 +267,7 @@ paths:
       responses:
         "204":
           description: User account deleted successfully
+  
   "/posts/{id}":
     post:
       operationId: R201
@@ -806,3 +807,55 @@ paths:
           description: Tag followed successfully.
         "401":
           description: Unauthorized. Authentication required.
+  "/notifications":
+    get:
+      operationId: R401
+      summary: Get User Notifications
+      description: "Fetch a list of notifications for the authenticated user."
+      tags:
+        - "M04: Notifications"
+      responses:
+        "200":
+          description: A list of notifications retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    description:
+                      type: string
+                    sent_at:
+                      type: string
+                      format: date-time
+        "401":
+          description: Unauthorized. Authentication required.
+        "403":
+          description: Forbidden. User not authorized to view notifications.
+  
+  "/notifications/{id}/delete":
+    delete:
+      operationId: R402
+      summary: Delete Notification
+      description: "Delete a specific notification for the authenticated user."
+      tags:
+        - "M04: Notifications"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: "ID of the notification to be deleted"
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Notification deleted successfully.
+        "401":
+          description: Unauthorized. Authentication required.
+        "403":
+          description: Forbidden. User not authorized to delete this notification.
+        "404":
+          description: Notification not found.
