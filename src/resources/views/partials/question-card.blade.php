@@ -33,13 +33,6 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 					<span>{{ $post->comments->count() }} Comment(s)</span>
 				</div>
 			</div>
-			@if ($question->tags->count())
-			<div class="mt-2">
-				@foreach($question->tags as $tag)
-				@include('partials.tag', $tag)
-				@endforeach
-			</div>
-			@endif
 		</div>
 	</a>
 </article>

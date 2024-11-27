@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Carbon\Carbon;
+
 class Post extends Model
 {
     use HasFactory;
@@ -67,7 +67,6 @@ class Post extends Model
 	public function creationFTime() : string
 	{
 		$date = date('Y-m-d', time());
-		$year = date('Y', );
 		$time = explode(" ", $this->created_at);
 
 		if ($date == $time[0])
@@ -84,6 +83,17 @@ class Post extends Model
     public function isEdited()
     {
         $latestEdition = $this->editions()->latest('made_at')->first();
-        return $latestEdition ? Carbon::parse($latestEdition->made_at)->format('d/m/Y H:i') : null;
+        if ($latestEdition) {
+            $currentDate = date('Y-m-d');
+            $madeAt = $latestEdition->made_at;
+            $timeParts = explode(" ", $madeAt);
+
+            if ($currentDate == $timeParts[0]) {
+                return date("H:i", strtotime($madeAt));
+            }
+
+            return date("d/m/Y H:i", strtotime($madeAt));
+        }
+        return null;
     }
 }

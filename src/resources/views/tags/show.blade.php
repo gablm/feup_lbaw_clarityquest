@@ -11,6 +11,7 @@ $questions = $tag->questions;
         <h2 class="text-2xl font-semibold mb-4">
 			Tag
 			<a class="tag-big">{{ $tag->name }}</a>
+            @include('partials.follow-tag-btn', $tag)
 		</h2>
         @if($tag->questions->isEmpty())
         <p class="text-gray-700">There are no questions under this topic.</p>

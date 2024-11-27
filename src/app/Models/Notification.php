@@ -64,7 +64,7 @@ class Notification extends Model
      */
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'notification_post', 'notification_id', 'post_id');
+        return $this->belongsToMany(Post::class, 'notificationpost', 'notification_id', 'post_id');
     }
 
     /**
@@ -72,6 +72,6 @@ class Notification extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'notification_user', 'notification_id', 'user_id');
+        return $this->belongsToMany(User::class, 'notificationuser', 'notification_id', 'user_id');
     }
 }

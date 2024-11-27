@@ -2,11 +2,11 @@
 $profile_pic = $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
 @endphp
 
-<article class="w-full bg-white shadow-md space-x-4 rounded-lg" data-id="{{ $user->id }}">
-	<a href={{ url('/users/' . $user->id) }}>
-		<div class="p-4">
-			<div class="flex flex-row space-x-3 items-center text-gray-500 text-sm mb-1">
-				<div class="flex flex-row items-center">
+<article id="user" class="w-full bg-white shadow-md space-x-4 rounded-lg" data-id="{{ $user->id }}">
+	<div class="flex flex-row justify-between items-center p-4">
+		<a href={{ url('/users/' . $user->id) }}>
+			<div class="flex flex-row space-x-3 text-gray-500 text-sm mb-1">
+				<div class="max-md:hidden flex flex-row items-center">
 					<img
 						src="{{ $profile_pic }}"
 						alt="Profile Picture"
@@ -20,6 +20,29 @@ $profile_pic = $user->profile_pic ? asset($user->profile_pic) : url('img/default
 					</h2>
 				</div>
 			</div>
+		</a>
+		<div>
+			@if ($panel && Auth::user()->id != $user->id)
+			<button onclick="blockUser({{ $user->id }})" class="tool-link">
+				@if ($user->isBlocked())
+				<i class="fa-solid fa-unlock"></i>
+				<span class="max-md:hidden ml-1">Unblock</span>
+				@else
+				<i class="fa-solid fa-shield-halved"></i>
+				<span class="max-md:hidden ml-1">Block</span>
+				@endif
+			</button>
+			@if (Auth::user()->isAdmin())
+			<a href="{{ url('/users/' . $user->id . '/edit') }}" class="tool-link">
+				<i class="fa-solid fa-pencil"></i>
+				<span class="max-md:hidden ml-1">Edit</span>
+			</a>
+			<button onclick="deleteUser({{ $user->id }})" class="tool-link text-red-500">
+				<i class="fa-solid fa-trash"></i>
+				<span class="max-md:hidden ml-1">Delete</span>
+			</button>
+			@endif
 		</div>
-	</a>
+		@endif
+	</div>
 </article>

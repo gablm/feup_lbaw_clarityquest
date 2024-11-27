@@ -9,11 +9,19 @@ use App\Models\User;
 class QuestionPolicy
 {
     /**
+     * Determine whether the user can view the model.
+     */
+    public function show(?User $user, Question $question): bool
+    {
+        return $user == null || $user->isBlocked() == false;
+    }
+
+    /**
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
-        return $user->role != Permission::Blocked;
+        return $user->isBlocked() == false;
     }
 
     /**
@@ -21,8 +29,7 @@ class QuestionPolicy
      */
     public function update(User $user, Question $question): bool
     {
-        $has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+        $has_role = $has_role = $user->isAdmin();;
 		$is_owner = $user->id == $question->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 		
@@ -36,6 +43,18 @@ class QuestionPolicy
     {
 		$has_role = $user->role == Permission::Admin
 			|| $user->role == Permission::Moderator;
+		$is_owner = $user->id == $question->post->user_id;
+		$is_blocked = $user->role == Permission::Blocked;
+
+        return $has_role || ($is_owner && !$is_blocked);
+    }
+
+	/**
+     * Determine whether the user can delete the model.
+     */
+    public function tags(User $user, Question $question): bool
+    {
+		$has_role = $user->isElevated();
 		$is_owner = $user->id == $question->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 

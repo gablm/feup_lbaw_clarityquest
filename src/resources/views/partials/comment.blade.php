@@ -14,7 +14,7 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 
 <article id="comment" class="mt-2" data-id="{{ $post->id }}">
 	<div class="flex flex-row items-center space-x-6 text-gray-500 text-sm">
-		<a class="tool-link" href="{{ $user ? url('/user/' . $user->id) : '/' }}">
+		<a class="tool-link" href="{{ $user ? url('/users/' . $user->id) : '/' }}">
 			<div class="flex flex-row items-center">
 				<img
 					src="{{ $profile_pic }}"
@@ -27,22 +27,20 @@ $is_edited = $edited_at ? " [edited at $edited_at]" : "";
 	</div>
 	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex items-center">
-		<div class="space-x-1">
-			<button onclick="sendVoteRequest({{ $comment->id }}, true)" class="vote-link fa-solid fa-up-long hover:text-red-600"></button>
-			<span id="votes-{{ $comment->id }}" class="vote-count">{{ $comment->post->votes }}</span>
-			<button onclick="sendVoteRequest({{ $comment->id }}, false)" class="vote-link fa-solid fa-down-long hover:text-blue-500"></button>
-		</div>
-		@if ($owner == false && $post->user && Auth::check())
+		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes])
+		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
 		<a href=# class="tool-link">
 			<i class="fa-solid fa-flag"></i>
 			<span class="ml-1">Report</span>
 		</a>
 		@endif
-		@if ($owner || $elevated)
+		@if ($owner || (Auth::check() && Auth::user()->isAdmin()))
 		<button onclick="showEditPostModal('comment', {{ $post->id }}, '{{ $post->text }}')" class="tool-link">
 			<i class="fa-solid fa-pencil"></i>
 			<span class="max-sm:hidden ml-1">Edit</span>
 		</button>
+		@endif
+		@if ($owner || $elevated)
 		<button data-id="{{ $comment->post->id }}" onclick="deleteComment(this)" class="tool-link text-red-500">
 			<i class="fa-solid fa-trash"></i>
 			<span class="max-md:hidden ml-1">Delete</span>

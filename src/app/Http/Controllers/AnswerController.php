@@ -14,28 +14,30 @@ use \Exception;
 
 class AnswerController extends Controller
 {
-    /**
-     * Display a listing of the user's answers.
-     *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     */
-    public function myAnswers()
-    {
-        if (!Auth::check())
-            return redirect()->route('login');
+	/**
+	 * Display a listing of the user's answers.
+	 *
+	 * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function myAnswers()
+	{
+		if (!Auth::check())
+			return redirect()->route('login');
 
-        $user = Auth::user();
-        $answers = $user->answersPosted()->with('question')->get();
+		$user = Auth::user();
+		$answers = $user->answersPosted()->with('question')->get();
 
-        return view('answers.mine', compact('answers'));
-    }
+		return view('answers.mine', compact('answers'));
+	}
 
 	/**
-     * Display a answer.
-     */
+	 * Display a answer.
+	 */
 	public function show(string $id)
 	{
 		$answer = Answer::findOrFail($id);
+
+		$this->authorize('show', $answer);
 
 		return view('partials.answer', [
 			'answer' => $answer
@@ -43,26 +45,26 @@ class AnswerController extends Controller
 	}
 
 	/**
-     * Creates a new answer.
-     */
-    public function create(Request $request)
-    {
-        $user = Auth::user();
+	 * Creates a new answer.
+	 */
+	public function create(Request $request)
+	{
+		$user = Auth::user();
 
-        $request->validate([
-            'text' => 'required|string|max:10000',
-            'id' => 'required|integer|exists:questions,id',
-        ]);
+		$request->validate([
+			'text' => 'required|string|max:10000',
+			'id' => 'required|integer|exists:questions,id',
+		]);
 
-        $question = Question::findOrFail($request->id);
+		$question = Question::findOrFail($request->id);
 
-        try {
-            $answer = DB::transaction(function () use ($request, $user, $question) {
-                $post = Post::create([
-                    'text' => $request->text,
-                    'user_id' => $user->id,
-                ]);
+		$answer = DB::transaction(function () use ($request, $user, $question) {
+			$post = Post::create([
+				'text' => $request->text,
+				'user_id' => $user->id,
+			]);
 
+<<<<<<< HEAD
                 Notification::create([
                     'receiver' => $question->post->user_id, // Original poster's ID
                     'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
@@ -74,67 +76,115 @@ class AnswerController extends Controller
                     'question_id' => $question->id,
                 ]);
             });
+=======
+			$notification = Notification::create([
+				'receiver' => $question->post->user_id,
+				'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
+				'type' => 'RESPONSE',
+			]);
+>>>>>>> 69db8eab063a08ba41bc5c38ec447a326900a579
 
-            return view('partials.answer', ['answer' => $answer]);
+			DB::table('notificationpost')->insert([
+				'notification_id' => $notification->id,
+				'post_id' => $question->id
+			]);
 
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'An error occurred while creating the answer.']);
-        }
-    }
+			foreach ($question->follows as $follower) {
+				$notification = Notification::create([
+					'receiver' => $follower->id,
+					'description' => "The question titled '{$question->title}' you follow just received a comment by '{$user->username}'.",
+					'type' => 'RESPONSE',
+				]);
+
+				DB::table('notificationpost')->insert([
+					'notification_id' => $notification->id,
+					'post_id' => $question->id
+				]);
+			}
+
+			return Answer::create([
+				'id' => $post->id,
+				'question_id' => $question->id,
+			]);
+		});
+
+		return view('partials.answer', ['answer' => $answer]);
+	}
 
 
 	/**
-     * Delete a answer.
-     */
+	 * Delete a answer.
+	 */
 	public function delete(string $id)
 	{
 		$answer = Answer::findOrFail($id);
-        $this->authorize('delete', $answer);
+		$this->authorize('delete', $answer);
 
-        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-        DB::transaction(function () use ($answer) {
-            $answer->post->delete();
-            $answer->delete();
-        });
+		DB::transaction(function () use ($answer) {
+			$answer->post->delete();
+			$answer->delete();
+		});
 
 		return;
 	}
 
 	/**
-     * Update a answer.
-     */
-    public function update(Request $request, string $id)
-    {
+	 * Update a answer.
+	 */
+	public function update(Request $request, string $id)
+	{
 		$answer = Answer::findOrFail($id);
 		$post = $answer->post;
 
 		$this->authorize('update', $answer);
 
-        $request->validate([
+		$request->validate([
 			'text' => 'required|string|max:10000'
-        ]);
+		]);
 
-        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-        DB::transaction(function () use ($request, $post, $answer) {
-            $old_text = $post->text;
-            $post->text = $request->text;
+		DB::transaction(function () use ($request, $post, $answer) {
+			$old_text = $post->text;
+			$post->text = $request->text;
 
-            $post->save();
-            $answer->save();
+			$post->save();
+			$answer->save();
 
-            Edition::create([
-                'post_id' => $answer->id,
-                'old_title' => null, 
-                'new_title' => null, 
-                'old' => $old_text, 
-                'new' => $request->text,
-            ]);
-        });
+			Edition::create([
+				'post_id' => $answer->id,
+				'old_title' => null,
+				'new_title' => null,
+				'old' => $old_text,
+				'new' => $request->text,
+			]);
+		});
 
-        return view('partials.answer', [
+		return view('partials.answer', [
 			'answer' => $answer
 		]);
-    }
+	}
+	/**
+	 * Mark an answer as correct.
+	 */
+	public function markAsCorrect(string $id)
+	{
+		$answer = Answer::findOrFail($id);
+		$question = $answer->question;
+
+		$this->authorize('update', $question);
+
+		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+
+		DB::transaction(function () use ($answer, $question) {
+			$question->answers()->update(['correct' => false]);
+
+			$answer->correct = true;
+			$answer->save();
+		});
+
+		return redirect()->back()->with('success', 'Answer marked as correct.');
+	}
 }

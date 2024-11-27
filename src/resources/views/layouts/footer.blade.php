@@ -7,6 +7,7 @@
 			<a href="#" class="hover:underline">FAQ</a>	
 			<a href={{ url('/about') }} class="hover:underline">About Us</a>
 			<a href={{ url('/contacts') }} class="hover:underline">Contacts</a>
+			<a href={{ url('/main-features') }} class="hover:underline">Main Features</a>
 		</div>
     </div>
   </footer>

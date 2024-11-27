@@ -2,8 +2,14 @@
 
 @section('content')
 <div class="container mx-auto p-6" onload="showAdminTab('tags')">
-	<div class="p-8 pt-4">
-		<h2 class="text-2xl font-semibold mb-8">Administration Panel</h2>
+	<div class="p-4 pt-4">
+		<h2 class="text-2xl font-semibold mb-8"> 
+			Admin Panel
+			<span class="text-sm text-gray-500 relative group">[?]
+				<span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
+					Here is the panel for managing reports, users and tags.
+				</span>
+			</span></h2>
 		<div class="mb-6 border-b border-gray-200">
 			<ul class="flex flex-row space-x-4 -mb-px text-lg font-medium">
 				<li>
@@ -22,6 +28,7 @@
 						Users
 					</button>
 				</li>
+				@if (Auth::user()->isAdmin())
 				<li>
 					<button
 						id="tags-tab"
@@ -30,6 +37,7 @@
 						Tags
 					</button>
 				</li>
+				@endif
 			</ul>
 		</div>
 
@@ -39,9 +47,7 @@
 			@else
 			<div class="space-y-4">
 				@foreach($reports as $report)
-				<div>
-					Report 1
-				</div>
+				@include('partials.report-card', $report)
 				@endforeach
 			</div>
 			@endif
@@ -53,17 +59,19 @@
 			@else
 			<div class="space-y-4">
 				@foreach($users as $user)
-				@include('partials.user-card', $user)
+				@include('partials.user-card', ['user' => $user, 'panel' => true])
 				@endforeach
 			</div>
 			@endif
 		</div>
+		
 		<div id="tags-section" class="tab-content hidden">
+		@if (Auth::user()->isAdmin())
 			<button onclick="showCreateTagModal()" class="ml-4 mb-4 nav-main">
 				<i class="fa-solid fa-plus"></i>
 				<span class="max-sm:hidden ml-1">Create</span>
 			</button>
-			<div id="tag-create" class="hidden modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+			<div id="tag-create" class="hidden modal fixed w-full h-full top-0 left-0 items-center justify-center">
 				<div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
 				<div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
 					<div class="modal-content py-4 text-left px-6">
@@ -78,15 +86,30 @@
 					</div>
 				</div>
 			</div>
+			<div id="edit-tag" class="hidden modal modal-style">
+				<div class="modal-overlay modal-bg"></div>
+				<div class="modal-container modal-cont">
+					<div class="modal-content py-4 text-left px-6">
+						<p id="edit-title" class="text-2xl font-bold mb-4">Edit Tag</p>
+						<div class="mb-4">
+							<input class="auth focus:outline-none focus:shadow-outline resize-none" id="text" type="textarea" name="text" required>
+						</div>
+						<div class="mt-4 flex space-x-2 justify-end">
+							<button class="modal-close tool-link" onclick="closeEditTagModal()">Cancel</button>
+							<button class="nav-main" onclick="sendEditTagRequest()">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div id="tag-list" class="space-y-4">
 				@if($tags->isEmpty())
 				<p class="pl-4 text-gray-700">No tags found.</p>
 				@endif
 				@foreach($tags as $tag)
-				@include('partials.tag-card', $tag)
+				@include('partials.tag-card', ['tag' => $tag, 'panel' => true])
 				@endforeach
 			</div>
-
+			@endif
 		</div>
 	</div>
 </div>

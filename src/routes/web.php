@@ -34,6 +34,7 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/contacts', 'contacts')->name('contacts');
 	Route::get('/search', 'search')->name('search'); 
 	Route::get('/admin', 'admin')->name('admin');
+	Route::get('/main-features','mainFeatures')->name('main-features');
 });
 
 // Comments
@@ -52,6 +53,7 @@ Route::controller(TagController::class)->group(function () {
 	Route::put('/tags', 'create')->middleware('auth');
 	Route::delete('/tags/{id}', 'delete')->middleware('auth');
 	Route::patch('/tags/{id}', 'update')->middleware('auth');
+	Route::post('/tags/{id}', 'follow')->middleware('auth');
 });
 
 // Answers
@@ -61,6 +63,8 @@ Route::controller(AnswerController::class)->group(function () {
 	Route::put('/answers', 'create')->middleware('auth');
 	Route::delete('/answers/{id}', 'delete')->middleware('auth');
 	Route::patch('/answers/{id}', 'update')->middleware('auth');
+
+	Route::post('/answers/{id}/correct', 'markAsCorrect')->name('answers.markAsCorrect')->middleware('auth');
 });
 
 // Questions
@@ -72,8 +76,13 @@ Route::controller(QuestionController::class)->group(function () {
 	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');
 
 	Route::get('/questions/{id}', 'show');
+	Route::post('/questions/{id}', 'follow')->middleware('auth');
 	Route::delete('/questions/{id}', 'delete')->middleware('auth');
 	Route::patch('/questions/{id}', 'update')->middleware('auth');
+
+	Route::post('/questions/{id}/tags',  'addTag')->middleware('auth');
+	Route::post('/questions/{id}/tags/remove', 'removeTag')->middleware('auth');
+
 });
 
 // Posts
@@ -88,8 +97,10 @@ Route::controller(UserController::class)->group(function () {
 	
 	Route::get('/users/{id}', 'showPublicProfile')->name('public.profile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
+	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');
 	Route::delete('/users/{id}', 'delete')->middleware('auth');
 	
+	Route::patch('/users/{id}/block', 'block')->middleware('auth');
 });
 
 // Authentication
@@ -107,5 +118,5 @@ Route::controller(RegisterController::class)->group(function () {
 // Notifications
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
-	Route::delete('/notifications/{id}/delete', [NotificationController::class, 'delete'])->middleware('auth');
+	Route::delete('/notifications/{id}', 'delete')->middleware('auth');
 });

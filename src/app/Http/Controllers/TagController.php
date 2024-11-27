@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -20,7 +21,7 @@ class TagController extends Controller
     }
 
 	/**
-     * Display a comment.
+     * Display a tag.
      */
     public function show(string $id)
     {
@@ -52,26 +53,25 @@ class TagController extends Controller
     }
 
 	/**
-     * Delete a comment.
+     * Delete a tag.
      */
 	public function delete(string $id)
 	{
+		//$this->authorize('delete');
+
 		$tag = Tag::findOrFail($id);
-
-		$this->authorize('delete');
-
 		$tag->delete();
 	}
 
 	/**
-     * Update a comment.
+     * Update a tag.
      */
     public function update(Request $request, string $id)
     {
+		//$this->authorize('update');
+		
 		$tag = Tag::findOrFail($id);
-
-		$this->authorize('update');
-
+		
         $request->validate([
 			'name' => 'required|string|max:64'
         ]);
@@ -81,6 +81,43 @@ class TagController extends Controller
 		$tag->save();
 
         return view('partials.tag-card', [
+			'tag' => $tag
+		]);
+    }
+    
+    /**
+     * Follow or unfollow a tag.
+     */
+    public function follow(string $id)
+    {
+        $user = Auth::user();
+
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        $tag = DB::transaction(function () use ($user, $id) {
+            $tag = Tag::findOrFail($id);
+
+            $exists = DB::table('followtag')
+                ->where('user_id', $user->id)
+                ->where('tag_id', $tag->id)
+                ->exists();
+
+            if ($exists) {
+                DB::table('followtag')
+                    ->where('user_id', $user->id)
+                    ->where('tag_id', $tag->id)
+                    ->delete();
+                return $tag;
+            }
+
+            DB::table('followtag')->insert([
+                'user_id' => $user->id,
+                'tag_id' => $tag->id
+            ]);
+
+            return $tag;
+        });
+
+        return view('partials.follow-tag-btn', [
 			'tag' => $tag
 		]);
     }

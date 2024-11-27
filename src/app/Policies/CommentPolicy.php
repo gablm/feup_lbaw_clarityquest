@@ -9,11 +9,19 @@ use App\Models\User;
 class CommentPolicy
 {
     /**
+     * Determine whether the user can view the model.
+     */
+    public function view(?User $user, Comment $comment): bool
+    {
+        return $user == null || $user->isBlocked() == false;
+    }
+
+    /**
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
-        return $user->role != Permission::Blocked;
+        return $user->isBlocked() == false;
     }
 
     /**
@@ -21,8 +29,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        $has_role = $user->role == Permission::Admin
-			|| $user->role == Permission::Moderator;
+        $has_role = $has_role = $user->isAdmin();;
 		$is_owner = $user->id == $comment->post->user_id;
 		$is_blocked = $user->role == Permission::Blocked;
 		

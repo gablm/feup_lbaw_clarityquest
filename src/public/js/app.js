@@ -276,18 +276,19 @@ function closeCreateTagModal() {
 }
 
 function sendCreateTagRequest() {
-	let tagList = document.querySelector('#tag-list');
-	let text = document.querySelector('#tag-name');
+    let tagList = document.querySelector('#tag-list');
+    let text = document.querySelector('#tag-name');
 
-	sendAjaxRequest('PUT', '/tags', { name: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
+    sendAjaxRequest('PUT', '/tags', { name: text.value },
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status != 200) return;
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(request.responseText, 'text/html');
 
 			tagList.prepend(doc.body.firstChild);
+			text.value = "";
 			closeCreateTagModal();
 		});
 }
@@ -295,11 +296,173 @@ function sendCreateTagRequest() {
 function sendVoteRequest(id, positive) {
 	let count = document.querySelector(`#votes-${id}`);
 
-	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? 1 : -1 },
+	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
 			count.textContent = JSON.parse(request.responseText).votes;
+		});
+}
+
+function showEditTagModal(id, content) {
+	let modal = document.querySelector('#edit-tag');
+	modal.setAttribute('data-id', id);
+
+	let text = modal.querySelector('#text');
+	text.value = content;
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeEditTagModal() {
+	let modal = document.querySelector('#edit-tag');
+	let text = modal.querySelector('#text');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
+}
+
+function sendEditTagRequest() {
+	let modal = document.querySelector('#edit-tag');
+	let text = modal.querySelector('#text');
+	let id = modal.getAttribute('data-id');
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+
+	sendAjaxRequest('PATCH', '/tags/' + id, { name: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			tag.parentElement.replaceChild(doc.body.firstChild, tag);
+			closeEditTagModal();
+		});
+}
+
+function showTagModal() {
+    let modal = document.querySelector('#tag-modal');
+    modal.classList.remove('hidden');
+}
+
+function closeTagModal() {
+    let modal = document.querySelector('#tag-modal');
+    modal.classList.add('hidden');
+}
+
+function deleteTag(id) {
+	let confirmed = confirm('Are you sure you want to delete this tag? This action cannot be undone.');
+	if (confirmed == false) return;
+
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/tags/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			tag.remove();
+		});
+}
+
+function followQuestion(button) {
+	let id = button.getAttribute('data-id');
+
+	sendAjaxRequest('POST', '/questions/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			button.parentElement.replaceChild(doc.body.firstChild, button);
+		});
+}
+
+function followTag(button) {
+	let id = button.getAttribute('data-id');
+
+	sendAjaxRequest('POST', '/tags/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			button.parentElement.replaceChild(doc.body.firstChild, button);
+		});
+}
+
+function markAsCorrect(answerId) {
+    sendAjaxRequest('POST', `/answers/${answerId}/correct`, {},
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status != 200) return;
+
+            let response = JSON.parse(request.responseText);
+            if (response.success) {
+                document.querySelectorAll('.mark-as-correct-btn').forEach(button => {
+                    button.remove();
+                });
+
+                document.querySelectorAll('.correct-answer').forEach(element => {
+                    element.classList.remove('correct-answer', 'text-green-500');
+                    element.textContent = '';
+                });
+
+                let answerElement = document.querySelector(`#answer-${answerId}`);
+                answerElement.querySelector('.answer-status').classList.add('correct-answer', 'text-green-500');
+                answerElement.querySelector('.answer-status').textContent = 'Correct Answer';
+            }
+        });
+		location.reload();
+}
+
+function deleteUser(id) {
+	let confirmed = confirm('Are you sure you want to delete this user? This action cannot be undone.');
+	if (confirmed == false) return;
+
+	let user = document.querySelector('#user[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/users/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			user.remove();
+		});
+}
+
+function blockUser(id) {
+	let user = document.querySelector('#user[data-id="' + id + '"]');
+
+	sendAjaxRequest('PATCH', '/users/' + id + '/block', {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			user.parentElement.replaceChild(doc.body.firstChild, user);
+		});
+}
+
+function deleteNotification(id) {
+	let notification = document.querySelector('#notification[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/notifications/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			notification.remove();
 		});
 }
