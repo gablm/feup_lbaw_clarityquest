@@ -401,28 +401,17 @@ function followTag(button) {
 }
 
 function markAsCorrect(answerId) {
+	let answerList = document.querySelector('#answer-list');
     sendAjaxRequest('POST', `/answers/${answerId}/correct`, {},
         (request) => {
             if (request.readyState != 4) return;
-            if (request.status != 200) return;
+			if (request.status != 200) return;
 
-            let response = JSON.parse(request.responseText);
-            if (response.success) {
-                document.querySelectorAll('.mark-as-correct-btn').forEach(button => {
-                    button.remove();
-                });
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
 
-                document.querySelectorAll('.correct-answer').forEach(element => {
-                    element.classList.remove('correct-answer', 'text-green-500');
-                    element.textContent = '';
-                });
-
-                let answerElement = document.querySelector(`#answer-${answerId}`);
-                answerElement.querySelector('.answer-status').classList.add('correct-answer', 'text-green-500');
-                answerElement.querySelector('.answer-status').textContent = 'Correct Answer';
-            }
-        });
-		location.reload();
+			answerList.parentElement.replaceChild(doc.body.firstChild, answerList);	
+    });
 }
 
 function deleteUser(id) {

@@ -171,6 +171,8 @@ class AnswerController extends Controller
 			$answer->save();
 		});
 
-		return redirect()->back()->with('success', 'Answer marked as correct.');
+		return view('partials.answer-list', [
+			'answerList' => $question->answers
+		]);
 	}
 }

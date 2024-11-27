@@ -31,11 +31,7 @@ $comment_count = $question->comments->count();
         <p id="answer-create-err" class="hidden text-sm text-red-500 mt-2">Content can't be empty!</p>
         <div class="mb-4"></div>
         @endif
-        <div id="answer-list" class="flex flex-col space-y-8">
-            @foreach ($question->answers as $answer)
-            @include('partials.answer', $answer)
-            @endforeach
-        </div>
+        @include('partials.answer-list', ['answerList' => $question->answers])
         <div id="add-comment" class="hidden modal modal-style">
             <div class="modal-overlay modal-bg"></div>
             <div class="modal-container modal-cont">
