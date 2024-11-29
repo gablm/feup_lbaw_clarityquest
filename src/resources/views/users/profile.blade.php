@@ -49,6 +49,7 @@
 					Edit Profile
 				</a>
 				@endif
+				@include('partials.google-btn', ['linked' => $user->google_token ? 2 : 1 ])
 				@endif
 			</div>
 		</div>
