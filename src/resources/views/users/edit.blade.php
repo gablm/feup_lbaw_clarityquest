@@ -19,7 +19,7 @@
 			</h2>
 			<div class="flex flex-row space-x-6">
 				@include('partials.google-btn', ['linked' => $user->google_token ? 2 : 1])
-				@include('partials.google-btn', ['linked' => $user->google_token ? 2 : 1])
+				@include('partials.x-btn', ['linked' => $user->x_token ? 2 : 1])
 			</div>
 		</div>
 	@endif

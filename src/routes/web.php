@@ -119,6 +119,9 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(OAuthController::class)->group(function(){
     Route::get('/google', 'redirectToGoogle')->name('auth.google');
     Route::get('/google/callback', 'handleGoogleCallback');
+	Route::get('/x', 'redirectToX')->name('auth.x');
+    Route::get('/x/callback', 'handleXCallback');
+
 });
 
 // Notifications
