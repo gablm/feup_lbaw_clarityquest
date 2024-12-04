@@ -21,6 +21,11 @@
 				@include('partials.google-btn', ['linked' => $user->google_token ? 2 : 1])
 				@include('partials.x-btn', ['linked' => $user->x_token ? 2 : 1])
 			</div>
+			@if ($errors->has('connection'))
+			<span class="auth-error bold">
+				{{ $errors->first('connection') }}
+			</span>
+		@endif
 		</div>
 	@endif
 	<div class="bg-white shadow-md rounded-lg p-6">
@@ -50,7 +55,7 @@
 			@csrf
 			@method('PATCH')
 
-			@if ($errors->any())
+			@if ($errors->any() && !$errors->has('connection'))
 				<div class="mb-4">
 					<ul class="list-disc list-inside text-red-500">
 						@foreach ($errors->all() as $error)
@@ -102,7 +107,7 @@
 					placeholder="Confirm your new password" class="w-full px-3 py-2 border rounded-md">
 			</div>
 
-			@if (Auth::user()->isAdmin())
+			@if (Auth::user()->isAdmin() && $user->id != Auth::user()->id)
 				<div class="mb-4">
 					<label class="auth" for="role">Role</label>
 					<select name="role" id="role" class="auth focus:outline-none focus:shadow-outline">
