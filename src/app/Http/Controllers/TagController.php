@@ -48,7 +48,8 @@ class TagController extends Controller
 		]);
 
         return view('partials.tag-card', [
-			'tag' => $tag
+			'tag' => $tag,
+			'panel' => true
 		]);
     }
 
@@ -57,9 +58,10 @@ class TagController extends Controller
      */
 	public function delete(string $id)
 	{
-		//$this->authorize('delete');
-
 		$tag = Tag::findOrFail($id);
+
+		$this->authorize('delete', $tag);
+
 		$tag->delete();
 	}
 
@@ -68,9 +70,9 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
-		//$this->authorize('update');
-		
 		$tag = Tag::findOrFail($id);
+
+		$this->authorize('update', $tag);
 		
         $request->validate([
 			'name' => 'required|string|max:64'
@@ -81,7 +83,8 @@ class TagController extends Controller
 		$tag->save();
 
         return view('partials.tag-card', [
-			'tag' => $tag
+			'tag' => $tag,
+			'panel' => true
 		]);
     }
     

@@ -96,6 +96,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
 	
+	Route::put('/users', 'create')->middleware('auth');
 	Route::get('/users/{id}', 'showPublicProfile')->name('public.profile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');

@@ -18,7 +18,7 @@ class TagPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, Tag $tag): bool
     {		
         return $user->isAdmin();
     }
@@ -26,7 +26,7 @@ class TagPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user): bool
+    public function delete(User $user, Tag $tag): bool
     {
 		return $user->isAdmin();
     }
