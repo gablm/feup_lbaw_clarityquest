@@ -39,4 +39,12 @@ class UserPolicy
         return $user->isAdmin() &&
 			$user2->isAdmin() == false;
     }
+
+	/**
+     * Determine whether the user can update the model role.
+     */
+    public function role(User $user, User $user2): bool
+    {
+        return $user->isAdmin();
+    }
 }

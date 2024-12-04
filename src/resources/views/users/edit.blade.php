@@ -81,6 +81,22 @@ $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('im
 				<input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm your new password" class="w-full px-3 py-2 border rounded-md">
 			</div>
 
+			@if (Auth::user()->isAdmin())
+			<div class="mb-4">
+                <label class="auth" for="role">Role</label>
+                <select name="role" id="role" class="auth focus:outline-none focus:shadow-outline">
+                    @foreach (\App\Enum\User\Permission::cases() as $role)
+                    <option value="{{ $role->value }}" @if ($role == $user->role) selected @endif>{{ $role->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('role'))
+                <span class="auth-error bold">
+                    {{ $errors->first('role') }}
+                </span>
+                @endif
+            </div>
+			@endif
+
 			<div class="flex justify-end">
 				<button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Update Profile</button>
 			</div>
