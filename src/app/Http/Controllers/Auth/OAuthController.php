@@ -15,28 +15,37 @@ class OAuthController extends Controller
 {
 	public function redirectToGoogle()
 	{
+		$actualUser =Auth::user();
+		if ($actualUser && $actualUser->google_token)
+		{
+			$actualUser->google_token = null;
+			$actualUser->save(); 
+
+			return redirect()->route('profile.edit');
+		}
+
 		return Socialite::driver('google')->redirect();
 	}
 
 	public function handleGoogleCallback(Request $request)
-	{
+	{	
 		$user = Socialite::driver('google')->user();
 		$actualUser = User::where('google_token', $user->id)->first();
-
-		if ($actualUser) {
+		
+		if ($actualUser && Auth::check() == false) {
 
 			Auth::login($actualUser);
 			$request->session()->regenerate();
 
 			return redirect()->intended('/');
 		}
-		
+
 		if (Auth::check()) {
 			$actualUser = Auth::user();
 			$actualUser->google_token = $user->id;
 			$actualUser->save(); 
 
-			return redirect()->route('profile');
+			return redirect()->route('profile.edit');
 		}
 
 		return redirect()->route('login')->withErrors([
