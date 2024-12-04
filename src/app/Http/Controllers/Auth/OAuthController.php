@@ -40,10 +40,20 @@ class OAuthController extends Controller
 			return redirect()->intended('/');
 		}
 
-		if (Auth::check()) {
-			$actualUser = Auth::user();
-			$actualUser->google_token = $user->id;
-			$actualUser->save(); 
+		if (Auth::check())
+		{
+			$curr = Auth::user();
+			
+			if ($actualUser && $actualUser->id != $curr->id)
+			{
+				return redirect()->route('profile.edit')
+					->withErrors([
+						'connection' => 'This Google account is already connected to other account.'
+					]);
+			}
+
+			$curr->google_token = $user->id;
+			$curr->save(); 
 
 			return redirect()->route('profile.edit');
 		}
@@ -80,10 +90,20 @@ class OAuthController extends Controller
 			return redirect()->intended('/');
 		}
 
-		if (Auth::check()) {
-			$actualUser = Auth::user();
-			$actualUser->x_token = $user->id;
-			$actualUser->save(); 
+		if (Auth::check())
+		{
+			$curr = Auth::user();
+			
+			if ($actualUser && $actualUser->id != $curr->id)
+			{
+				return redirect()->route('profile.edit')
+					->withErrors([
+						'connection' => 'This X account is already connected to other account.'
+					]);
+			}
+
+			$curr->x_token = $user->id;
+			$curr->save(); 
 
 			return redirect()->route('profile.edit');
 		}
