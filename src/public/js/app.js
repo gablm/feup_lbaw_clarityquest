@@ -265,14 +265,22 @@ function sendCreateCommentRequest() {
 
 function showCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
+	let text = document.querySelector('#tag-name');
 
+	modal.removeAttribute('data-id');
 	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+	text.value = "";
 }
 
 function closeCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
+	let text = document.querySelector('#tag-name');
 
+	modal.removeAttribute('data-id');
 	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
 }
 
 function sendCreateTagRequest() {
