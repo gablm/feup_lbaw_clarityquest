@@ -28,9 +28,9 @@
 	<main class="grid h-screen place-items-center">
 		<div class="flex flex-col items-center">
 			<a href="{{ url('/') }}">
-				<img  class="h-32 md:h-48 lg:h-64" src={{ url('img/logo.png') }}>
+				<img  class="h-32" src={{ url('img/logo.png') }}>
 			</a>
-			<section id="content" class="min-w-[40vw] lg:min-w-[25vw] mt-5 p-[1em] shadow-lg border border-gray-200 rounded">
+			<section id="content" class="min-w-[40vw] lg:min-w-[25vw] mt-4 p-[1em] shadow-lg border border-gray-200 rounded">
 				@yield('content')
 			</section>
 		</div>
