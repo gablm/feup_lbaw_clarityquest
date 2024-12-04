@@ -10,7 +10,7 @@ $notifications = $user ? $user->notifications()->orderBy('sent_at', 'desc')->tak
 @endphp
 
 <nav class="fixed w-screen bg-white z-0 shadow-lg px-4">
-	<div class="flex justify-between items-center">
+	<div class="flex justify-between items-center px-4">
 		<a href="{{ url('/') }}" class="flex items-center">
 			<img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
 		</a>
