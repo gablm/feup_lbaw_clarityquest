@@ -218,7 +218,7 @@ class UserController extends Controller
 	 */
 	public function create(Request $request)
     {
-        if (Auth::check() == false || Auth::user()->isAdmin() == false)
+        if (Auth::user()->isAdmin() == false)
 			return abort(403);
 
 		$request->validate([
@@ -226,12 +226,13 @@ class UserController extends Controller
 			'name' => 'required|string|max:250',
 			'email' => 'required|email|max:250|unique:users',
 			'password' => 'required|min:8',
-			'role' => 'string|in:REGULAR,ADMIN,MODERATOR'
+			'role' => 'required|string|in:REGULAR,ADMIN,MODERATOR'
 		]);
 
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         $user = DB::transaction(function () use ($request) {
             $user = User::create([
+				'username' => $request->username,
 				'name' => $request->name,
 				'email' => $request->email,
 				'password' => Hash::make($request->password), 

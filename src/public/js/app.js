@@ -473,7 +473,40 @@ function showCreateUserModal() {
 
 function closeCreateUserModal() {
 	let modal = document.querySelector('#user-create');
+	let name = document.querySelector('#user-name');
+	let handle = document.querySelector('#user-username');
+	let email = document.querySelector('#user-email');
+	let password = document.querySelector('#user-password');
+	let role = document.querySelector('#user-role');
 
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
+	name.value = "";
+	handle.value = "";
+	email.value = "";
+	password.value = "";
+	role.value = "";
+}
+
+function sendCreateUserRequest() {
+    let userList = document.querySelector('#user-list');
+    let name = document.querySelector('#user-name');
+	let handle = document.querySelector('#user-username');
+	let email = document.querySelector('#user-email');
+	let password = document.querySelector('#user-password');
+	let role = document.querySelector('#user-role');
+
+    sendAjaxRequest('PUT', '/users', { name: name.value, username: handle.value,
+										email: email.value, password: password.value,
+										role: role.value },
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status != 200) return;
+
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			userList.prepend(doc.body.firstChild);
+			closeCreateUserModal();
+		});
 }

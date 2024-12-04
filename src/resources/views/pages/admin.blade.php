@@ -72,7 +72,7 @@
 							<div class="mb-4">
 								<label class="auth" for="username">Handle</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-username" type="text"
-									name="username" value="{{ old('username') }}">
+									name="username">
 							</div>
 
 							<div class="mb-4">
@@ -89,9 +89,9 @@
 
 							<div class="mb-4">
 								<label class="auth" for="role">Role</label>
-								<select name="role" id="role" class="auth focus:outline-none focus:shadow-outline">
+								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
 									@foreach (\App\Enum\User\Permission::cases() as $role)
-										<option value="{{ $role->value }}">
+										<option value="{{ $role->value }}" @if($role->value == 'REGULAR') selected @endif>
 											{{ $role->name }}</option>
 									@endforeach
 								</select>
