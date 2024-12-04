@@ -89,11 +89,6 @@ $profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('im
                     <option value="{{ $role->value }}" @if ($role == $user->role) selected @endif>{{ $role->name }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('role'))
-                <span class="auth-error bold">
-                    {{ $errors->first('role') }}
-                </span>
-                @endif
             </div>
 			@endif
 

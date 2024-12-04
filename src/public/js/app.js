@@ -463,3 +463,17 @@ function deleteNotification(id) {
 			notification.remove();
 		});
 }
+
+function showCreateUserModal() {
+	let modal = document.querySelector('#user-create');
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeCreateUserModal() {
+	let modal = document.querySelector('#user-create');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+}
