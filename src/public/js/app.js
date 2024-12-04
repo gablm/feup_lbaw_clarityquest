@@ -36,7 +36,7 @@ function toggleNotificationDropdown() {
 function showProfileTab(tab) {
 	document.getElementById('questions-section').classList.add('hidden');
 	document.getElementById('answers-section').classList.add('hidden');
-
+	document.getElementById('medals-section').classList.add('hidden');
 
 	document.querySelectorAll('.tab-btn').forEach(btn => {
 		btn.classList.remove('bg-blue-100', 'text-blue-600', 'border-blue-600', 'hover:bg-blue-200');

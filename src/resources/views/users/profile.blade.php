@@ -72,6 +72,14 @@
 						Posted Answers
 					</button>
 				</li>
+				<li>
+					<button
+						id="answers-tab"
+						class="tab-btn bg-gray-100 text-gray-600 border-b-2 border-transparent px-4 py-2 rounded-t-lg hover:bg-gray-200"
+						onclick="showProfileTab('medals')">
+						Your Medals
+					</button>
+				</li>
 			</ul>
 		</div>
 
@@ -89,7 +97,6 @@
 			</div>
 			@endif
 		</div>
-
 		<!-- Answers Section  -->
 		<div id="answers-section" class="tab-content hidden">
 			@if($answers->isEmpty())
@@ -104,6 +111,10 @@
 			</div>
 			@endif
 		</div>
-	</div>
+		<!-- Medals Section -->
+		<div id="medals-section" class="tab-content hidden">
+				@include('partials.medals', ['medals' => $medals])
+		</div>
 </div>
 @endsection
+
