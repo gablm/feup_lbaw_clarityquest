@@ -39,11 +39,16 @@
 	</div>
 
 	<div class="flex items-center justify-between">
-		<button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
-			Sign In
-		</button>
-		<a class="auth-link" href="{{ route('register') }}">
-			Register
+		<div class="flex space-x-4 items-center">
+			<button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
+				Sign In
+			</button>
+			<a class="auth-link" href="{{ route('register') }}">
+				Register
+			</a>
+		</div>
+		<a class="auth-link" href="{{ route('recover.index') }}">
+			Forgot password?
 		</a>
 	</div>
 </form>

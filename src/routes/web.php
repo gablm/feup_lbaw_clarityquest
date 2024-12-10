@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RecoveryController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\StaticController;
@@ -122,6 +123,13 @@ Route::controller(OAuthController::class)->group(function(){
 	Route::get('/x', 'redirectToX')->name('auth.x');
     Route::get('/x/callback', 'handleXCallback');
 
+});
+
+Route::controller(RecoveryController::class)->group(function() {
+	Route::get('/recover', 'index')->name('recover.index');
+	Route::post('/recover', 'sendEmail')->name('recover.send');
+	Route::get('/recover/sent', 'sent')->name('recover.sent');
+	Route::get('/recover/{token}', 'resetPassword');
 });
 
 // Notifications

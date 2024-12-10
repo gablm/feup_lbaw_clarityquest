@@ -25,7 +25,7 @@ class MailModel extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mail Model',
+            subject: $this->mailData['subject'],
         );
     }
 
@@ -35,7 +35,7 @@ class MailModel extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: $this->mailData['view'],
         );
     }
 
@@ -46,6 +46,6 @@ class MailModel extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return $this->mailData['attachments'];
     }
 }

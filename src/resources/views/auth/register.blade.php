@@ -49,7 +49,7 @@
         <input class="auth focus:outline-none focus:shadow-outline" id="password-confirm" type="password" name="password_confirmation" required placeholder="Confirm your password">
     </div>
 
-    <div class="flex items-center justify-between">
+    <div class="flex items-center space-x-4">
         <button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
             Register
         </button>
