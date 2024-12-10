@@ -516,3 +516,57 @@ function sendCreateUserRequest() {
 			closeCreateUserModal();
 		});
 }
+
+function showReportPostModal(type, id, content) {
+	let modal = document.querySelector('#report-post');
+	modal.setAttribute('data-id', id);
+	modal.setAttribute('data-type', type);
+
+	let text = modal.querySelector('#report-text');
+	text.textContent = content;
+
+	let title = modal.querySelector('#report-edit-title');
+	switch (type) {
+		case 'question':
+			title.textContent = 'Report Question';
+			break;
+		case 'comment':
+			title.textContent = 'Report Comment';
+			break;
+		case 'answer':
+			title.textContent = 'Report Answer';
+			break;
+	}
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeReportPostModal() {
+	let modal = document.querySelector('#report-post');
+	let text = modal.querySelector('#report-text');
+	let reason = modal.querySelector('#report-reason');
+	let title = modal.querySelector('#report-edit-title');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
+	reason.value = "";
+	title.textContent = "Report ??";
+}
+
+function sendReportPostRequest() {
+	let modal = document.querySelector('#report-post');
+	let id = modal.getAttribute('data-id');
+	let reason = modal.querySelector('#report-reason');
+
+	sendAjaxRequest('PUT', '/reports/', { id: id, reason: reason.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			closeEditPostModal();
+			showSuccessModal("Report send successfully!");
+		});
+}

@@ -42,10 +42,10 @@
 			</button>
 			@include('partials.follow-btn', $question)
 			@if ($owner == false && $post->user && Auth::user()->isElevated() == false)
-				<a href=# class="tool-link">
+				<button href=# class="tool-link" onclick="showReportPostModal('question', {{ $question->id }}, '{{ $question->title }}')">
 					<i class="fa-solid fa-flag"></i>
 					<span class="max-md:hidden ml-1">Report</span>
-				</a>
+				</button>
 			@endif
 			@if ($owner || $elevated)
 				<button class="tool-link" onclick="showTagModal()">

@@ -38,10 +38,10 @@
 			</button>
 		@endif
 		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
-			<a href=# class="tool-link">
+			<button href=# class="tool-link" onclick="showReportPostModal('answer', {{ $answer->id }}, '{{ $post->text }}')">
 				<i class="fa-solid fa-flag"></i>
-				<span class="max-sm:hidden ml-1">Report</span>
-			</a>
+				<span class="max-md:hidden ml-1">Report</span>
+			</button>
 		@endif
 		@if ($q_owner && !$answer->correct)
 			<a href="javascript:void(0);" onclick="markAsCorrect({{ $answer->id }})"

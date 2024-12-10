@@ -26,10 +26,10 @@
 	<div class="flex items-center">
 		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes])
 		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
-			<a href=# class="tool-link">
+			<button href=# class="tool-link" onclick="showReportPostModal('comment', {{ $comment->id }}, '{{ $post->text }}')">
 				<i class="fa-solid fa-flag"></i>
-				<span class="ml-1">Report</span>
-			</a>
+				<span class="max-md:hidden ml-1">Report</span>
+			</button>
 		@endif
 		@if ($owner || (Auth::check() && Auth::user()->isAdmin()))
 			<button onclick="showEditPostModal('comment', {{ $post->id }}, '{{ $post->text }}')" class="tool-link">
