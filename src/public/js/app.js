@@ -68,7 +68,7 @@ function showAdminTab(tab) {
 }
 
 function sendEditQuestionRequest() {
-	let question = document.querySelector('#question');
+	let question = document.querySelector('.question');
 	let id = question.getAttribute('data-id');
 	let title = question.querySelector('#title');
 	let description = question.querySelector('#description');
@@ -87,21 +87,23 @@ function sendEditQuestionRequest() {
 }
 
 function showEditQuestionModal() {
-	let question = document.querySelector('#question');
-	let modal = question.querySelector('#edit');
+	let question = document.querySelector('.question');
+	let modal = question.querySelector('#edit-question');
 
 	modal.classList.remove('hidden');
+	modal.classList.add('flex');
 }
 
 function closeEditQuestionModal() {
-	let question = document.querySelector('#question');
-	let modal = question.querySelector('#edit');
+	let question = document.querySelector('.question');
+	let modal = question.querySelector('#edit-question');
 
 	modal.classList.add('hidden');
+	modal.classList.remove('flex');
 }
 
 function sendCreateAnswerRequest() {
-	let question = document.querySelector('#question');
+	let question = document.querySelector('.question');
 	let id = question.getAttribute('data-id');
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
@@ -131,7 +133,7 @@ function deleteAnswer(object) {
 	if (confirmed == false) return;
 
 	let id = object.getAttribute('data-id');
-	let answer = document.querySelector('#answer[data-id="' + id + '"]');
+	let answer = document.querySelector('.answer[data-id="' + id + '"]');
 	let answer_count = document.querySelector('#question-answer-count');
 
 	sendAjaxRequest('DELETE', '/answers/' + id, {},
@@ -149,7 +151,7 @@ function deleteComment(object) {
 	if (confirmed == false) return;
 
 	let id = object.getAttribute('data-id');
-	let comment = document.querySelector('#comment[data-id="' + id + '"]');
+	let comment = document.querySelector('.comment[data-id="' + id + '"]');
 
 	sendAjaxRequest('DELETE', '/comments/' + id, {},
 		(request) => {
@@ -204,11 +206,11 @@ function sendEditPostRequest() {
 
 	switch (type) {
 		case 'comment':
-			post = document.querySelector('#comment[data-id="' + id + '"]');
+			post = document.querySelector('.comment[data-id="' + id + '"]');
 			route = '/comments/';
 			break;
 		case 'answer':
-			post = document.querySelector('#answer[data-id="' + id + '"]');
+			post = document.querySelector('.answer[data-id="' + id + '"]');
 			route = '/answers/';
 			break;
 	}
@@ -355,12 +357,16 @@ function sendEditTagRequest() {
 
 function showTagModal() {
     let modal = document.querySelector('#tag-modal');
+
     modal.classList.remove('hidden');
+	modal.classList.add('flex');
 }
 
 function closeTagModal() {
     let modal = document.querySelector('#tag-modal');
+	
     modal.classList.add('hidden');
+	modal.classList.remove('flex');
 }
 
 function deleteTag(id) {
