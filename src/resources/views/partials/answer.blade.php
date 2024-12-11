@@ -30,7 +30,7 @@
 	</div>
 	<p class="text-gray-700 pb-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex before:items-center">
-		@include('partials.vote', ['id' => $answer->id, 'votes' => $answer->post->votes])
+		@include('partials.vote', ['id' => $answer->id, 'votes' => $answer->post->votes, 'voteStatus' => $voteStatus])
 		@if (Auth::check())
 			<button onclick="showCreateCommentModal({{ $answer->id }})" class="tool-link">
 				<i class="fa-solid fa-plus"></i>

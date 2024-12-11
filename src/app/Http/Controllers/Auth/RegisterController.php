@@ -29,10 +29,28 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        
         $request->validate([
-            'username' => 'required|string|max:32|unique:users',
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
+            'username' => [
+                'required',
+                'string',
+                'max:32',
+                'unique:users',
+                'regex:/^[a-zA-Z0-9._-]+$/', 
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:250',
+                'regex:/^[a-zA-Z\s]+$/', 
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:250',
+                'unique:users',
+                'regex:/^[a-z0-9._-]+@[a-z0-9_.-]+\.[a-z]{2,}$/'
+            ],
             'password' => 'required|min:8|confirmed'
         ]);
 
