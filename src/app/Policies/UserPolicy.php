@@ -36,7 +36,14 @@ class UserPolicy
      */
     public function block(User $user, User $user2): bool
     {
-        return $user->isAdmin() &&
-			$user2->isAdmin() == false;
+        return ($user->isAdmin() && $user2->isAdmin() == false) || ($user->isModerator() && ($user2->isModerator()==false && $user2->isAdmin() == false));
+    }
+
+	/**
+     * Determine whether the user can update the model role.
+     */
+    public function role(User $user, User $user2): bool
+    {
+        return $user->isAdmin();
     }
 }

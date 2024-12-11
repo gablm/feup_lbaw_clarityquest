@@ -8,13 +8,14 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\NotificationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +96,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
 	
+	Route::put('/users', 'create')->middleware('auth');
 	Route::get('/users/{id}', 'showPublicProfile')->name('public.profile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');
@@ -112,6 +114,14 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(OAuthController::class)->group(function(){
+    Route::get('/google', 'redirectToGoogle')->name('auth.google');
+    Route::get('/google/callback', 'handleGoogleCallback');
+	Route::get('/x', 'redirectToX')->name('auth.x');
+    Route::get('/x/callback', 'handleXCallback');
+
 });
 
 // Notifications

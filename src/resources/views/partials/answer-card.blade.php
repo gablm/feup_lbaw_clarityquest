@@ -9,7 +9,7 @@ $elevated = Auth::check() && Auth::user()->isElevated();
 @endphp
 
 <article class="w-full bg-white shadow-md rounded-lg mb-4" data-id="{{ $answer->id }}">
-	<a href={{ url('/questions/' . $answer->question->id) }}>
+	<a href={{ url('/questions/' . $answer->question->id . "#" . $answer->id) }}>
 		<div class="flex flex-col p-4">
 			<div class="flex flex-row justify-between space-x-6 items-center text-gray-500 text-sm mb-1">
 				<div class="flex flex-row items-center">

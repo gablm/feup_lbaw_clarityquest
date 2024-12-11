@@ -26,8 +26,7 @@
 				</div>
 			</div>
 			<div class="flex flex-col space-y-2 items-end">
-				@if (Auth::check())
-				@if (Auth::user()->id == $user->id)
+				@if (Auth::check() && Auth::user()->id == $user->id)
 				<a href="{{ route('profile.edit') }}" class="mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 					Edit Profile
 				</a>
@@ -49,7 +48,6 @@
 					Edit Profile
 				</a>
 				@endif
-				@endif
 			</div>
 		</div>
 
@@ -64,12 +62,20 @@
 						Posted Questions
 					</button>
 				</li>
-				<li>
+				<li class="mr-4">
 					<button
 						id="answers-tab"
 						class="tab-btn bg-gray-100 text-gray-600 border-b-2 border-transparent px-4 py-2 rounded-t-lg hover:bg-gray-200"
 						onclick="showProfileTab('answers')">
 						Posted Answers
+					</button>
+				</li>
+				<li>
+					<button
+						id="medals-tab"
+						class="tab-btn bg-gray-100 text-gray-600 border-b-2 border-transparent px-4 py-2 rounded-t-lg hover:bg-gray-200"
+						onclick="showProfileTab('medals')">
+						Your Medals
 					</button>
 				</li>
 			</ul>
@@ -89,7 +95,6 @@
 			</div>
 			@endif
 		</div>
-
 		<!-- Answers Section  -->
 		<div id="answers-section" class="tab-content hidden">
 			@if($answers->isEmpty())
@@ -104,6 +109,10 @@
 			</div>
 			@endif
 		</div>
-	</div>
+		<!-- Medals Section -->
+		<div id="medals-section" class="tab-content hidden">
+				@include('partials.medals', ['medals' => $medals])
+		</div>
 </div>
 @endsection
+

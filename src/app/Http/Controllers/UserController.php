@@ -63,6 +63,7 @@ class UserController extends Controller
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bio' => 'nullable|string|max:1000',
             'password' => 'nullable|string|min:8|confirmed',
+			'role' => 'string|in:REGULAR,ADMIN,MODERATOR'
         ]);
 
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
@@ -93,6 +94,12 @@ class UserController extends Controller
                 $user->password = Hash::make($request->password);
             }
 
+			if ($request->has('role'))
+			{
+				$this->authorize('role', $user);
+				$user->role = $request->role;
+			}
+
             $user->save();
         });
 
@@ -121,17 +128,7 @@ class UserController extends Controller
 			$vote->activity_type = 'vote';
 			return $vote;
 		});
-		/*
-        $medals = collect([
-            ['type' => 'posts_upvoted', 'count' => $user->postsUpvotedMedals(), 'created_at' => $user->medals->updated_at],
-            ['type' => 'posts_created', 'count' => $user->postsCreatedMedals(), 'created_at' => $user->medals->updated_at],
-            ['type' => 'questions_created', 'count' => $user->questionsCreatedMedals(), 'created_at' => $user->medals->updated_at],
-            ['type' => 'answers_posted', 'count' => $user->answersPostedMedals(), 'created_at' => $user->medals->updated_at],
-        ])->map(function ($medal) {
-            $medal['activity_type'] = 'medal';
-            return (object) $medal;->merge($medals)
-        });*/
-
+		
 
 		$allActivity = $comments->merge($answers)->merge($votes)->sortByDesc('created_at')->take(10);
 
@@ -146,12 +143,13 @@ class UserController extends Controller
 		// Fetch related data
 		$questions = $user->questionsCreated()->latest()->get();
 		$answers = $user->answersPosted()->latest()->get();
-
+		$medals = $user->medals;
 		// Pass data to the view
 		return view('users.profile', [
 			'user' => $user,
 			'questions' => $questions,
 			'answers' => $answers,
+			'medals' => $medals
 		]);
 	}
 
@@ -191,8 +189,15 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $this->authorize('block', $user);
-
+		try {
+			$this->authorize('block', $user);
+		} catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+			return view('partials.user-card', [
+				'user' => $user,
+				'panel' => true,
+				'error' => 'You do not have permissions to block this user.',
+			]);
+		}
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
         DB::transaction(function () use ($user) {
             $user->role = $user->role == Permission::Blocked 
@@ -205,4 +210,55 @@ class UserController extends Controller
 			'panel' => true
 		]);
     }
+	/**
+	 * Create a user.
+	 */
+	public function create(Request $request)
+    {
+        if (Auth::user()->isAdmin() == false)
+			return abort(403);
+
+		$request->validate([
+			'username' => 'required|string|max:32|unique:users',
+			'name' => 'required|string|max:250',
+			'email' => 'required|email|max:250|unique:users',
+			'password' => 'required|min:8',
+			'role' => 'required|string|in:REGULAR,ADMIN,MODERATOR'
+		]);
+
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        $user = DB::transaction(function () use ($request) {
+            $user = User::create([
+				'username' => $request->username,
+				'name' => $request->name,
+				'email' => $request->email,
+				'password' => Hash::make($request->password), 
+				'role' => $request->role
+			]);
+
+			Medals::create(['user_id' => $user->id]);
+
+			return $user;
+        });
+
+        return view('partials.user-card', [
+			'user' => $user,
+			'panel' => true
+		]);;
+    }
+
+	public function showMedals(string $id)
+	{
+    // Fetch the user by ID
+    $user = User::findOrFail($id);
+
+    // Fetch the medals information
+    $medals = $user->medals;
+
+    // Pass data to the view
+    return view('partials.medals', [
+        'user' => $user,
+        'medals' => $medals,
+    ]);
+}
 }

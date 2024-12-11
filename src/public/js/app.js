@@ -36,7 +36,7 @@ function toggleNotificationDropdown() {
 function showProfileTab(tab) {
 	document.getElementById('questions-section').classList.add('hidden');
 	document.getElementById('answers-section').classList.add('hidden');
-
+	document.getElementById('medals-section').classList.add('hidden');
 
 	document.querySelectorAll('.tab-btn').forEach(btn => {
 		btn.classList.remove('bg-blue-100', 'text-blue-600', 'border-blue-600', 'hover:bg-blue-200');
@@ -68,7 +68,7 @@ function showAdminTab(tab) {
 }
 
 function sendEditQuestionRequest() {
-	let question = document.querySelector('#question');
+	let question = document.querySelector('.question');
 	let id = question.getAttribute('data-id');
 	let title = question.querySelector('#title');
 	let description = question.querySelector('#description');
@@ -87,21 +87,23 @@ function sendEditQuestionRequest() {
 }
 
 function showEditQuestionModal() {
-	let question = document.querySelector('#question');
-	let modal = question.querySelector('#edit');
+	let question = document.querySelector('.question');
+	let modal = question.querySelector('#edit-question');
 
 	modal.classList.remove('hidden');
+	modal.classList.add('flex');
 }
 
 function closeEditQuestionModal() {
-	let question = document.querySelector('#question');
-	let modal = question.querySelector('#edit');
+	let question = document.querySelector('.question');
+	let modal = question.querySelector('#edit-question');
 
 	modal.classList.add('hidden');
+	modal.classList.remove('flex');
 }
 
 function sendCreateAnswerRequest() {
-	let question = document.querySelector('#question');
+	let question = document.querySelector('.question');
 	let id = question.getAttribute('data-id');
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
@@ -131,7 +133,7 @@ function deleteAnswer(object) {
 	if (confirmed == false) return;
 
 	let id = object.getAttribute('data-id');
-	let answer = document.querySelector('#answer[data-id="' + id + '"]');
+	let answer = document.querySelector('.answer[data-id="' + id + '"]');
 	let answer_count = document.querySelector('#question-answer-count');
 
 	sendAjaxRequest('DELETE', '/answers/' + id, {},
@@ -149,7 +151,7 @@ function deleteComment(object) {
 	if (confirmed == false) return;
 
 	let id = object.getAttribute('data-id');
-	let comment = document.querySelector('#comment[data-id="' + id + '"]');
+	let comment = document.querySelector('.comment[data-id="' + id + '"]');
 
 	sendAjaxRequest('DELETE', '/comments/' + id, {},
 		(request) => {
@@ -204,11 +206,11 @@ function sendEditPostRequest() {
 
 	switch (type) {
 		case 'comment':
-			post = document.querySelector('#comment[data-id="' + id + '"]');
+			post = document.querySelector('.comment[data-id="' + id + '"]');
 			route = '/comments/';
 			break;
 		case 'answer':
-			post = document.querySelector('#answer[data-id="' + id + '"]');
+			post = document.querySelector('.answer[data-id="' + id + '"]');
 			route = '/answers/';
 			break;
 	}
@@ -265,14 +267,22 @@ function sendCreateCommentRequest() {
 
 function showCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
+	let text = document.querySelector('#tag-name');
 
+	modal.removeAttribute('data-id');
 	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+	text.value = "";
 }
 
 function closeCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
+	let text = document.querySelector('#tag-name');
 
+	modal.removeAttribute('data-id');
 	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
 }
 
 function sendCreateTagRequest() {
@@ -347,12 +357,16 @@ function sendEditTagRequest() {
 
 function showTagModal() {
     let modal = document.querySelector('#tag-modal');
+
     modal.classList.remove('hidden');
+	modal.classList.add('flex');
 }
 
 function closeTagModal() {
     let modal = document.querySelector('#tag-modal');
+	
     modal.classList.add('hidden');
+	modal.classList.remove('flex');
 }
 
 function deleteTag(id) {
@@ -453,5 +467,106 @@ function deleteNotification(id) {
 			if (request.status != 200) return;
 
 			notification.remove();
+		});
+}
+
+function showCreateUserModal() {
+	let modal = document.querySelector('#user-create');
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeCreateUserModal() {
+	let modal = document.querySelector('#user-create');
+	let name = document.querySelector('#user-name');
+	let handle = document.querySelector('#user-username');
+	let email = document.querySelector('#user-email');
+	let password = document.querySelector('#user-password');
+	let role = document.querySelector('#user-role');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	name.value = "";
+	handle.value = "";
+	email.value = "";
+	password.value = "";
+	role.value = "";
+}
+
+function sendCreateUserRequest() {
+    let userList = document.querySelector('#user-list');
+    let name = document.querySelector('#user-name');
+	let handle = document.querySelector('#user-username');
+	let email = document.querySelector('#user-email');
+	let password = document.querySelector('#user-password');
+	let role = document.querySelector('#user-role');
+
+    sendAjaxRequest('PUT', '/users', { name: name.value, username: handle.value,
+										email: email.value, password: password.value,
+										role: role.value },
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status != 200) return;
+
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			userList.prepend(doc.body.firstChild);
+			closeCreateUserModal();
+		});
+}
+
+function showReportPostModal(type, id, content) {
+	let modal = document.querySelector('#report-post');
+	modal.setAttribute('data-id', id);
+	modal.setAttribute('data-type', type);
+
+	let text = modal.querySelector('#report-text');
+	text.textContent = content;
+
+	let title = modal.querySelector('#report-edit-title');
+	switch (type) {
+		case 'question':
+			title.textContent = 'Report Question';
+			break;
+		case 'comment':
+			title.textContent = 'Report Comment';
+			break;
+		case 'answer':
+			title.textContent = 'Report Answer';
+			break;
+	}
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeReportPostModal() {
+	let modal = document.querySelector('#report-post');
+	let text = modal.querySelector('#report-text');
+	let reason = modal.querySelector('#report-reason');
+	let title = modal.querySelector('#report-edit-title');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
+	reason.value = "";
+	title.textContent = "Report ??";
+}
+
+function sendReportPostRequest() {
+	let modal = document.querySelector('#report-post');
+	let id = modal.getAttribute('data-id');
+	let reason = modal.querySelector('#report-reason');
+
+	sendAjaxRequest('PUT', '/reports/', { id: id, reason: reason.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			closeEditPostModal();
+			showSuccessModal("Report send successfully!");
 		});
 }
