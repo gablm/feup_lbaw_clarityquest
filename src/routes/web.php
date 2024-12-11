@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\StaticController;
@@ -129,4 +130,10 @@ Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
     Route::get('/notifications/recent', 'recent')->name('notifications.recent')->middleware('auth');
 	Route::delete('/notifications/{id}', 'delete')->middleware('auth');
+});
+
+// Reports
+Route::controller(ReportController::class)->group(function() {
+	Route::put('/reports', 'create')->middleware('auth');
+	Route::delete('/reports/{id}', 'delete')->middleware('auth');
 });

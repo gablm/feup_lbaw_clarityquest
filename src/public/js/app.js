@@ -561,7 +561,7 @@ function sendReportPostRequest() {
 	let id = modal.getAttribute('data-id');
 	let reason = modal.querySelector('#report-reason');
 
-	sendAjaxRequest('PUT', '/reports/', { id: id, reason: reason.value },
+	sendAjaxRequest('PUT', '/reports', { id: id, reason: reason.value },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
