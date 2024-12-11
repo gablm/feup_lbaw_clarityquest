@@ -34,7 +34,7 @@
 	<h2 class="text-4xl font-semibold pl-3 break-words">{{ $question->title }}</h2>
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
 	<div class="flex items-center">
-		@include('partials.vote', ['id' => $question->id, 'votes' => $question->post->votes])
+		@include('partials.vote', ['id' => $question->id, 'votes' => $question->post->votes,'voteStatus' => $voteStatus])
 		@if (Auth::check())
 			<button onclick="showCreateCommentModal({{ $question->id }})" class="tool-link">
 				<i class="fa-solid fa-plus"></i>

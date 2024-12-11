@@ -104,21 +104,30 @@ class QuestionController extends Controller
 	 * Display a question.
 	 */
 	public function show(string $id)
-    {
-        $question = Question::with(['answers' => function ($query) {
-            $query->join('posts', 'posts.id', '=', 'answers.id')
-                  ->orderBy('answers.correct', 'desc')
-                  ->orderBy('posts.votes', 'desc')
-                  ->select('answers.*');
-        }])->findOrFail($id);
-
-        $tags = Tag::orderBy('name')->get();
-
-        return view('questions.show', [
-            'question' => $question,
-            'tags' => $tags
-        ]);
-    }
+	{
+		$question = Question::with(['answers' => function ($query) {
+			$query->join('posts', 'posts.id', '=', 'answers.id')
+				  ->orderBy('answers.correct', 'desc')
+				  ->orderBy('posts.votes', 'desc')
+				  ->select('answers.*');
+		}])->findOrFail($id);
+	
+		$tags = Tag::orderBy('name')->get();
+	
+		$user = Auth::user();
+		$voteStatus = null;
+	
+		if ($user) {
+			$vote = $question->post->votes()->where('user_id', $user->id)->first();
+			$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
+		}
+	
+		return view('questions.show', [
+			'question' => $question,
+			'tags' => $tags,
+			'voteStatus' => $voteStatus
+		]);
+	}
 
 	/**
 	 * Delete a question.
