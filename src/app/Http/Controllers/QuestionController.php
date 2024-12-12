@@ -53,7 +53,6 @@ class QuestionController extends Controller
 				'text' => $request->description,
 				'user_id' => $user->id
 			]);
-
 			$question = Question::create([
 				'title' => $request->title,
 				'id' => $post->id

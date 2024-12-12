@@ -20,6 +20,9 @@ class PostController extends Controller
         ]);
 
         $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
         $positive = $request->positive === "true";
 
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
@@ -57,6 +60,9 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        return response()->json(['votes' => $post->votes]);
+        return view('partials.vote',
+            ['id' => $post->id, 
+            'votes' => $post->votes, 
+            'voteStatus' => $post->voteStatus($user->id)]);
     }
 }

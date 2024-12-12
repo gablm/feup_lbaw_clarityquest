@@ -24,7 +24,8 @@
 	</div>
 	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex items-center">
-		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes, 'voteStatus' => $voteStatus])
+		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes,'voteStatus' => Auth::check() ? $comment->post->voteStatus(Auth::id()) : null])	
+		
 		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
 			<button href=# class="tool-link" onclick="showReportPostModal('comment', {{ $comment->id }}, '{{ $post->text }}')">
 				<i class="fa-solid fa-flag"></i>
