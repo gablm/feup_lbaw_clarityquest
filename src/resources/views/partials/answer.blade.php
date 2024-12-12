@@ -24,7 +24,7 @@
 		</a>
 		<span>{{ $post->creationFTime() }} {{ $is_edited }}</span>
 		@if($answer->correct)
-			<a class="ml-4 tag-link">Marked as correct</a>
+			<a class="ml-4 correct">Marked as correct</a>
 		@endif
 	</div>
 	<p class="text-gray-700 pb-2 pl-3 break-words">{{ $post->text }}</p>

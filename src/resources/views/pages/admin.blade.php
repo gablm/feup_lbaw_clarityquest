@@ -5,12 +5,7 @@
 	<div class="p-4 pt-4">
 		<h2 class="text-2xl font-semibold mb-8">
 			Admin Panel
-			<span class="text-sm text-gray-500 relative group">[?]
-				<span
-					class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-					Here is the panel for managing reports, users and tags.
-				</span>
-			</span>
+			@include('partials.tip', ['tip' => "Here is the panel for managing reports, users and tags."])
 		</h2>
 		<div class="mb-6 border-b border-gray-200">
 			<ul class="flex flex-row space-x-4 -mb-px text-lg font-medium">

@@ -10,11 +10,11 @@
                             class="w-48 h-auto object-cover">
                     </div>
                     <div class="col-span-2 text-gray-700 mb-3 mt-1 break-words">
-                        <p class="text-gray-700"><b> Posts Upvoted: </b>{{ $medals->posts_upvoted }}</p>
-                        <p class="text-gray-700"><b> Posts Created: </b>{{ $medals->posts_created }}</p>
-                        <p class="text-gray-700"><b> Questions Created: </b>{{ $medals->questions_created }}</p>
-                        <p class="text-gray-700"><b> Answers Posted: </b>{{ $medals->answers_posted }}</p>
-                        <p class="text-black"><b> Total: </b>{{ $user->totalMedals() }}</p>
+                        <p class="text-gray-700 text-4xl"><b> Posts Upvoted: </b>{{ $medals->posts_upvoted }}</p>
+                        <p class="text-gray-700 text-4xl"><b> Posts Created: </b>{{ $medals->posts_created }}</p>
+                        <p class="text-gray-700 text-4xl"><b> Questions Created: </b>{{ $medals->questions_created }}</p>
+                        <p class="text-gray-700 text-4xl"><b> Answers Posted: </b>{{ $medals->answers_posted }}</p>
+                        <p class="text-black text-4xl"><b> Total: </b>{{ $user->totalMedals() }}</p>
                     </div>
                 </div>
             </article>

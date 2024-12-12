@@ -75,7 +75,7 @@
 						id="medals-tab"
 						class="tab-btn bg-gray-100 text-gray-600 border-b-2 border-transparent px-4 py-2 rounded-t-lg hover:bg-gray-200"
 						onclick="showProfileTab('medals')">
-						Your Medals
+						Medals
 					</button>
 				</li>
 			</ul>

@@ -6,11 +6,7 @@
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-semibold mb-4">
             My Questions
-            <span class="text-sm text-gray-500 relative group">[?]
-                <span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-                    Here are the questions you have created.
-                </span>
-            </span>
+            @include('partials.tip', ['tip' => "Here are the questions you have created."])
         </h2>
         @if($myQuestions->isEmpty())
         <p class="text-gray-700">You have not created any questions.</p>
