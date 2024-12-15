@@ -23,7 +23,7 @@
         <div class="mb-4">
             <h3 class="text-xl font-semibold mb-2">
                 Latest Questions
-                @include('partials.tip', ['tip' => "Here are the most recently asked questions."]);
+                @include('partials.tip', ['tip' => "Here are the most recently asked questions."])
             </h3>
             @if($latestQuestions->isEmpty())
                 <p class="text-gray-700">No latest questions available.</p>
