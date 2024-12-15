@@ -302,10 +302,9 @@ function sendCreateTagRequest() {
 			closeCreateTagModal();
 		});
 }
-
+/*
 function sendVoteRequest(id, positive) {
 	let count = document.querySelector(`#votes-${id}`);
-
 	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
 		(request) => {
 			if (request.readyState != 4) return;
@@ -313,6 +312,19 @@ function sendVoteRequest(id, positive) {
 
 			count.textContent = JSON.parse(request.responseText).votes;
 		});
+}*/
+function sendVoteRequest(id, positive) {
+	let voteStatus = document.querySelector('#vote-status');
+	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
+		(request) => { 
+            if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			voteStatus.parentElement.replaceChild(doc.body.firstChild, voteStatus);	
+    });
 }
 
 function showEditTagModal(id, content) {
@@ -561,7 +573,7 @@ function sendReportPostRequest() {
 	let id = modal.getAttribute('data-id');
 	let reason = modal.querySelector('#report-reason');
 
-	sendAjaxRequest('PUT', '/reports/', { id: id, reason: reason.value },
+	sendAjaxRequest('PUT', '/reports', { id: id, reason: reason.value },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;

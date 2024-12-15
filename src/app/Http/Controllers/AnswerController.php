@@ -38,9 +38,19 @@ class AnswerController extends Controller
 		$answer = Answer::findOrFail($id);
 
 		$this->authorize('show', $answer);
+		$user = Auth::user();
+		$voteStatus = null;
+	
+		if ($user) {
+			$vote = $question->post->votes()->where('user_id', $user->id)->first();
+			$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
+		}
+	
+		$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
 
 		return view('partials.answer', [
-			'answer' => $answer
+			'answer' => $answer,
+			'voteStatus' => $voteStatus
 		]);
 	}
 

@@ -11,7 +11,6 @@
 
 	$edited_at = $answer->post->isEdited();
 	$is_edited = $edited_at ? " [edited at $edited_at]" : "";
-
 @endphp
 
 <article class="answer mt-2" data-id="{{ $post->id }}">
@@ -25,12 +24,12 @@
 		</a>
 		<span>{{ $post->creationFTime() }} {{ $is_edited }}</span>
 		@if($answer->correct)
-			<a class="ml-4 tag-link">Marked as correct</a>
+			<a class="ml-4 correct">Marked as correct</a>
 		@endif
 	</div>
 	<p class="text-gray-700 pb-2 pl-3 break-words">{{ $post->text }}</p>
 	<div class="flex before:items-center">
-		@include('partials.vote', ['id' => $answer->id, 'votes' => $answer->post->votes])
+		@include('partials.vote', ['id' => $answer->id, 'votes' => $answer->post->votes, 'voteStatus' => Auth::check() ? $answer->post->voteStatus(Auth::id()) : null])
 		@if (Auth::check())
 			<button onclick="showCreateCommentModal({{ $answer->id }})" class="tool-link">
 				<i class="fa-solid fa-plus"></i>

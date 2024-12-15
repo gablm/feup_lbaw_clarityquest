@@ -421,6 +421,27 @@ AFTER INSERT ON "answers"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
 
+
+-- DB MUST BE UPDATED
+-- New function to handle vote removal
+
+CREATE OR REPLACE FUNCTION update_post_votes_on_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE posts
+    SET votes = (SELECT COUNT(*) FROM votes WHERE post_id = OLD.post_id AND positive = TRUE) -
+                (SELECT COUNT(*) FROM votes WHERE post_id = OLD.post_id AND positive = FALSE)
+    WHERE id = OLD.post_id;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- New trigger for vote removal
+CREATE TRIGGER trigger_update_post_votes_on_delete
+AFTER DELETE ON votes
+FOR EACH ROW
+EXECUTE FUNCTION update_post_votes_on_delete();
+
 --------------
 -- Populate --
 --------------

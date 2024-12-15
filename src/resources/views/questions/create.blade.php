@@ -6,11 +6,7 @@
     <div class="container mx-auto p-6">
         <h2 class="text-2xl font-semibold mb-4">
             Create Question
-            <span class="text-sm text-gray-500 relative group">[?]
-                <span class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-                    Through this form you can upload a question and add a tag to it.
-                </span>
-            </span>
+            @include('partials.tip', ['tip' => "Through this form you can upload a question and add a tag to it."])
         </h2>
         <form method="POST" action="{{ route('questions-create') }}">
             {{ csrf_field() }}
