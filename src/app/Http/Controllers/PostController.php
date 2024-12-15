@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Vote;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,9 +61,25 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
+        $voteCount = DB::table('votes')->where('post_id', $post->id)->count();
+
+        if ($voteCount <= 10 || $voteCount % 10 === 0) {
+            $message = "Your post has reached {$voteCount} vote(s)!";
+            $notification = Notification::create([
+                'receiver' => $post->user_id,
+                'description' => $message,
+            ]);
+    
+            DB::table('notificationpost')->insert([
+                'notification_id' => $notification->id,
+                'post_id' => $post->id
+            ]);
+        }
+
         return view('partials.vote',
             ['id' => $post->id, 
             'votes' => $post->votes, 
             'voteStatus' => $post->voteStatus($user->id)]);
     }
+
 }
