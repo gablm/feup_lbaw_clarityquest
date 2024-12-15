@@ -48,17 +48,12 @@ $notifications = $user ? $user->notifications()->orderBy('sent_at', 'desc')->tak
 						@else
 							<ul>
 								@foreach ($notifications as $notification)
-<<<<<<< HEAD
-								<li class="px-4 py-2 border-b hover:bg-gray-100">
-									<a href="{{ route('pages.notifications') }}" class="block text-sm text-gray-700">
-=======
 								@php
 								$post = $notification->posts()->first();
 								$route = $post ? url('/questions/' . $post->id ) : route('pages.notifications');
 								@endphp
 								<li class="px-4 py-2 border-b hover:bg-gray-100">
 									<a href="{{ $route }}" class="block text-sm text-gray-700">
->>>>>>> 69db8eab063a08ba41bc5c38ec447a326900a579
 										{{ $notification->description }}
 									</a>
 								</li>
