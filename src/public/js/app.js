@@ -302,19 +302,9 @@ function sendCreateTagRequest() {
 			closeCreateTagModal();
 		});
 }
-/*
-function sendVoteRequest(id, positive) {
-	let count = document.querySelector(`#votes-${id}`);
-	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
 
-			count.textContent = JSON.parse(request.responseText).votes;
-		});
-}*/
 function sendVoteRequest(id, positive) {
-	let voteStatus = document.querySelector('#vote-status');
+	let voteStatus = document.querySelector('#vote-status-' + id);
 	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
 		(request) => { 
             if (request.readyState != 4) return;
