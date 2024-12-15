@@ -74,11 +74,25 @@ class AnswerController extends Controller
 				'user_id' => $user->id,
 			]);
 
+<<<<<<< HEAD
+                Notification::create([
+                    'receiver' => $question->post->user_id, // Original poster's ID
+                    'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
+                    'type' => 'RESPONSE',
+                ]);
+
+                return Answer::create([
+                    'id' => $post->id,
+                    'question_id' => $question->id,
+                ]);
+            });
+=======
 			$notification = Notification::create([
 				'receiver' => $question->post->user_id,
 				'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
 				'type' => 'RESPONSE',
 			]);
+>>>>>>> 69db8eab063a08ba41bc5c38ec447a326900a579
 
 			DB::table('notificationpost')->insert([
 				'notification_id' => $notification->id,

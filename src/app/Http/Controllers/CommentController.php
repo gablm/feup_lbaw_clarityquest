@@ -91,6 +91,52 @@ class CommentController extends Controller
 		return view('partials.comment', [
 			'comment' => $comment
 		]);
+<<<<<<< HEAD
+    }
+    /**
+     * Create a new comment.
+     */
+    public function create(Request $request)
+    {
+        $user = Auth::user();
+    
+        $request->validate([
+            'text' => 'required|string|max:1000',
+            'id' => 'required|integer|exists:posts,id', 
+        ]);
+    
+        $ownerPost = Post::findOrFail($request->id);
+    
+        try {
+            $comment = DB::transaction(function () use ($request, $user, $ownerPost) {
+                $post = Post::create([
+                    'text' => $request->text,
+                    'user_id' => $user->id
+                ]);
+                
+                
+
+                $comment = Comment::create([
+                    'id' => $post->id, 
+                    'post_id' => $ownerPost->id
+                ]);
+                
+
+                return $comment;
+            });
+    
+            return view('partials.comment', [
+                'comment' => $comment
+            ]);
+    
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred while creating the comment.']);
+        }
+    }
+
+}
+
+=======
 	}
 	/**
 	 * Create a new comment.
@@ -155,3 +201,4 @@ class CommentController extends Controller
 		]);
 	}
 }
+>>>>>>> 69db8eab063a08ba41bc5c38ec447a326900a579

@@ -34,7 +34,7 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
-	Route::get('/search', 'search')->name('search');
+	Route::get('/search', 'search')->name('search'); 
 	Route::get('/admin', 'admin')->name('admin');
 	Route::get('/main-features','mainFeatures')->name('main-features');
 });
@@ -102,6 +102,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');
 	Route::delete('/users/{id}', 'delete')->middleware('auth');
+	
 	Route::patch('/users/{id}/block', 'block')->middleware('auth');
 });
 
@@ -128,7 +129,6 @@ Route::controller(OAuthController::class)->group(function(){
 // Notifications
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
-    Route::get('/notifications/recent', 'recent')->name('notifications.recent')->middleware('auth');
 	Route::delete('/notifications/{id}', 'delete')->middleware('auth');
 });
 
