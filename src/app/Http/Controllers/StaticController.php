@@ -43,12 +43,10 @@ class StaticController extends Controller
 
 	public function search(Request $request)
 	{
-		// Get the search query and filter parameters from the request
 		$query = $request->input('search');
-		$filter = $request->input('filter', 'all'); // Default to 'all' if no filter is provided
-		$sort = $request->input('sort', 'relevance'); // Default to 'relevance'
+		$filter = $request->input('filter', 'all'); 
+		$sort = $request->input('sort', 'none'); 
 
-		// If the query is empty, return an empty result set
 		if (empty($query)) {
 			return view('pages.search-results', ['results' => [], 'query' => $query]);
 		}
@@ -68,17 +66,27 @@ class StaticController extends Controller
 			$questions = Question::select(
 				'questions.id',
 				'questions.title',
-				DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank'),
-				'posts.created_at'  
+				DB::raw('posts.created_at, posts.votes, ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank'),
+				DB::raw('(SELECT COUNT(*) FROM answers WHERE answers.question_id = questions.id) as answers_count')
 			)
 			->join('posts', 'posts.id', '=', 'questions.id')  
 			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery])
 			->when($sort === 'newest', function ($query) {
 				$query->orderByDesc('posts.created_at');
 			})
+			->when($sort === 'oldest', function ($query) {
+				$query->orderBy('posts.created_at');
+			})
 			->when($sort === 'alphabetical', function ($query) {
 				$query->orderBy('questions.title');
 			})
+			->when($sort === 'most_upvoted', function ($query) {
+				$query->orderByDesc(DB::raw('posts.votes')); 
+			})
+			->when($sort === 'least_upvoted', function ($query) {
+				$query->orderBy(DB::raw('posts.votes')); 
+			})
+			->orderByDesc('rank') 
 			->get();
 		}
 
@@ -92,6 +100,7 @@ class StaticController extends Controller
 			)
 			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery])
 			->when($sort === 'newest', fn($q) => $q->orderByDesc('created_at'))
+			->when($sort === 'oldest', fn($q) => $q->orderBy('created_at'))
 			->orderByDesc('rank')
 			->get();
 		}
@@ -104,6 +113,8 @@ class StaticController extends Controller
 			)
 			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery])
 			->when($sort === 'alphabetical', fn($q) => $q->orderBy('name'))
+			->when($sort === 'newest', fn($q) => $q->orderByDesc('created_at'))
+			->when($sort === 'oldest', fn($q) => $q->orderBy('created_at'))
 			->orderByDesc('rank')
 			->get();
 		}
@@ -118,7 +129,6 @@ class StaticController extends Controller
 			'sort' => $sort,
 		]);
 	}
-
 	public function admin()
 	{
 		if (!Auth::check() || !Auth::user()->isElevated())

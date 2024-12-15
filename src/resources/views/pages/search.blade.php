@@ -8,30 +8,41 @@
     <!-- Main Content -->
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-semibold mb-4">Search Results</h2>
-        <p class="text-gray-700">Showing results for: <strong>{{ $query }}</strong></p>
-
-        <!-- Sorting and Filtering Options -->
+        
         <div class="flex justify-between items-center mb-4">
-            <div>
+            <p class="text-gray-700">Showing results for: <strong>{{ $query }}</strong></p>
+
+            <div class="flex space-x-2">
                 <form method="GET" action="{{ route('search') }}" class="flex space-x-2">
                     <input type="hidden" name="search" value="{{ $query }}">
 
                     <!-- Filter Dropdown -->
-                    <select name="filter" class="border rounded px-2 py-1">
-                        <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All</option>
-                        <option value="questions" {{ request('filter') === 'questions' ? 'selected' : '' }}>Questions</option>
-                        <option value="users" {{ request('filter') === 'users' ? 'selected' : '' }}>Users</option>
-                        <option value="tags" {{ request('filter') === 'tags' ? 'selected' : '' }}>Tags</option>
-                    </select>
+                    <div class="flex flex-col">
+                        <label class="font-bold text-gray-700 mb-1">Filter by</label>
+                        <select name="filter" class="border rounded px-2 py-1">
+                            <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All</option>
+                            <option value="questions" {{ request('filter') === 'questions' ? 'selected' : '' }}>Questions</option>
+                            <option value="users" {{ request('filter') === 'users' ? 'selected' : '' }}>Users</option>
+                            <option value="tags" {{ request('filter') === 'tags' ? 'selected' : '' }}>Tags</option>
+                        </select>
+                    </div>
 
                     <!-- Sort Dropdown -->
-                    <select name="sort" class="border rounded px-2 py-1">
-                        <option value="relevance" {{ request('sort') === 'relevance' ? 'selected' : '' }}>Relevance</option>
-                        <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Newest</option>
-                        <option value="alphabetical" {{ request('sort') === 'alphabetical' ? 'selected' : '' }}>Alphabetical</option>
-                    </select>
+                    <div class="flex flex-col">
+                        <label class="font-bold text-gray-700 mb-1">Sort by</label>
+                        <select name="sort" class="border rounded px-2 py-1">
+                            <option value="none" {{ request('sort') === 'none' ? 'selected' : '' }}>None</option>
+                            <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Newest</option>
+                            <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
+                            <option value="alphabetical" {{ request('sort') === 'alphabetical' ? 'selected' : '' }}>Alphabetical</option>
+                            <option value="most_upvoted" {{ request('sort') === 'most_upvoted' ? 'selected' : '' }}>Most Upvoted</option>
+                            <option value="least_upvoted" {{ request('sort') === 'least_upvoted' ? 'selected' : '' }}>Least Upvoted</option>
+                        </select>
+                    </div>
 
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Apply</button>
+                    <div class="flex items-end">
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded">Apply</button>
+                    </div>
                 </form>
             </div>
         </div>
