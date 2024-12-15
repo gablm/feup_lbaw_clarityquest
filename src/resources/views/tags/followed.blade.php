@@ -5,7 +5,7 @@
 	@include('partials.sidebar')
 	<div class="container mx-auto p-4">
 		<h2 class="text-2xl font-semibold mb-4">
-            My Tags
+            Followed Tags
             @include('partials.tip', ['tip' => "Here are the tags you follow."])
         </h2>
 		@if($followedTags->isEmpty())
