@@ -572,3 +572,4 @@ function sendReportPostRequest() {
 			showSuccessModal("Report send successfully!");
 		});
 }
+
