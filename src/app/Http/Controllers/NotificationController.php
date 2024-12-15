@@ -34,45 +34,12 @@ class NotificationController extends Controller
     }
 
     /**
-<<<<<<< HEAD
-     * Create a new notification for a specific user.
-     * 
-     * @param int $receiverId The ID of the user receiving the notification.
-     * @param string $description The notification description.
-     * @param string $type The notification type.
-     */
-    public function create($receiverId, $description, $type = 'OTHER')
-    {
-        Notification::create([
-            'receiver' => $receiverId,
-            'description' => $description,
-            'type' => $type,
-        ]);
-
-        return response()->json(['message' => 'Notification created successfully.']);
-    }
-
-    /**
-=======
->>>>>>> 69db8eab063a08ba41bc5c38ec447a326900a579
      * Delete a notification for the authenticated user.
      * 
      * @param int $id The ID of the notification to delete.
      */
     public function delete($id)
     {
-<<<<<<< HEAD
-        
-        $notification = Notification::findOrFail($id);
-
-        
-    
-        $notification->delete();
-    
-        return response()->json(['success' => true]);
-    }
-        
-=======
         $notification = Notification::findOrFail($id);
 
 		$this->authorize('delete', $notification);
@@ -81,5 +48,4 @@ class NotificationController extends Controller
     
         return response()->json(['success' => true]);
     }  
->>>>>>> 69db8eab063a08ba41bc5c38ec447a326900a579
 }
