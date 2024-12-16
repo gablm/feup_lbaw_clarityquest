@@ -387,7 +387,11 @@ function blockUser(id) {
 	sendAjaxRequest('PATCH', '/users/' + id + '/block', {},
 		(request) => {
 			if (request.readyState != 4) return;
-			if (request.status != 200) return;
+			if (request.status != 200)
+			{
+				showInfoModal("This action failed, please try again");
+				return;
+			};
 
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(request.responseText, 'text/html');
