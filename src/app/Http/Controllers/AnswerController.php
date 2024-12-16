@@ -40,12 +40,12 @@ class AnswerController extends Controller
 		$this->authorize('show', $answer);
 		$user = Auth::user();
 		$voteStatus = null;
-	
+
 		if ($user) {
 			$vote = $answer->post->votes()->where('user_id', $user->id)->first();
 			$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
 		}
-	
+
 		$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
 
 		return view('partials.answer', [
@@ -65,7 +65,7 @@ class AnswerController extends Controller
 			return abort(403);
 
 		$request->validate([
-			'text' => 'required|string|max:10000',
+			'text' => 'required|string|max:5000',
 			'id' => 'required|integer|exists:questions,id',
 		]);
 
@@ -77,16 +77,18 @@ class AnswerController extends Controller
 				'user_id' => $user->id,
 			]);
 
-			$notification = Notification::create([
-				'receiver' => $question->post->user_id,
-				'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
-				'type' => 'RESPONSE',
-			]);
+			if ($question->post->user_id != null) {
+				$notification = Notification::create([
+					'receiver' => $question->post->user_id,
+					'description' => "Your question titled '{$question->title}' has been answered by user '{$user->username}'.",
+					'type' => 'RESPONSE',
+				]);
 
-			DB::table('notificationpost')->insert([
-				'notification_id' => $notification->id,
-				'post_id' => $question->id
-			]);
+				DB::table('notificationpost')->insert([
+					'notification_id' => $notification->id,
+					'post_id' => $question->id
+				]);
+			}
 
 			foreach ($question->follows as $follower) {
 				$notification = Notification::create([

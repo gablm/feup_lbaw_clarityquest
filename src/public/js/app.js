@@ -18,13 +18,12 @@ function sendAjaxRequest(method, url, data, handler) {
 	request.send(encodeForAjax(data));
 }
 
-function charCounter(object, max)
+function charCounter(entry, object, max)
 {
-	let counter = object.parentElement.querySelector(".counter");
+	let counter = entry.parentElement.querySelector(".counter");
 	let size = object.value.length;
 
 	counter.textContent = `${size}/${max} characters`;
-	console.log(size);
 }
 //#endregion
 
@@ -330,19 +329,34 @@ function deleteNotification(id) {
 }
 //#endregion
 
-function sendCreateAnswerRequest() {
-	let question = document.querySelector('.question');
-	let id = question.getAttribute('data-id');
+function sendCreateAnswerRequest(id) {
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
-	let errorBox = document.querySelector("#answer-create-err");
-	let answer_count = document.querySelector('#question-answer-count');
+	let answerCount = document.querySelector('#question-answer-count');
+	let error = document.querySelector('.add-err');
+
+	if (text.value == "")
+	{
+		error.classList.remove('hidden');
+		error.textContent = "Error: Answer content can't be empty.";
+		return;
+	}
 
 	sendAjaxRequest('POST', '/answers', { id: id, text: text.value },
 		(request) => {
 			if (request.readyState != 4) return;
-			if (request.status != 200) {
-				errorBox.classList.remove('hidden');
+
+			if (request.status == 302)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid text contents.";
+				return;
+			}
+
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
 				return;
 			}
 
@@ -352,7 +366,7 @@ function sendCreateAnswerRequest() {
 			answerList.prepend(doc.body.firstChild);
 			text.value = "";
 			errorBox.classList.add('hidden');
-			answer_count.textContent = Number(answer_count.textContent) + 1;
+			answerCount.textContent = Number(answerCount.textContent) + 1;
 		});
 }
 

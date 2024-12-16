@@ -22,15 +22,19 @@
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
 			<div class="flex flex-row space-x-2 mt-2">
-				<textarea class="auth focus:outline-none focus:shadow-outline resize-none" id="answer-text" type="textarea"
-					name="text" required placeholder="Enter your answer here..."></textarea>
-				<button type="submit" class="nav-main text-blue-700" onclick="sendCreateAnswerRequest()">
+				<textarea onkeyup="charCounter(this.parentElement, this, 5000)"
+					onkeydown="charCounter(this.parentElement, this, 5000)"
+					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text" type="textarea"
+					name="text" maxlength="5000" required placeholder="Enter your answer here..."></textarea>
+				<button type="submit" class="nav-main text-blue-700" onclick="sendCreateAnswerRequest({{ $question->id }})">
 					<i class="fa-solid fa-plus"></i>
 					<span class="max-sm:hidden ml-1">Add Answer</span>
 				</button>
 			</div>
-			<p id="answer-create-err" class="hidden text-sm text-red-500 mt-2">Content can't be empty!</p>
-			<div class="mb-4"></div>
+			<span class="counter my-2">0/5000 characters</span>
+			<div class="flex flex-col">
+				<span class="ml-2 mb-4 add-err hidden text-sm text-red-500"></span>
+			</div>
 		@endif
 		@include('partials.answer-list', ['answerList' => $question->answers])
 		<div id="add-comment" class="hidden modal modal-style">
@@ -73,7 +77,7 @@
 					</div>
 					<div class="flex flex-col mb-4">
 						<label class="auth" for="report-reason">Reason</label>
-						<textarea onkeyup="charCounter(this, 100)" onkeydown="charCounter(this, 100)"
+						<textarea onkeyup="charCounter(this, this, 100)" onkeydown="charCounter(this, this, 100)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="report-reason"
 							maxlength="100" type="textarea" name="report-reason" required
 							placeholder="Enter the reason here..."></textarea>
