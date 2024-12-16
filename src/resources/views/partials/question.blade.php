@@ -44,7 +44,7 @@
 			@if ($owner == false && $post->user)
 				<button href=# class="tool-link" onclick="showReportPostModal('question', {{ $question->id }}, '{{ $question->title }}')">
 					<i class="fa-solid fa-flag"></i>
-					<span class="max-md:hidden ml-1">Report</span>
+					<span class="max-lg:hidden ml-1">Report</span>
 				</button>
 			@endif
 			@if ($owner || $elevated)

@@ -583,22 +583,20 @@ function sendReportPostRequest() {
 				error.textContent = "Error: This post does not exist (anymore).";
 				return;
 			}
+			
+			if (request.status == 405)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field submitted to the server.";
+				return;
+			}
 
-			if (request.status == 500)
+			if (request.status != 200)
 			{
 				error.classList.remove('hidden');
 				error.textContent = "Error: Internal server error. Try again later.";
 				return;
 			}
-
-			if (request.status == 405)
-			{
-					error.classList.remove('hidden');
-					error.textContent = "Error: Invalid field submitted to the server.";
-					return;
-			}
-
-			if (request.status != 200) return;
 
 			closeReportPostModal();
 			showSuccessModal("Report sent successfully!");
@@ -634,3 +632,48 @@ function showSuccessModal(content)
 	modal.classList.add('flex');
 }
 
+function showDeleteReportModal(id) {
+	let modal = document.querySelector('#delete-report');
+	modal.setAttribute('data-id', id);
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeDeleteReportModal() {
+	let modal = document.querySelector('#delete-report');
+	let err = modal.querySelector('.err');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	err.classList.add('hidden');
+}
+
+function sendDeleteReportRequest() {
+	let modal = document.querySelector('#delete-report');
+	let id = modal.getAttribute('data-id');
+	let report = document.querySelector('.report-card[data-id="' + id + '"]');
+	let error = modal.querySelector('.err');
+
+	sendAjaxRequest('DELETE', '/reports/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This report does not exist (anymore).";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			report.remove();
+			closeDeleteReportModal();
+		});
+}
