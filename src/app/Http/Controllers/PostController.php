@@ -61,9 +61,11 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        $voteCount = DB::table('votes')->where('post_id', $post->id)->count();
+        $voteCount = DB::table('votes')
+			->where('post_id', $post->id)->count();
 
-        if ($voteCount <= 10 || $voteCount % 10 === 0) {
+        if ($post->user_id != null && ($voteCount <= 10 || $voteCount % 10 === 0))
+		{
             $message = "Your post has reached {$voteCount} vote(s)!";
             $notification = Notification::create([
                 'receiver' => $post->user_id,
