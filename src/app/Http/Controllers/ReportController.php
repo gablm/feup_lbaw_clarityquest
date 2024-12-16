@@ -12,17 +12,22 @@ class ReportController extends Controller
     public function create(Request $request)
     {
 		$request->validate([
-			'name' => 'required|string|max:64',
+			'reason' => 'required|string|max:100',
 			'id' => 'required|integer|exists:posts,id'
         ]);
 
-		$post = Post::findOrFail($request->post_id);
+		if (Auth::user()->isBlocked())
+			return response(status: 500);
+
+		$post = Post::findOrFail($request->id);
 
 		Report::create([
 			'reason' => $request->reason,
 			'user_id' => Auth::user()->id,
 			'post_id' => $post->id
 		]);
+
+		return response()->json(['success' => true]);
     }
 
     public function delete(Request $request, string $id)

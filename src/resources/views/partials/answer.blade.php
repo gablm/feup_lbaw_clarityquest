@@ -36,7 +36,7 @@
 				<span class="max-sm:hidden ml-1">Comment</span>
 			</button>
 		@endif
-		@if ($owner == false && $post->user && Auth::check() && Auth::user()->isElevated() == false)
+		@if ($owner == false && $post->user && Auth::check())
 			<button href=# class="tool-link" onclick="showReportPostModal('answer', {{ $answer->id }}, '{{ $post->text }}')">
 				<i class="fa-solid fa-flag"></i>
 				<span class="max-md:hidden ml-1">Report</span>

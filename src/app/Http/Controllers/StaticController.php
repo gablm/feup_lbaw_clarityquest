@@ -136,7 +136,7 @@ class StaticController extends Controller
 
 		$users = User::all();
 
-		$reports = Report::all();
+		$reports = Report::orderBy('created_at', 'DESC')->get();
 		$tags = Tag::all();
 
 		// Pass data to the view

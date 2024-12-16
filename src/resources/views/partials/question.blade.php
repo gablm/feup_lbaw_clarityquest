@@ -41,7 +41,7 @@
 				<span class="max-sm:hidden ml-1">Comment</span>
 			</button>
 			@include('partials.follow-btn', $question)
-			@if ($owner == false && $post->user && Auth::user()->isElevated() == false)
+			@if ($owner == false && $post->user)
 				<button href=# class="tool-link" onclick="showReportPostModal('question', {{ $question->id }}, '{{ $question->title }}')">
 					<i class="fa-solid fa-flag"></i>
 					<span class="max-md:hidden ml-1">Report</span>
