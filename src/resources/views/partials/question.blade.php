@@ -34,17 +34,17 @@
 	<h2 class="text-4xl font-semibold pl-3 break-words">{{ $question->title }}</h2>
 	<p class="text-gray-700 py-3 pl-3 break-words">{{ $question->post->text }}</p>
 	<div class="flex items-center">
-		@include('partials.vote', ['id' => $question->id, 'votes' => $question->post->votes])
+		@include('partials.vote', ['id' => $question->id, 'votes' => $question->post->votes,'voteStatus' => Auth::check() ? $question->post->voteStatus(Auth::id()) : null])
 		@if (Auth::check())
 			<button onclick="showCreateCommentModal({{ $question->id }})" class="tool-link">
 				<i class="fa-solid fa-plus"></i>
 				<span class="max-sm:hidden ml-1">Comment</span>
 			</button>
 			@include('partials.follow-btn', $question)
-			@if ($owner == false && $post->user && Auth::user()->isElevated() == false)
+			@if ($owner == false && $post->user)
 				<button href=# class="tool-link" onclick="showReportPostModal('question', {{ $question->id }}, '{{ $question->title }}')">
 					<i class="fa-solid fa-flag"></i>
-					<span class="max-md:hidden ml-1">Report</span>
+					<span class="max-lg:hidden ml-1">Report</span>
 				</button>
 			@endif
 			@if ($owner || $elevated)

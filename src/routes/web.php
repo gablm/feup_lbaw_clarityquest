@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\RecoveryController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\StaticController;
@@ -16,6 +15,8 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Auth\RecoveryController;
+use App\Http\Controllers\ReportController;
 
 
 /*
@@ -34,7 +35,7 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/', 'index')->name('home');
 	Route::get('/about', 'aboutUs')->name('about-us');
 	Route::get('/contacts', 'contacts')->name('contacts');
-	Route::get('/search', 'search')->name('search');
+	Route::get('/search', 'search')->name('search'); 
 	Route::get('/admin', 'admin')->name('admin');
 	Route::get('/main-features','mainFeatures')->name('main-features');
 });
@@ -102,6 +103,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');
 	Route::delete('/users/{id}', 'delete')->middleware('auth');
+	
 	Route::patch('/users/{id}/block', 'block')->middleware('auth');
 });
 
@@ -135,6 +137,11 @@ Route::controller(RecoveryController::class)->group(function() {
 // Notifications
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', 'index')->name('pages.notifications')->middleware('auth');
-    Route::get('/notifications/recent', 'recent')->name('notifications.recent')->middleware('auth');
 	Route::delete('/notifications/{id}', 'delete')->middleware('auth');
+});
+
+// Reports
+Route::controller(ReportController::class)->group(function() {
+	Route::put('/reports', 'create')->middleware('auth');
+	Route::delete('/reports/{id}', 'delete')->middleware('auth');
 });

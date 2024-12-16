@@ -96,4 +96,12 @@ class Post extends Model
         }
         return null;
     }
+    
+    public function voteStatus($user_id)
+    {
+        $vote = $this->votes()->where('user_id', $user_id)->first();
+        $voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
+    
+        return $voteStatus;
+    }
 }

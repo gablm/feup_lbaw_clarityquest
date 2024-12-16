@@ -304,15 +304,17 @@ function sendCreateTagRequest() {
 }
 
 function sendVoteRequest(id, positive) {
-	let count = document.querySelector(`#votes-${id}`);
-
+	let voteStatus = document.querySelector('#vote-status-' + id);
 	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
-		(request) => {
-			if (request.readyState != 4) return;
+		(request) => { 
+            if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
-			count.textContent = JSON.parse(request.responseText).votes;
-		});
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			voteStatus.parentElement.replaceChild(doc.body.firstChild, voteStatus);	
+    });
 }
 
 function showEditTagModal(id, content) {
@@ -547,6 +549,7 @@ function closeReportPostModal() {
 	let text = modal.querySelector('#report-text');
 	let reason = modal.querySelector('#report-reason');
 	let title = modal.querySelector('#report-edit-title');
+	let error = modal.querySelector("#report-error");
 
 	modal.removeAttribute('data-id');
 	modal.classList.add('hidden');
@@ -554,19 +557,123 @@ function closeReportPostModal() {
 	text.value = "";
 	reason.value = "";
 	title.textContent = "Report ??";
+	error.classList.add('hidden');
 }
 
 function sendReportPostRequest() {
 	let modal = document.querySelector('#report-post');
 	let id = modal.getAttribute('data-id');
 	let reason = modal.querySelector('#report-reason');
+	let error = modal.querySelector("#report-error");
 
-	sendAjaxRequest('PUT', '/reports/', { id: id, reason: reason.value },
+	if (!reason.value)
+	{
+		error.classList.remove('hidden');
+		error.textContent = "Error: Reason can't be empty.";
+		return;
+	}
+
+	sendAjaxRequest('PUT', '/reports', { id: id, reason: reason.value },
 		(request) => {
 			if (request.readyState != 4) return;
-			if (request.status != 200) return;
 
-			closeEditPostModal();
-			showSuccessModal("Report send successfully!");
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This post does not exist (anymore).";
+				return;
+			}
+			
+			if (request.status == 405)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field submitted to the server.";
+				return;
+			}
+
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			closeReportPostModal();
+			showSuccessModal("Report sent successfully!");
+		});
+}
+
+function charCounter(object, max)
+{
+	let counter = object.parentElement.querySelector(".counter");
+	let size = object.value.length;
+
+	counter.textContent = `${size}/${max} characters`;
+	console.log(size);
+}
+
+function closeSuccessModal()
+{
+	let modal = document.querySelector('#success-modal');
+	let text = modal.querySelector('#success-text');
+
+	text.textContent = "";
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+}
+
+function showSuccessModal(content)
+{
+	let modal = document.querySelector('#success-modal');
+	let text = modal.querySelector('#success-text');
+
+	text.textContent = content;
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function showDeleteReportModal(id) {
+	let modal = document.querySelector('#delete-report');
+	modal.setAttribute('data-id', id);
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeDeleteReportModal() {
+	let modal = document.querySelector('#delete-report');
+	let err = modal.querySelector('.err');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	err.classList.add('hidden');
+}
+
+function sendDeleteReportRequest() {
+	let modal = document.querySelector('#delete-report');
+	let id = modal.getAttribute('data-id');
+	let report = document.querySelector('.report-card[data-id="' + id + '"]');
+	let error = modal.querySelector('.err');
+
+	sendAjaxRequest('DELETE', '/reports/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This report does not exist (anymore).";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			report.remove();
+			closeDeleteReportModal();
 		});
 }

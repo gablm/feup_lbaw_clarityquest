@@ -24,8 +24,17 @@ class CommentController extends Controller
 
 		$this->authorize('show', $comment);
 
+		$user = Auth::user();
+		$voteStatus = null;
+	
+		if ($user) {
+			$vote = $question->post->votes()->where('user_id', $user->id)->first();
+			$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
+		}
+	
 		return view('partials.comment', [
-			'comment' => $comment
+			'comment' => $comment,
+			'voteStatus' => $voteStatus
 		]);
 	}
 
@@ -146,3 +155,4 @@ class CommentController extends Controller
 		]);
 	}
 }
+

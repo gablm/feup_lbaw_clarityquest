@@ -43,10 +43,10 @@ class StaticController extends Controller
 
 	public function search(Request $request)
 	{
-		// Get the search query from the request
 		$query = $request->input('search');
+		$filter = $request->input('filter', 'all'); 
+		$sort = $request->input('sort', 'none'); 
 
-		// If the query is empty, return an empty result set
 		if (empty($query)) {
 			return view('pages.search-results', ['results' => [], 'query' => $query]);
 		}
@@ -56,40 +56,79 @@ class StaticController extends Controller
 			array_map(fn($term) => $term . ':*', explode(' ', $query))
 		);
 
-		// Perform a full-text search on the Question table
-		$questions = Question::select(
-			'id',
-			'title',
-			DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank') // Compute rank based on search
-		)
-			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery]) // Match the tsvectors column
-			->orderByDesc('rank') // Order by relevance rank
-			->get();
+		// Initialize results
+		$questions = collect();
+		$users = collect();
+		$tags = collect();
 
-		$users = User::select(
-			'id',
-			'username',
-			'name',
-			'profile_pic',
-			DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank') // Compute rank based on search
-		)
-			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery]) // Match the tsvectors column
-			->orderByDesc('rank') // Order by relevance rank
+		// Apply filters
+		if ($filter === 'all' || $filter === 'questions') {
+			$questions = Question::select(
+				'questions.id',
+				'questions.title',
+				DB::raw('posts.created_at, posts.votes, ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank'),
+				DB::raw('(SELECT COUNT(*) FROM answers WHERE answers.question_id = questions.id) as answers_count')
+			)
+			->join('posts', 'posts.id', '=', 'questions.id')  
+			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery])
+			->when($sort === 'newest', function ($query) {
+				$query->orderByDesc('posts.created_at');
+			})
+			->when($sort === 'oldest', function ($query) {
+				$query->orderBy('posts.created_at');
+			})
+			->when($sort === 'alphabetical', function ($query) {
+				$query->orderBy('questions.title');
+			})
+			->when($sort === 'most_upvoted', function ($query) {
+				$query->orderByDesc(DB::raw('posts.votes')); 
+			})
+			->when($sort === 'least_upvoted', function ($query) {
+				$query->orderBy(DB::raw('posts.votes')); 
+			})
+			->orderByDesc('rank') 
 			->get();
+		}
 
-		$tags = Tag::select(
-			'id',
-			'name',
-			DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank') // Compute rank based on search
-		)
-			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery]) // Match the tsvectors column
-			->orderByDesc('rank') // Order by relevance rank
+		if ($filter === 'all' || $filter === 'users') {
+			$users = User::select(
+				'id',
+				'username',
+				'name',
+				'profile_pic',
+				DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank')
+			)
+			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery])
+			->when($sort === 'newest', fn($q) => $q->orderByDesc('created_at'))
+			->when($sort === 'oldest', fn($q) => $q->orderBy('created_at'))
+			->orderByDesc('rank')
 			->get();
+		}
+
+		if ($filter === 'all' || $filter === 'tags') {
+			$tags = Tag::select(
+				'id',
+				'name',
+				DB::raw('ts_rank(tsvectors, websearch_to_tsquery(\'english\', :query)) as rank')
+			)
+			->whereRaw('tsvectors @@ websearch_to_tsquery(\'english\', :query)', ['query' => $modifiedQuery])
+			->when($sort === 'alphabetical', fn($q) => $q->orderBy('name'))
+			->when($sort === 'newest', fn($q) => $q->orderByDesc('created_at'))
+			->when($sort === 'oldest', fn($q) => $q->orderBy('created_at'))
+			->orderByDesc('rank')
+			->get();
+		}
 
 		// Return the search results to the view
-		return view('pages.search', ['questions' => $questions, 'users' => $users, 'tags' => $tags, 'query' => $query]);
+		return view('pages.search', [
+			'questions' => $questions,
+			'users' => $users,
+			'tags' => $tags,
+			'query' => $query,
+			'filter' => $filter,
+			'sort' => $sort,
+		]);
 	}
-
 	public function admin()
 	{
 		if (!Auth::check() || !Auth::user()->isElevated())
@@ -97,7 +136,7 @@ class StaticController extends Controller
 
 		$users = User::all();
 
-		$reports = Report::all();
+		$reports = Report::orderBy('created_at', 'DESC')->get();
 		$tags = Tag::all();
 
 		// Pass data to the view

@@ -7,16 +7,6 @@
 	</a>
 	<ul class="space-y-2">
 		<li>
-			<a href="/my-questions" class="side-link">
-				My Questions
-			</a>
-		</li>
-		<li>
-			<a href="/my-answers" class="side-link">
-				My Answers
-			</a>
-		</li>
-		<li>
 			<a href="/followed-questions" class="side-link">
 				Followed Questions
 			</a>

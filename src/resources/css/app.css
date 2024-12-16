@@ -46,7 +46,9 @@
 	.tag-link {
 		@apply inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded;
 	}
-
+	.correct {
+		@apply inline-block bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded;
+	}
 	.tag-big {
 		@apply inline-block bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded;
 	}

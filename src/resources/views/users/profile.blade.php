@@ -43,7 +43,7 @@
 						Delete Account
 					</button>
 				</form>
-				@elseif (Auth::user()->isAdmin())
+				@elseif (Auth::check() && Auth::user()->isAdmin())
 				<a href="{{ url('/users/' . $user->id . '/edit') }}" class="mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 					Edit Profile
 				</a>
@@ -75,7 +75,7 @@
 						id="medals-tab"
 						class="tab-btn bg-gray-100 text-gray-600 border-b-2 border-transparent px-4 py-2 rounded-t-lg hover:bg-gray-200"
 						onclick="showProfileTab('medals')">
-						Your Medals
+						Medals
 					</button>
 				</li>
 			</ul>

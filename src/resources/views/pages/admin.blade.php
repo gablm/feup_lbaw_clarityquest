@@ -5,12 +5,7 @@
 	<div class="p-4 pt-4">
 		<h2 class="text-2xl font-semibold mb-8">
 			Admin Panel
-			<span class="text-sm text-gray-500 relative group">[?]
-				<span
-					class="absolute hidden group-hover:block bg-gray-200 text-black text-sm rounded py-2 px-6 left-full ml-2 tooltiptext">
-					Here is the panel for managing reports, users and tags.
-				</span>
-			</span>
+			@include('partials.tip', ['tip' => "Here is the panel for managing reports, users and tags."])
 		</h2>
 		<div class="mb-6 border-b border-gray-200">
 			<ul class="flex flex-row space-x-4 -mb-px text-lg font-medium">
@@ -50,6 +45,22 @@
 					@endforeach
 				</div>
 			@endif
+			<div id="delete-report" class="hidden modal modal-style">
+				<div class="modal-overlay modal-bg"></div>
+				<div class="modal-container modal-cont">
+					<div class="modal-content py-4 text-left px-6">
+						<p id="edit-title" class="text-2xl font-bold mb-4">Delete report</p>
+						<div class="flex flex-col mb-4">
+							<p>Are you sure you want to delete this report?</p>
+							<span class="err hidden auth-error bold mt-1"></span>
+						</div>
+						<div class="mt-4 flex space-x-2 justify-end">
+							<button class="modal-close tool-link" onclick="closeDeleteReportModal()">Cancel</button>
+							<button class="nav-main bg-red-600" onclick="sendDeleteReportRequest()">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div id="users-section" class="tab-content hidden">
@@ -92,7 +103,8 @@
 								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
 									@foreach (\App\Enum\User\Permission::cases() as $role)
 										<option value="{{ $role->value }}" @if($role->value == 'REGULAR') selected @endif>
-											{{ $role->name }}</option>
+											{{ $role->name }}
+										</option>
 									@endforeach
 								</select>
 							</div>
