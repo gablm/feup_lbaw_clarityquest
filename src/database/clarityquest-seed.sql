@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS "answers";
 DROP TABLE IF EXISTS "questions";
 DROP TABLE IF EXISTS "posts";
 DROP TABLE IF EXISTS "users";
-DROP TABLE IF EXISTS "password_resets";
+DROP TABLE IF EXISTS PasswordResets;
 
 DROP TYPE IF EXISTS Permission;
 DROP TYPE IF EXISTS NotificationType;
@@ -212,7 +212,7 @@ CREATE TABLE "editions"(
     FOREIGN KEY (post_id) REFERENCES "posts"(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE "password_resets"(
+CREATE TABLE PasswordResets(
 	id SERIAL PRIMARY KEY,
 	email TEXT NOT NULL,
 	token TEXT NOT NULL,

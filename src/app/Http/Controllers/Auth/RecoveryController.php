@@ -28,7 +28,7 @@ class RecoveryController extends Controller
 		if ($user == null)
 			return redirect()->route('recover.sent');
 
-		$token = Str::random(64);
+		$token = Str::random(128);
 
 		DB::table('password_resets')->insert([
 			'email' => $request->email, 
@@ -86,11 +86,11 @@ class RecoveryController extends Controller
 	function resetPassword(Request $request)
 	{
 		$request->validate([
-			'token' => 'required|string|min:64|max:64',
+			'token' => 'required|string|min:128|max:128',
 			'password' => 'required|min:8|confirmed',
 		]);
 
-		$reset = DB::table('password_resets')
+		$reset = DB::table('PasswordResets')
 			->where([
 				'token' => $request->token
 			])->first();
@@ -112,7 +112,7 @@ class RecoveryController extends Controller
 				'password' => Hash::make($request->password)
 			]);
 
-		DB::table('password_resets')
+		DB::table('PasswordResets')
 			->where([
 				'email' => $request->token
 			])->delete();
