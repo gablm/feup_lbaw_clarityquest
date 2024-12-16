@@ -329,6 +329,65 @@ function deleteNotification(id) {
 }
 //#endregion
 
+//#region Quick Button Actions
+function followQuestion(button) {
+	let id = button.getAttribute('data-id');
+
+	sendAjaxRequest('POST', '/questions/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200)
+			{
+				showInfoModal("This action failed, please try again");
+				return;
+			}
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			button.parentElement.replaceChild(doc.body.firstChild, button);
+		});
+}
+
+function followTag(button) {
+	let id = button.getAttribute('data-id');
+
+	sendAjaxRequest('POST', '/tags/' + id, { },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200)
+			{
+				showInfoModal("This action failed, please try again.");
+				return;
+			}
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			button.parentElement.replaceChild(doc.body.firstChild, button);
+		});
+}
+
+function blockUser(id) {
+	let user = document.querySelector('#user[data-id="' + id + '"]');
+
+	sendAjaxRequest('PATCH', '/users/' + id + '/block', {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200)
+			{
+				showInfoModal("This action failed, please try again.");
+				return;
+			}
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			user.parentElement.replaceChild(doc.body.firstChild, user);
+		});
+}
+//#endregion
+
 function sendCreateAnswerRequest(id) {
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
@@ -614,36 +673,6 @@ function closeTagModal() {
 	modal.classList.remove('flex');
 }
 
-function followQuestion(button) {
-	let id = button.getAttribute('data-id');
-
-	sendAjaxRequest('POST', '/questions/' + id, { },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			button.parentElement.replaceChild(doc.body.firstChild, button);
-		});
-}
-
-function followTag(button) {
-	let id = button.getAttribute('data-id');
-
-	sendAjaxRequest('POST', '/tags/' + id, { },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			button.parentElement.replaceChild(doc.body.firstChild, button);
-		});
-}
-
 function markAsCorrect(answerId) {
 	let answerList = document.querySelector('#answer-list');
     sendAjaxRequest('POST', `/answers/${answerId}/correct`, {},
@@ -656,25 +685,6 @@ function markAsCorrect(answerId) {
 
 			answerList.parentElement.replaceChild(doc.body.firstChild, answerList);	
     });
-}
-
-function blockUser(id) {
-	let user = document.querySelector('#user[data-id="' + id + '"]');
-
-	sendAjaxRequest('PATCH', '/users/' + id + '/block', {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200)
-			{
-				showInfoModal("This action failed, please try again");
-				return;
-			};
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			user.parentElement.replaceChild(doc.body.firstChild, user);
-		});
 }
 
 function showCreateUserModal() {
