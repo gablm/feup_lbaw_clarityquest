@@ -1,3 +1,4 @@
+//#region General
 function encodeForAjax(data) {
 	if (data == null) return null;
 	return Object.keys(data).map(function (k) {
@@ -17,6 +18,17 @@ function sendAjaxRequest(method, url, data, handler) {
 	request.send(encodeForAjax(data));
 }
 
+function charCounter(object, max)
+{
+	let counter = object.parentElement.querySelector(".counter");
+	let size = object.value.length;
+
+	counter.textContent = `${size}/${max} characters`;
+	console.log(size);
+}
+//#endregion
+
+//#region Dropdowns
 function toggleUserDropdown() {
 	let otherDropdown = document.querySelector('#notification-dropdown');
 	otherDropdown.classList.add('hidden');
@@ -32,7 +44,9 @@ function toggleNotificationDropdown() {
 	let dropdown = document.querySelector('#notification-dropdown');
 	dropdown.classList.toggle('hidden');
 }
+//#endregion
 
+//#region Change Tabs
 function showProfileTab(tab) {
 	document.getElementById('questions-section').classList.add('hidden');
 	document.getElementById('answers-section').classList.add('hidden');
@@ -65,6 +79,281 @@ function showAdminTab(tab) {
 	let elem = document.getElementById(`${tab}-tab`);
 	elem.classList.add('bg-blue-100', 'text-blue-600', 'border-blue-600', 'hover:bg-blue-200');
 	elem.classList.remove('bg-gray-100', 'text-gray-600', 'border-transparent', 'hover:bg-gray-200');
+}
+//#endregion
+
+//#region Info Modal
+function closeInfoModal()
+{
+	let modal = document.querySelector('#info-modal');
+	let text = modal.querySelector('#info-text');
+
+	text.textContent = "";
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+}
+
+function showInfoModal(content)
+{
+	let modal = document.querySelector('#info-modal');
+	let text = modal.querySelector('#info-text');
+
+	text.textContent = content;
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+//#endregion
+
+//#region Delete Modals
+
+var deleteFunc;
+
+function showDeleteModal(id, request, setup) {
+	let modal = document.querySelector('#delete-modal');
+	let title = modal.querySelector('#delete-title');
+	let desc = modal.querySelector('#delete-desc');
+
+	modal.setAttribute('data-id', id);
+	deleteFunc = request;
+
+	setup(title, desc);
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeDeleteModal() {
+	let modal = document.querySelector('#delete-modal');
+	let err = modal.querySelector('.err');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	err.classList.add('hidden');
+}
+
+function sendDeleteRequest() {
+	let modal = document.querySelector('#delete-modal');
+	let id = modal.getAttribute('data-id');
+	let error = modal.querySelector('.err');
+
+	deleteFunc(id, error);
+}
+
+//#region Delete Report
+function setupDeleteReport(title, desc)
+{
+	title.textContent = "Delete Report";
+	desc.textContent = "Are you sure you want to delete this report?";
+}
+
+function deleteReport(id, error)
+{
+	let report = document.querySelector('.report-card[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/reports/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This report does not exist (anymore).";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			report.remove();
+			closeDeleteModal();
+		});
+}
+//#endregion
+
+//#region Delete User
+function setupDeleteUser(title, desc)
+{
+	title.textContent = "Delete User";
+	desc.textContent = "Are you sure you want to delete this user?";
+}
+
+function deleteUser(id, error) {
+	let user = document.querySelector('#user[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/users/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This user does not exist (anymore).";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			user.remove();
+			closeDeleteModal();
+		});
+}
+//#endregion
+
+//#region Delete Tag
+function setupDeleteTag(title, desc)
+{
+	title.textContent = "Delete Tag";
+	desc.textContent = "Are you sure you want to delete this tag?";
+}
+
+function deleteTag(id, error) {
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/tags/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This user does not exist (anymore).";
+				return;
+			}
+		
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			tag.remove();
+			closeDeleteModal();
+		});
+}
+//#endregion
+
+//#region Delete Answer
+function setupDeleteAnswer(title, desc)
+{
+	title.textContent = "Delete Answer";
+	desc.textContent = "Are you sure you want to delete this answer?";
+}
+
+function deleteAnswer(id, error) {
+	let answer = document.querySelector('.answer[data-id="' + id + '"]');
+	let answer_count = document.querySelector('#question-answer-count');
+
+	sendAjaxRequest('DELETE', '/answers/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This answer does not exist (anymore).";
+
+				answer.remove();
+				answer_count.textContent = answer_count.textContent - 1;
+				return;
+			}
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			answer.remove();
+			answer_count.textContent = answer_count.textContent - 1;
+			closeDeleteModal();
+		});
+}
+//#endregion
+
+//#region Delete Comment
+function setupDeleteComment(title, desc)
+{
+	title.textContent = "Delete Comment";
+	desc.textContent = "Are you sure you want to delete this comment?";
+}
+
+function deleteComment(id, error) {
+	let comment = document.querySelector('.comment[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/comments/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This answer does not exist (anymore).";
+				
+				comment.remove();
+				return;
+			}
+			
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			comment.remove();
+			closeDeleteModal();
+		});
+}
+//#endregion
+//#endregion
+
+//#region Notifications
+function deleteNotification(id) {
+	let notification = document.querySelector('#notification[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/notifications/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			notification.remove();
+		});
+}
+//#endregion
+
+function sendCreateAnswerRequest() {
+	let question = document.querySelector('.question');
+	let id = question.getAttribute('data-id');
+	let answerList = document.querySelector('#answer-list');
+	let text = document.querySelector('#answer-text');
+	let errorBox = document.querySelector("#answer-create-err");
+	let answer_count = document.querySelector('#question-answer-count');
+
+	sendAjaxRequest('POST', '/answers', { id: id, text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) {
+				errorBox.classList.remove('hidden');
+				return;
+			}
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			answerList.prepend(doc.body.firstChild);
+			text.value = "";
+			errorBox.classList.add('hidden');
+			answer_count.textContent = Number(answer_count.textContent) + 1;
+		});
 }
 
 function sendEditQuestionRequest() {
@@ -100,32 +389,6 @@ function closeEditQuestionModal() {
 
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
-}
-
-function sendCreateAnswerRequest() {
-	let question = document.querySelector('.question');
-	let id = question.getAttribute('data-id');
-	let answerList = document.querySelector('#answer-list');
-	let text = document.querySelector('#answer-text');
-	let errorBox = document.querySelector("#answer-create-err");
-	let answer_count = document.querySelector('#question-answer-count');
-
-	sendAjaxRequest('POST', '/answers', { id: id, text: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) {
-				errorBox.classList.remove('hidden');
-				return;
-			}
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			answerList.prepend(doc.body.firstChild);
-			text.value = "";
-			errorBox.classList.add('hidden');
-			answer_count.textContent = Number(answer_count.textContent) + 1;
-		});
 }
 
 function showEditPostModal(type, id, content) {
@@ -530,260 +793,3 @@ function sendReportPostRequest() {
 			showInfoModal("Report sent successfully!");
 		});
 }
-
-function charCounter(object, max)
-{
-	let counter = object.parentElement.querySelector(".counter");
-	let size = object.value.length;
-
-	counter.textContent = `${size}/${max} characters`;
-	console.log(size);
-}
-
-//#region Info Modal
-function closeInfoModal()
-{
-	let modal = document.querySelector('#info-modal');
-	let text = modal.querySelector('#info-text');
-
-	text.textContent = "";
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-}
-
-function showInfoModal(content)
-{
-	let modal = document.querySelector('#info-modal');
-	let text = modal.querySelector('#info-text');
-
-	text.textContent = content;
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-//#endregion
-
-//#region Delete Modals
-
-var deleteFunc;
-
-function showDeleteModal(id, request, setup) {
-	let modal = document.querySelector('#delete-modal');
-	let title = modal.querySelector('#delete-title');
-	let desc = modal.querySelector('#delete-desc');
-
-	modal.setAttribute('data-id', id);
-	deleteFunc = request;
-
-	setup(title, desc);
-
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-
-function closeDeleteModal() {
-	let modal = document.querySelector('#delete-modal');
-	let err = modal.querySelector('.err');
-
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-	err.classList.add('hidden');
-}
-
-function sendDeleteRequest() {
-	let modal = document.querySelector('#delete-modal');
-	let id = modal.getAttribute('data-id');
-	let error = modal.querySelector('.err');
-
-	deleteFunc(id, error);
-}
-
-//#region Delete Report
-function setupDeleteReport(title, desc)
-{
-	title.textContent = "Delete Report";
-	desc.textContent = "Are you sure you want to delete this report?";
-}
-
-function deleteReport(id, error)
-{
-	let report = document.querySelector('.report-card[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/reports/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-
-			if (request.status == 404)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: This report does not exist (anymore).";
-				return;
-			}
-	
-			if (request.status != 200)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Internal server error. Try again later.";
-				return;
-			}
-
-			report.remove();
-			closeDeleteModal();
-		});
-}
-//#endregion
-
-//#region Delete User
-function setupDeleteUser(title, desc)
-{
-	title.textContent = "Delete User";
-	desc.textContent = "Are you sure you want to delete this user?";
-}
-
-function deleteUser(id, error) {
-	let user = document.querySelector('#user[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/users/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-
-			if (request.status == 404)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: This user does not exist (anymore).";
-				return;
-			}
-	
-			if (request.status != 200)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Internal server error. Try again later.";
-				return;
-			}
-
-			user.remove();
-			closeDeleteModal();
-		});
-}
-//#endregion
-
-//#region Delete Tag
-function setupDeleteTag(title, desc)
-{
-	title.textContent = "Delete Tag";
-	desc.textContent = "Are you sure you want to delete this tag?";
-}
-
-function deleteTag(id, error) {
-	let tag = document.querySelector('#tag[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/tags/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			
-			if (request.status == 404)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: This user does not exist (anymore).";
-				return;
-			}
-		
-			if (request.status != 200)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Internal server error. Try again later.";
-				return;
-			}
-
-			tag.remove();
-			closeDeleteModal();
-		});
-}
-//#endregion
-
-//#region Delete Answer
-function setupDeleteAnswer(title, desc)
-{
-	title.textContent = "Delete Answer";
-	desc.textContent = "Are you sure you want to delete this answer?";
-}
-
-function deleteAnswer(id, error) {
-	let answer = document.querySelector('.answer[data-id="' + id + '"]');
-	let answer_count = document.querySelector('#question-answer-count');
-
-	sendAjaxRequest('DELETE', '/answers/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status == 404)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: This answer does not exist (anymore).";
-
-				answer.remove();
-				answer_count.textContent = answer_count.textContent - 1;
-				return;
-			}
-			if (request.status != 200)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Internal server error. Try again later.";
-				return;
-			}
-
-			answer.remove();
-			answer_count.textContent = answer_count.textContent - 1;
-			closeDeleteModal();
-		});
-}
-//#endregion
-
-//#region Delete Comment
-function setupDeleteComment(title, desc)
-{
-	title.textContent = "Delete Comment";
-	desc.textContent = "Are you sure you want to delete this comment?";
-}
-
-function deleteComment(id, error) {
-	let comment = document.querySelector('.comment[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/comments/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			
-			if (request.status == 404)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: This answer does not exist (anymore).";
-				
-				comment.remove();
-				return;
-			}
-			
-			if (request.status != 200)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Internal server error. Try again later.";
-				return;
-			}
-
-			comment.remove();
-			closeDeleteModal();
-		});
-}
-//#endregion
-//#endregion
-
-//#region Notifications
-function deleteNotification(id) {
-	let notification = document.querySelector('#notification[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/notifications/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			notification.remove();
-		});
-}
-//#endregion
