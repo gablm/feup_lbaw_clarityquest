@@ -42,7 +42,7 @@ Route::controller(StaticController::class)->group(function () {
 
 // Comments
 Route::controller(CommentController::class)->group(function () {
-	Route::put('/comments', 'create')->middleware('auth');
+	Route::post('/comments', 'create')->middleware('auth');
 	
 	Route::delete('/comments/{id}', 'delete')->middleware('auth');
 	Route::patch('/comments/{id}', 'update')->middleware('auth');
@@ -53,7 +53,7 @@ Route::controller(TagController::class)->group(function () {
 	Route::get('/followed-tags', 'followedTags')->name('followed-tags')->middleware('auth');
 	Route::get('/tags/{id}', 'show')->middleware('auth');
 
-	Route::put('/tags', 'create')->middleware('auth');
+	Route::post('/tags', 'create')->middleware('auth');
 	Route::delete('/tags/{id}', 'delete')->middleware('auth');
 	Route::patch('/tags/{id}', 'update')->middleware('auth');
 	Route::post('/tags/{id}', 'follow')->middleware('auth');
@@ -63,7 +63,7 @@ Route::controller(TagController::class)->group(function () {
 Route::controller(AnswerController::class)->group(function () {
 	Route::get('/my-answers', 'myAnswers')->name('my-answers')->middleware('auth');
 
-	Route::put('/answers', 'create')->middleware('auth');
+	Route::post('/answers', 'create')->middleware('auth');
 	Route::delete('/answers/{id}', 'delete')->middleware('auth');
 	Route::patch('/answers/{id}', 'update')->middleware('auth');
 
@@ -98,7 +98,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::get('/profile', 'profile')->name('profile');
 	Route::get('/profile/edit', 'edit')->name('profile.edit')->middleware('auth');
 	
-	Route::put('/users', 'create')->middleware('auth');
+	Route::post('/users', 'create')->middleware('auth');
 	Route::get('/users/{id}', 'showPublicProfile')->name('public.profile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
 	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');
@@ -143,6 +143,6 @@ Route::controller(NotificationController::class)->group(function () {
 
 // Reports
 Route::controller(ReportController::class)->group(function() {
-	Route::put('/reports', 'create')->middleware('auth');
+	Route::post('/reports', 'create')->middleware('auth');
 	Route::delete('/reports/{id}', 'delete')->middleware('auth');
 });

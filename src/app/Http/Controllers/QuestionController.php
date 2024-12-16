@@ -62,7 +62,8 @@ class QuestionController extends Controller
 			]);
 
 			foreach ($request->tags as $tag_id) {
-				$tag = Tag::findOrFail($tag_id);
+				$tag = Tag::find($tag_id);
+				if ($tag == null) continue;
 
 				DB::table('posttag')->insert([
 					'post_id' => $post->id,

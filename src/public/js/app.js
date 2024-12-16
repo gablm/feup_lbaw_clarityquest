@@ -110,7 +110,7 @@ function sendCreateAnswerRequest() {
 	let errorBox = document.querySelector("#answer-create-err");
 	let answer_count = document.querySelector('#question-answer-count');
 
-	sendAjaxRequest('PUT', '/answers', { id: id, text: text.value },
+	sendAjaxRequest('POST', '/answers', { id: id, text: text.value },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) {
@@ -218,7 +218,7 @@ function sendCreateCommentRequest() {
 	let id = modal.getAttribute('data-id');
 	let list = document.querySelector(`#comment-list-${id}`);
 
-	sendAjaxRequest('PUT', '/comments/', { id: id, text: text.value },
+	sendAjaxRequest('POST', '/comments/', { id: id, text: text.value },
 		(request) => {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
@@ -255,7 +255,7 @@ function sendCreateTagRequest() {
     let tagList = document.querySelector('#tag-list');
     let text = document.querySelector('#tag-name');
 
-    sendAjaxRequest('PUT', '/tags', { name: text.value },
+    sendAjaxRequest('POST', '/tags', { name: text.value },
         (request) => {
             if (request.readyState != 4) return;
             if (request.status != 200) return;
@@ -432,7 +432,7 @@ function sendCreateUserRequest() {
 	let password = document.querySelector('#user-password');
 	let role = document.querySelector('#user-role');
 
-    sendAjaxRequest('PUT', '/users', { name: name.value, username: handle.value,
+    sendAjaxRequest('POST', '/users', { name: name.value, username: handle.value,
 										email: email.value, password: password.value,
 										role: role.value },
         (request) => {
@@ -501,7 +501,7 @@ function sendReportPostRequest() {
 		return;
 	}
 
-	sendAjaxRequest('PUT', '/reports', { id: id, reason: reason.value },
+	sendAjaxRequest('POST', '/reports', { id: id, reason: reason.value },
 		(request) => {
 			if (request.readyState != 4) return;
 
