@@ -131,7 +131,8 @@ Route::controller(RecoveryController::class)->group(function() {
 	Route::get('/recover', 'index')->name('recover.index');
 	Route::post('/recover', 'sendEmail')->name('recover.send');
 	Route::get('/recover/sent', 'sent')->name('recover.sent');
-	Route::get('/recover/{token}', 'resetPassword');
+	Route::get('/recover/{token}', 'showResetPasswordForm')->name('recover.form');
+	Route::post('/recover/reset', 'resetPassword')->name('recover.action');
 });
 
 // Notifications

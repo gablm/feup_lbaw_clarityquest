@@ -56,7 +56,7 @@
 						</div>
 						<div class="mt-4 flex space-x-2 justify-end">
 							<button class="modal-close tool-link" onclick="closeDeleteReportModal()">Cancel</button>
-							<button class="nav-main bg-red-600" onclick="sendDeleteReportRequest()">Save</button>
+							<button class="nav-main bg-red-600" onclick="sendDeleteReportRequest()">Delete</button>
 						</div>
 					</div>
 				</div>

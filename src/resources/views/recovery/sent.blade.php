@@ -16,7 +16,7 @@
 	</div>
 
 	<div class="my-4">
-	<p>Please check your email. If you don't received</p>
+	<p>Please check your email. If you haven't received</p>
 	<p>anything within 5-10 minutes, please try again.</p>
 	</div>
 

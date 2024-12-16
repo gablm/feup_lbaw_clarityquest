@@ -4,6 +4,12 @@
 <form method="POST" action="{{ route('login') }}">
 	{{ csrf_field() }}
 
+	@if ($errors->has('recover'))
+			<span class="auth-error bold">
+				{{ $errors->first('recover') }}
+			</span>
+	@endif
+
 	@if (session('success'))
 		<p class="auth-success bold">
 			{{ session('success') }}
