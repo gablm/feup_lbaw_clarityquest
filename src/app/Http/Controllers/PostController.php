@@ -35,28 +35,28 @@ class PostController extends Controller
                 ->where('post_id', $post->id)
                 ->first();
 
-            if ($existingVote) {
-                if ($existingVote->positive == $positive) {
-
-                    DB::table('votes')
-                        ->where('user_id', $user->id)
-                        ->where('post_id', $post->id)
-                        ->delete();
-                } else {
-
-                    DB::table('votes')
-                        ->where('user_id', $user->id)
-                        ->where('post_id', $post->id)
-                        ->update(['positive' => $positive]);
-                }
-            } else {
-
-                DB::table('votes')->insert([
+            if ($existingVote == null) {
+				DB::table('votes')->insert([
                     'user_id' => $user->id,
                     'post_id' => $post->id,
                     'positive' => $positive,
                 ]);
+
+                return;
             }
+
+			if ($existingVote->positive == $positive) {
+				DB::table('votes')
+					->where('user_id', $user->id)
+					->where('post_id', $post->id)
+					->delete();
+				return;
+			}
+
+			DB::table('votes')
+				->where('user_id', $user->id)
+				->where('post_id', $post->id)
+				->update(['positive' => $positive]);
         });
 
         $post = Post::findOrFail($id);

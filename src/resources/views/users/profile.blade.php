@@ -43,7 +43,7 @@
 						Delete Account
 					</button>
 				</form>
-				@elseif (Auth::user()->isAdmin())
+				@elseif (Auth::check() && Auth::user()->isAdmin())
 				<a href="{{ url('/users/' . $user->id . '/edit') }}" class="mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 					Edit Profile
 				</a>
