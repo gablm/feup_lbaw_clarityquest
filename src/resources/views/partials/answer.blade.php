@@ -56,7 +56,7 @@
 			</button>
 		@endif
 		@if ($owner || $elevated)
-			<button data-id="{{ $answer->post->id }}" onclick="deleteAnswer(this)" class="tool-link text-red-500">
+			<button onclick="showDeleteModal({{ $answer->id }}, deleteAnswer, setupDeleteAnswer)" class="tool-link text-red-500">
 				<i class="fa-solid fa-trash"></i>
 				<span class="max-md:hidden ml-1">Delete</span>
 			</button>
