@@ -28,7 +28,7 @@ class CommentController extends Controller
 		$voteStatus = null;
 	
 		if ($user) {
-			$vote = $question->post->votes()->where('user_id', $user->id)->first();
+			$vote = $comment->post->votes()->where('user_id', $user->id)->first();
 			$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
 		}
 	
@@ -98,6 +98,9 @@ class CommentController extends Controller
 	public function create(Request $request)
 	{
 		$user = Auth::user();
+
+		if ($user->isBlocked())
+			return abort(403);
 
 		$request->validate([
 			'text' => 'required|string|max:1000',

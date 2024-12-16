@@ -17,7 +17,7 @@ class ReportController extends Controller
         ]);
 
 		if (Auth::user()->isBlocked())
-			return response(status: 500);
+			return abort(403);
 
 		$post = Post::findOrFail($request->id);
 

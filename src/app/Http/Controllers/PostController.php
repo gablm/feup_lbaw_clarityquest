@@ -21,9 +21,9 @@ class PostController extends Controller
         ]);
 
         $user = Auth::user();
-        if (!$user) {
+        if ($user == null)
             return redirect()->route('login');
-        }
+
         $positive = $request->positive === "true";
 
         DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');

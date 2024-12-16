@@ -42,6 +42,9 @@ class QuestionController extends Controller
 	{
 		$user = Auth::user();
 
+		if ($user->isBlocked())
+			return abort(403);
+
 		$request->validate([
 			'title' => 'required|string|max:64',
 			'description' => 'required|string|max:10000',

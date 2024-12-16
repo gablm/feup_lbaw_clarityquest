@@ -37,7 +37,9 @@ class TagController extends Controller
      */
     public function create(Request $request)
     {
-		//$this->authorize('create');
+		$user = Auth::user();
+		if ($user->isElevated() == false || $user->isBlocked())
+			return abort(403);
 
         $request->validate([
 			'name' => 'required|string|max:64'
