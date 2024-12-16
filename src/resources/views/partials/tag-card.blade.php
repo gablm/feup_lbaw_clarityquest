@@ -11,7 +11,7 @@
 				<i class="fa-solid fa-pencil"></i>
 				<span class="max-md:hidden ml-1">Edit</span>
 			</button>
-			<button onclick="deleteTag({{ $tag->id }})" class="tool-link text-red-500">
+			<button onclick="showDeleteModal({{ $tag->id }}, deleteTag, setupDeleteTag)" class="tool-link text-red-500">
 				<i class="fa-solid fa-trash"></i>
 				<span class="max-md:hidden ml-1">Delete</span>
 			</button>

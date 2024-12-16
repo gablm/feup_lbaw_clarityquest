@@ -28,7 +28,7 @@
 		<div class="flex flex-row justify-between">
 			<div class="flex flex-row items-center text-gray-500">
 				<span class="mr-2">Posted by: </span>
-				<a class="tool-link" href="{{ $user ? url('/users/' . $infr->id) : '/' }}">
+				<a class="tool-link" href="{{ $infr ? url('/users/' . $infr->id) : '/' }}">
 					<div class="flex flex-row items-center">
 						<img src="{{ $profile_pic2 }}" alt="Profile Picture" class="w-6 h-6 rounded-full object-cover">
 						<span class="ml-2">{{ $infr->name ?? "[REDACTED]" }}</span>
@@ -52,7 +52,7 @@
 				<i class="fa-solid fa-eye"></i>
 				<span class="max-md:hidden ml-1">View Context</span>
 			</a>
-			<button onclick="showDeleteReportModal({{ $report->id }})" class="tool-link text-red-500">
+			<button onclick="showDeleteModal({{ $report->id }}, deleteReport, setupDeleteReport)" class="tool-link text-red-500">
 				<i class="fa-solid fa-trash"></i>
 				<span class="max-md:hidden ml-1">Delete</span>
 			</button>

@@ -371,21 +371,6 @@ function closeTagModal() {
 	modal.classList.remove('flex');
 }
 
-function deleteTag(id) {
-	let confirmed = confirm('Are you sure you want to delete this tag? This action cannot be undone.');
-	if (confirmed == false) return;
-
-	let tag = document.querySelector('#tag[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/tags/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			tag.remove();
-		});
-}
-
 function followQuestion(button) {
 	let id = button.getAttribute('data-id');
 
@@ -430,21 +415,6 @@ function markAsCorrect(answerId) {
     });
 }
 
-function deleteUser(id) {
-	let confirmed = confirm('Are you sure you want to delete this user? This action cannot be undone.');
-	if (confirmed == false) return;
-
-	let user = document.querySelector('#user[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/users/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			user.remove();
-		});
-}
-
 function blockUser(id) {
 	let user = document.querySelector('#user[data-id="' + id + '"]');
 
@@ -457,18 +427,6 @@ function blockUser(id) {
 			let doc = parser.parseFromString(request.responseText, 'text/html');
 
 			user.parentElement.replaceChild(doc.body.firstChild, user);
-		});
-}
-
-function deleteNotification(id) {
-	let notification = document.querySelector('#notification[data-id="' + id + '"]');
-
-	sendAjaxRequest('DELETE', '/notifications/' + id, {},
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			notification.remove();
 		});
 }
 
@@ -599,7 +557,7 @@ function sendReportPostRequest() {
 			}
 
 			closeReportPostModal();
-			showSuccessModal("Report sent successfully!");
+			showInfoModal("Report sent successfully!");
 		});
 }
 
@@ -612,36 +570,48 @@ function charCounter(object, max)
 	console.log(size);
 }
 
-function closeSuccessModal()
+//#region Info Modal
+function closeInfoModal()
 {
-	let modal = document.querySelector('#success-modal');
-	let text = modal.querySelector('#success-text');
+	let modal = document.querySelector('#info-modal');
+	let text = modal.querySelector('#info-text');
 
 	text.textContent = "";
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
 }
 
-function showSuccessModal(content)
+function showInfoModal(content)
 {
-	let modal = document.querySelector('#success-modal');
-	let text = modal.querySelector('#success-text');
+	let modal = document.querySelector('#info-modal');
+	let text = modal.querySelector('#info-text');
 
 	text.textContent = content;
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
 }
+//#endregion
 
-function showDeleteReportModal(id) {
-	let modal = document.querySelector('#delete-report');
+//#region Delete Modals
+
+var deleteFunc;
+
+function showDeleteModal(id, request, setup) {
+	let modal = document.querySelector('#delete-modal');
+	let title = modal.querySelector('#delete-title');
+	let desc = modal.querySelector('#delete-desc');
+
 	modal.setAttribute('data-id', id);
+	deleteFunc = request;
+
+	setup(title, desc);
 
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
 }
 
-function closeDeleteReportModal() {
-	let modal = document.querySelector('#delete-report');
+function closeDeleteModal() {
+	let modal = document.querySelector('#delete-modal');
 	let err = modal.querySelector('.err');
 
 	modal.classList.add('hidden');
@@ -649,11 +619,24 @@ function closeDeleteReportModal() {
 	err.classList.add('hidden');
 }
 
-function sendDeleteReportRequest() {
-	let modal = document.querySelector('#delete-report');
+function sendDeleteRequest() {
+	let modal = document.querySelector('#delete-modal');
 	let id = modal.getAttribute('data-id');
-	let report = document.querySelector('.report-card[data-id="' + id + '"]');
 	let error = modal.querySelector('.err');
+
+	deleteFunc(id, error);
+}
+
+//#region Delete Report
+function setupDeleteReport(title, desc)
+{
+	title.textContent = "Delete Report";
+	desc.textContent = "Are you sure you want to delete this report?";
+}
+
+function deleteReport(id, error)
+{
+	let report = document.querySelector('.report-card[data-id="' + id + '"]');
 
 	sendAjaxRequest('DELETE', '/reports/' + id, {},
 		(request) => {
@@ -674,6 +657,90 @@ function sendDeleteReportRequest() {
 			}
 
 			report.remove();
-			closeDeleteReportModal();
+			closeDeleteModal();
 		});
 }
+//#endregion
+
+//#region Delete User
+function setupDeleteUser(title, desc)
+{
+	title.textContent = "Delete User";
+	desc.textContent = "Are you sure you want to delete this user?";
+}
+
+function deleteUser(id, error) {
+	let user = document.querySelector('#user[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/users/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This user does not exist (anymore).";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			user.remove();
+			closeDeleteModal();
+		});
+}
+//#endregion
+
+//#region Delete Tag
+function setupDeleteTag(title, desc)
+{
+	title.textContent = "Delete Tag";
+	desc.textContent = "Are you sure you want to delete this tag?";
+}
+
+function deleteTag(id) {
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/tags/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This user does not exist (anymore).";
+				return;
+			}
+		
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			tag.remove();
+			closeDeleteModal();
+		});
+}
+//#endregion
+//#endregion
+
+//#region Notifications
+function deleteNotification(id) {
+	let notification = document.querySelector('#notification[data-id="' + id + '"]');
+
+	sendAjaxRequest('DELETE', '/notifications/' + id, {},
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status != 200) return;
+
+			notification.remove();
+		});
+}
+//#endregion

@@ -45,22 +45,6 @@
 					@endforeach
 				</div>
 			@endif
-			<div id="delete-report" class="hidden modal modal-style">
-				<div class="modal-overlay modal-bg"></div>
-				<div class="modal-container modal-cont">
-					<div class="modal-content py-4 text-left px-6">
-						<p id="edit-title" class="text-2xl font-bold mb-4">Delete report</p>
-						<div class="flex flex-col mb-4">
-							<p>Are you sure you want to delete this report?</p>
-							<span class="err hidden auth-error bold mt-1"></span>
-						</div>
-						<div class="mt-4 flex space-x-2 justify-end">
-							<button class="modal-close tool-link" onclick="closeDeleteReportModal()">Cancel</button>
-							<button class="nav-main bg-red-600" onclick="sendDeleteReportRequest()">Delete</button>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<div id="users-section" class="tab-content hidden">

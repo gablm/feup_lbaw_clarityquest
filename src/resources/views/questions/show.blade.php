@@ -87,19 +87,6 @@
 				</div>
 			</div>
 		</div>
-		<div id="success-modal" class="hidden modal modal-style">
-			<div class="modal-overlay modal-bg"></div>
-			<div class="modal-container modal-cont">
-				<div class="modal-content py-4 text-left px-6">
-					<div class="mb-4">
-						<p id="success-text">????</p>
-					</div>
-					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="nav-main" onclick="closeSuccessModal()">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
 @endsection
