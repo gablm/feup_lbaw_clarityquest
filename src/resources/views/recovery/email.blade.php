@@ -17,7 +17,7 @@
 </head>
 
 <a href="{{ url('/') }}">
-	<img height="128px" src="{{ url('img/logo.png') }}">
+	<img height="128px" alt="Clarity Quest Logo" src="{{ url('img/logo.png') }}">
 </a>
 <p>Hello, <span style="font-weight: bold">{{ $mailData['name'] }}</span>!</p>
 <p>A password recovery request for the account associated

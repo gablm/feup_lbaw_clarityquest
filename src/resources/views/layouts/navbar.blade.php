@@ -12,7 +12,7 @@ $notifications = $user ? $user->notifications()->orderBy('sent_at', 'desc')->tak
 <nav class="fixed w-screen bg-white z-10 shadow-lg px-4">
 	<div class="flex justify-between items-center px-4">
 		<a href="{{ url('/') }}" class="flex items-center">
-			<img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
+			<img alt="Clarity Quest Logo" src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
 		</a>
 		<form class="flex items-center w-[30vw] space-x-1" action="{{ route('search') }}" method="GET">
 			<input type="search" name='search' placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}">
