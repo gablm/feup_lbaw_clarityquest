@@ -107,33 +107,6 @@ class UserController extends Controller
 			->with('success', 'Profile updated successfully.');
 	}
 
-	public function activity()
-	{
-		if (!Auth::check())
-			return redirect()->route('login');
-
-		$user = Auth::user();
-
-		$comments = $user->commentsOnPosts()->get()->map(function ($comment) {
-			$comment->activity_type = 'comment';
-			return $comment;
-		});
-
-		$answers = $user->answersToQuestions()->get()->map(function ($answer) {
-			$answer->activity_type = 'answer';
-			return $answer;
-		});
-
-		$votes = $user->votesOnPosts()->get()->map(function ($vote) {
-			$vote->activity_type = 'vote';
-			return $vote;
-		});
-
-		$allActivity = $comments->merge($answers)->merge($votes)->sortByDesc('created_at')->take(10);
-
-		return view('home', ['activities' => $allActivity]);
-	}
-
 	public function showPublicProfile(string $id)
 	{
 		// Fetch the user by ID
