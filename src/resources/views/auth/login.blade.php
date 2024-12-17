@@ -19,7 +19,7 @@
 	<div class="mb-4">
 		<label class="auth" for="email">E-mail</label>
 		<input class="auth focus:outline-none focus:shadow-outline" id="email" type="email" name="email"
-			value="{{ old('email') }}" required placeholder="Enter your email">
+			value="{{ old('email') }}" required autocomplete="true" placeholder="Enter your email">
 		@if ($errors->has('email'))
 			<span class="auth-error bold">
 				{{ $errors->first('email') }}
