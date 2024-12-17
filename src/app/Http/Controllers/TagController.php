@@ -42,7 +42,7 @@ class TagController extends Controller
 			return abort(403);
 
         $request->validate([
-			'name' => 'required|string|max:64'
+			'name' => 'required|string|max:24'
         ]);
 
 		$tag = Tag::create([
