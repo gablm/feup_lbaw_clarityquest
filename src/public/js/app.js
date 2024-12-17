@@ -887,27 +887,15 @@ function closeTagModal() {
 }
 //#endregion
 
-function sendEditQuestionRequest() {
-	let question = document.querySelector('.question');
-	let id = question.getAttribute('data-id');
-	let title = question.querySelector('#title');
-	let description = question.querySelector('#description');
-
-	sendAjaxRequest('PATCH', '/questions/' + id, { title: title.value, description: description.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let q = createElemFromRequest(request);
-			question.parentElement.replaceChild(q, question);
-
-			closeEditQuestionModal();
-		});
-}
-
+//#region Question Edit
 function showEditQuestionModal() {
 	let question = document.querySelector('.question');
 	let modal = question.querySelector('#edit-question');
+
+	let error = modal.querySelectorAll('.err');
+	error.forEach((elem) => {
+		elem.classList.add('hidden');
+	});
 
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
@@ -917,9 +905,69 @@ function closeEditQuestionModal() {
 	let question = document.querySelector('.question');
 	let modal = question.querySelector('#edit-question');
 
+	let error = modal.querySelectorAll('.err');
+	error.forEach((elem) => {
+		elem.classList.add('hidden');
+	});
+
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
 }
+
+function sendEditQuestionRequest() {
+	let question = document.querySelector('.question');
+	let id = question.getAttribute('data-id');
+	let title = question.querySelector('#title');
+	let description = question.querySelector('#description');
+
+	let modal = question.querySelector('#edit-question');
+	let errors = modal.querySelectorAll('.err');
+	errors.forEach((elem) => {
+		elem.classList.add('hidden');
+	});
+
+	let errorTitle = modal.querySelector('.err#err-eq-title');
+	if (title.value == "")
+	{
+		errorTitle.classList.remove('hidden');
+		errorTitle.textContent = `Title content can't be empty.`;
+	}
+
+	let errorDesc = modal.querySelector('.err#err-eq-desc');
+	if (description.value == "")
+	{
+		errorDesc.classList.remove('hidden');
+		errorDesc.textContent = `Description content can't be empty.`;
+	}
+
+	if (title.value == "" || description.value == "") return;
+
+	let error = modal.querySelector('.err#err-eq-gen');
+
+	sendAjaxRequest('PATCH', '/questions/' + id, { title: title.value, description: description.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status == 302)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid text contents.";
+				return;
+			}
+		
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			let q = createElemFromRequest(request);
+			question.parentElement.replaceChild(q, question);
+
+			closeEditQuestionModal();
+		});
+}
+//#endregion
 
 function showCreateUserModal() {
 	let modal = document.querySelector('#user-create');

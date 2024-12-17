@@ -112,17 +112,24 @@
 		<div class="modal-container modal-cont">
 			<div class="modal-content py-4 text-left px-6">
 				<p class="text-2xl font-bold mb-4">Edit</p>
-				<div class="mb-4">
+				<div class="flex flex-col mb-4">
 					<label class="auth" for="title">Title</label>
-					<input class="auth focus:outline-none focus:shadow-outline" id="title" type="text" name="title"
-						value="{{ $question->title }}" required placeholder="Enter the title">
+					<input onkeyup="charCounter(this, this, 250)" onkeydown="charCounter(this, this, 250)" 
+						class="auth focus:outline-none focus:shadow-outline" id="title" type="text" name="title"
+						value="{{ $question->title }}" maxlength="250" required placeholder="Enter the title">
+					<span class="counter my-1">{{ strlen($question->title) }}/250 characters</span>
+					<span id="err-eq-title" class="err hidden auth-error bold mt-1"></span>
 				</div>
-				<div class="mb-4">
+				<div class="flex flex-col mb-4">
 					<label class="auth" for="description">Description</label>
-					<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="10"
-						id="description" type="textarea" name="description" required
+					<textarea onkeyup="charCounter(this, this, 3000)" onkeydown="charCounter(this, this, 3000)"
+						class="auth focus:outline-none focus:shadow-outline resize-none" rows="10"
+						id="description" type="textarea" maxlength="3000" name="description" required
 						placeholder="Enter the description">{{ $question->post->text }}</textarea>
+					<span class="counter my-1">{{ strlen($question->post->text) }}/3000 characters</span>
+					<span id="err-eq-desc" class="err hidden auth-error bold mt-1"></span>
 				</div>
+				<span id="err-eq-gen" class="err hidden auth-error bold mt-1"></span>
 				<div class="mt-4 flex space-x-2 justify-end">
 					<button class="modal-close tool-link" onclick="closeEditQuestionModal()">Cancel</button>
 					<button class="nav-main" onclick="sendEditQuestionRequest()">Save</button>
