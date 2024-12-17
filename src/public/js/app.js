@@ -18,6 +18,13 @@ function sendAjaxRequest(method, url, data, handler) {
 	request.send(encodeForAjax(data));
 }
 
+function createElemFromRequest(request) {
+	let parser = new DOMParser();
+    let doc = parser.parseFromString(request.responseText, 'text/html');
+
+	return doc.body.firstChild;
+}
+
 function charCounter(entry, object, max)
 {
 	let counter = entry.parentElement.querySelector(".counter");
@@ -342,10 +349,8 @@ function followQuestion(button) {
 				return;
 			}
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			button.parentElement.replaceChild(doc.body.firstChild, button);
+			let btn = createElemFromRequest(request);
+			button.parentElement.replaceChild(btn, button);
 		});
 }
 
@@ -361,10 +366,8 @@ function followTag(button) {
 				return;
 			}
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			button.parentElement.replaceChild(doc.body.firstChild, button);
+			let btn = createElemFromRequest(request);
+			button.parentElement.replaceChild(btn, button);
 		});
 }
 
@@ -380,11 +383,26 @@ function blockUser(id) {
 				return;
 			}
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			user.parentElement.replaceChild(doc.body.firstChild, user);
+			let btn = createElemFromRequest(request);
+			user.parentElement.replaceChild(btn, user);
 		});
+}
+
+function markAsCorrect(answerId) {
+	let answerList = document.querySelector('#answer-list');
+
+    sendAjaxRequest('POST', `/answers/${answerId}/correct`, {},
+        (request) => {
+            if (request.readyState != 4) return;
+			if (request.status != 200)
+			{
+				showInfoModal("This action failed, please try again.");
+				return;
+			}
+
+			let answer = createElemFromRequest(request);
+			answerList.parentElement.replaceChild(answer, answerList);	
+    });
 }
 //#endregion
 
@@ -443,10 +461,9 @@ function sendCreateTagRequest() {
 				return;
 			}
 
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(request.responseText, 'text/html');
+            let tag = createElemFromRequest(request);
+			tagList.prepend(tag);
 
-			tagList.prepend(doc.body.firstChild);
 			text.value = "";
 			closeCreateTagModal();
 		});
@@ -519,10 +536,9 @@ function sendEditTagRequest() {
 				return;
 			}
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+			let newTag = createElemFromRequest(request);
+			tag.parentElement.replaceChild(newTag, tag);
 
-			tag.parentElement.replaceChild(doc.body.firstChild, tag);
 			closeEditTagModal();
 		});
 }
@@ -650,12 +666,12 @@ function sendCreateAnswerRequest(id) {
 				return;
 			}
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+			let answer = createElemFromRequest(request);
+			answerList.prepend(answer);
 
-			answerList.prepend(doc.body.firstChild);
 			text.value = "";
 			charCounter(text.parentElement, text, 5000);
+			
 			errorBox.classList.add('hidden');
 			answerCount.textContent = Number(answerCount.textContent) + 1;
 		});
@@ -672,10 +688,9 @@ function sendEditQuestionRequest() {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+			let q = createElemFromRequest(request);
+			question.parentElement.replaceChild(q, question);
 
-			question.parentElement.replaceChild(doc.body.firstChild, question);
 			closeEditQuestionModal();
 		});
 }
@@ -754,10 +769,9 @@ function sendEditPostRequest() {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+			let p = createElemFromRequest(request);
+			post.parentElement.replaceChild(p, post);
 
-			post.parentElement.replaceChild(doc.body.firstChild, post);
 			closeEditPostModal();
 		});
 }
@@ -791,10 +805,9 @@ function sendCreateCommentRequest() {
 			if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
+			let comment = createElemFromRequest(request)
+			list.prepend(comment);
 
-			list.prepend(doc.body.firstChild);
 			closeCreateCommentModal();
 		});
 }
@@ -806,10 +819,8 @@ function sendVoteRequest(id, positive) {
             if (request.readyState != 4) return;
 			if (request.status != 200) return;
 
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			voteStatus.parentElement.replaceChild(doc.body.firstChild, voteStatus);	
+			let vote = createElemFromRequest(request);
+			voteStatus.parentElement.replaceChild(vote, voteStatus);	
     });
 }
 
@@ -825,20 +836,6 @@ function closeTagModal() {
 	
     modal.classList.add('hidden');
 	modal.classList.remove('flex');
-}
-
-function markAsCorrect(answerId) {
-	let answerList = document.querySelector('#answer-list');
-    sendAjaxRequest('POST', `/answers/${answerId}/correct`, {},
-        (request) => {
-            if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			answerList.parentElement.replaceChild(doc.body.firstChild, answerList);	
-    });
 }
 
 function showCreateUserModal() {
@@ -880,10 +877,8 @@ function sendCreateUserRequest() {
             if (request.readyState != 4) return;
             if (request.status != 200) return;
 
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			userList.prepend(doc.body.firstChild);
+            let user = createElemFromRequest(request);
+			userList.prepend(user);
 			closeCreateUserModal();
 		});
 }

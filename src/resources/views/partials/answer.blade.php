@@ -46,7 +46,7 @@
 			<a href="javascript:void(0);" onclick="markAsCorrect({{ $answer->id }})"
 				class="tool-link text-blue-700 mark-as-correct-btn">
 				<i class="fa-solid fa-check"></i>
-				<span class="max-md:hidden ml-1">Mark as Correct</span>
+				<span class="max-lg:hidden ml-1">Mark as Correct</span>
 			</a>
 		@endif
 		@if ($owner || (Auth::check() && Auth::user()->isAdmin()))
