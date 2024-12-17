@@ -123,8 +123,11 @@
 						<div class="modal-content py-4 text-left px-6">
 							<p class="text-2xl font-bold mb-4">Create Tag</p>
 							<div class="mb-4">
-								<input class="auth focus:outline-none focus:shadow-outline" type="text" id="tag-name"
-									name="name" required>
+								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
+									class="auth focus:outline-none focus:shadow-outline" type="text"
+									id="tag-name" name="name" maxlength="24" required>
+								<span class="counter my-2">0/24 characters</span>
+								<span class="err hidden auth-error bold mt-1"></span>
 							</div>
 							<div class="mt-4 flex space-x-2 justify-end">
 								<button class="modal-close tool-link" onclick="closeCreateTagModal()">Cancel</button>

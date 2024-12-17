@@ -388,6 +388,160 @@ function blockUser(id) {
 }
 //#endregion
 
+//#region Admin Panel - Tags
+function showCreateTagModal() {
+	let modal = document.querySelector('#tag-create');
+	let text = modal.querySelector('#tag-name');
+	let error = modal.querySelector('.err');
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+
+	error.classList.add('hidden');
+	
+	text.value = "";
+
+	charCounter(modal.firstChild, text, 24);
+}
+
+function closeCreateTagModal() {
+	let modal = document.querySelector('#tag-create');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+}
+
+function sendCreateTagRequest() {
+    let tagList = document.querySelector('#tag-list');
+	let modal = document.querySelector('#tag-create');
+    let text = modal.querySelector('#tag-name');
+	let error = modal.querySelector('.err');
+
+	if (text.value == "")
+	{
+		error.classList.remove('hidden');
+		error.textContent = "Error: Tag name can't be empty.";
+		return;
+	}
+
+    sendAjaxRequest('POST', '/tags', { name: text.value },
+        (request) => {
+            if (request.readyState != 4) return;
+            if (request.status == 302)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid text contents.";
+				return;
+			}
+
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			tagList.prepend(doc.body.firstChild);
+			text.value = "";
+			closeCreateTagModal();
+		});
+}
+//#endregion
+
+//#region Question Page - Report
+function showReportPostModal(type, id, content) {
+	let modal = document.querySelector('#report-post');
+	modal.setAttribute('data-id', id);
+	modal.setAttribute('data-type', type);
+
+	let reason = modal.querySelector('#report-reason');
+	reason.value = "";
+	charCounter(modal.firstChild, reason, 100);
+
+	let text = modal.querySelector('#report-text');
+	text.textContent = content;
+
+	let title = modal.querySelector('#report-edit-title');
+	switch (type) {
+		case 'question':
+			title.textContent = 'Report Question';
+			break;
+		case 'comment':
+			title.textContent = 'Report Comment';
+			break;
+		case 'answer':
+			title.textContent = 'Report Answer';
+			break;
+	}
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeReportPostModal() {
+	let modal = document.querySelector('#report-post');
+	let text = modal.querySelector('#report-text');
+	
+	let title = modal.querySelector('#report-edit-title');
+	let error = modal.querySelector("#report-error");
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	text.value = "";
+	reason.value = "";
+	title.textContent = "Report ??";
+	error.classList.add('hidden');
+}
+
+function sendReportPostRequest() {
+	let modal = document.querySelector('#report-post');
+	let id = modal.getAttribute('data-id');
+	let reason = modal.querySelector('#report-reason');
+	let error = modal.querySelector("#report-error");
+
+	if (!reason.value)
+	{
+		error.classList.remove('hidden');
+		error.textContent = "Error: Reason can't be empty.";
+		return;
+	}
+
+	sendAjaxRequest('POST', '/reports', { id: id, reason: reason.value },
+		(request) => {
+			if (request.readyState != 4) return;
+
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This post does not exist (anymore).";
+				return;
+			}
+			
+			if (request.status == 405)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field submitted to the server.";
+				return;
+			}
+
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			closeReportPostModal();
+			showInfoModal("Report sent successfully!");
+		});
+}
+//#endregion
+
 function sendCreateAnswerRequest(id) {
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
@@ -424,6 +578,7 @@ function sendCreateAnswerRequest(id) {
 
 			answerList.prepend(doc.body.firstChild);
 			text.value = "";
+			charCounter(text.parentElement, text, 5000);
 			errorBox.classList.add('hidden');
 			answerCount.textContent = Number(answerCount.textContent) + 1;
 		});
@@ -567,44 +722,6 @@ function sendCreateCommentRequest() {
 		});
 }
 
-function showCreateTagModal() {
-	let modal = document.querySelector('#tag-create');
-	let text = document.querySelector('#tag-name');
-
-	modal.removeAttribute('data-id');
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-	text.value = "";
-}
-
-function closeCreateTagModal() {
-	let modal = document.querySelector('#tag-create');
-	let text = document.querySelector('#tag-name');
-
-	modal.removeAttribute('data-id');
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-	text.value = "";
-}
-
-function sendCreateTagRequest() {
-    let tagList = document.querySelector('#tag-list');
-    let text = document.querySelector('#tag-name');
-
-    sendAjaxRequest('POST', '/tags', { name: text.value },
-        (request) => {
-            if (request.readyState != 4) return;
-            if (request.status != 200) return;
-
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			tagList.prepend(doc.body.firstChild);
-			text.value = "";
-			closeCreateTagModal();
-		});
-}
-
 function sendVoteRequest(id, positive) {
 	let voteStatus = document.querySelector('#vote-status-' + id);
 	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
@@ -731,89 +848,5 @@ function sendCreateUserRequest() {
 
 			userList.prepend(doc.body.firstChild);
 			closeCreateUserModal();
-		});
-}
-
-function showReportPostModal(type, id, content) {
-	let modal = document.querySelector('#report-post');
-	modal.setAttribute('data-id', id);
-	modal.setAttribute('data-type', type);
-
-	let text = modal.querySelector('#report-text');
-	text.textContent = content;
-
-	let title = modal.querySelector('#report-edit-title');
-	switch (type) {
-		case 'question':
-			title.textContent = 'Report Question';
-			break;
-		case 'comment':
-			title.textContent = 'Report Comment';
-			break;
-		case 'answer':
-			title.textContent = 'Report Answer';
-			break;
-	}
-
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-
-function closeReportPostModal() {
-	let modal = document.querySelector('#report-post');
-	let text = modal.querySelector('#report-text');
-	let reason = modal.querySelector('#report-reason');
-	let title = modal.querySelector('#report-edit-title');
-	let error = modal.querySelector("#report-error");
-
-	modal.removeAttribute('data-id');
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-	text.value = "";
-	reason.value = "";
-	title.textContent = "Report ??";
-	error.classList.add('hidden');
-}
-
-function sendReportPostRequest() {
-	let modal = document.querySelector('#report-post');
-	let id = modal.getAttribute('data-id');
-	let reason = modal.querySelector('#report-reason');
-	let error = modal.querySelector("#report-error");
-
-	if (!reason.value)
-	{
-		error.classList.remove('hidden');
-		error.textContent = "Error: Reason can't be empty.";
-		return;
-	}
-
-	sendAjaxRequest('POST', '/reports', { id: id, reason: reason.value },
-		(request) => {
-			if (request.readyState != 4) return;
-
-			if (request.status == 404)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: This post does not exist (anymore).";
-				return;
-			}
-			
-			if (request.status == 405)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Invalid field submitted to the server.";
-				return;
-			}
-
-			if (request.status != 200)
-			{
-				error.classList.remove('hidden');
-				error.textContent = "Error: Internal server error. Try again later.";
-				return;
-			}
-
-			closeReportPostModal();
-			showInfoModal("Report sent successfully!");
 		});
 }

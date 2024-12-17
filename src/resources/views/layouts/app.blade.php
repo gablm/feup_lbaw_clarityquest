@@ -27,10 +27,10 @@
 
 <body>
 	<main class="flex flex-col h-screen justify-between">
-    	@include('layouts.navbar')
+		@include('layouts.navbar')
 		<section id="content" class="z-1 pt-20 pb-5 flex flex-grow">
-        	@yield('content')
-    	</section>
+			@yield('content')
+		</section>
 		<div id="info-modal" class="hidden modal modal-style">
 			<div class="modal-overlay modal-bg"></div>
 			<div class="modal-container modal-cont">
@@ -45,21 +45,21 @@
 			</div>
 		</div>
 		<div id="delete-modal" class="hidden modal modal-style">
-				<div class="modal-overlay modal-bg"></div>
-				<div class="modal-container modal-cont">
-					<div class="modal-content py-4 text-left px-6">
-						<p id="delete-title" class="text-2xl font-bold mb-4">????</p>
-						<div class="flex flex-col mb-4">
-							<p id="delete-desc">???</p>
-							<span class="err hidden auth-error bold mt-1"></span>
-						</div>
-						<div class="mt-4 flex space-x-2 justify-end">
-							<button class="modal-close tool-link" onclick="closeDeleteModal()">Cancel</button>
-							<button class="nav-warn" onclick="sendDeleteRequest()">Delete</button>
-						</div>
+			<div class="modal-overlay modal-bg"></div>
+			<div class="modal-container modal-cont">
+				<div class="modal-content py-4 text-left px-6">
+					<p id="delete-title" class="text-2xl font-bold mb-4">????</p>
+					<div class="flex flex-col mb-4">
+						<p id="delete-desc">???</p>
+						<span class="err hidden auth-error bold mt-1"></span>
+					</div>
+					<div class="mt-4 flex space-x-2 justify-end">
+						<button class="modal-close tool-link" onclick="closeDeleteModal()">Cancel</button>
+						<button class="nav-warn" onclick="sendDeleteRequest()">Delete</button>
 					</div>
 				</div>
 			</div>
+		</div>
 		@include('layouts.footer')
 	</main>
 </body>
