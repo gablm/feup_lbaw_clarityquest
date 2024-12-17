@@ -317,7 +317,7 @@ function deleteComment(id, error) {
 
 //#region Notifications
 function deleteNotification(id) {
-	let notification = document.querySelector('#notification[data-id="' + id + '"]');
+	let notification = document.querySelector('.notification[data-id="' + id + '"]');
 
 	sendAjaxRequest('DELETE', '/notifications/' + id, {},
 		(request) => {
