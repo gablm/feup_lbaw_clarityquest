@@ -31,6 +31,9 @@ class UserController extends Controller
 	 */
 	public function edit()
 	{
+		if (Auth::user()->isBlocked())
+			return abort(403);
+
 		return view('users.edit', [
 			'user' => Auth::user()
 		]);
@@ -109,6 +112,9 @@ class UserController extends Controller
 
 	public function showPublicProfile(string $id)
 	{
+		if (Auth::check() && Auth::user()->isBlocked())
+			return abort(403);
+
 		// Fetch the user by ID
 		$user = User::findOrFail($id);
 
@@ -190,7 +196,7 @@ class UserController extends Controller
 			'name' => 'required|string|max:250',
 			'email' => 'required|email|max:250|unique:users',
 			'password' => 'required|min:8',
-			'role' => 'required|string|in:REGULAR,ADMIN,MODERATOR'
+			'role' => 'required|string|in:BLOCKED,REGULAR,ADMIN,MODERATOR'
 		]);
 
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');

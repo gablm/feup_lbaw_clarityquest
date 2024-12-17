@@ -21,6 +21,9 @@ class QuestionController extends Controller
 	 */
 	public function followedQuestions()
 	{
+		if (Auth::user()->isBlocked())
+			return abort(403);
+
 		$user = Auth::user();
 		$followedQuestions = $user->followedQuestions;
 
@@ -29,6 +32,9 @@ class QuestionController extends Controller
 
 	public function myQuestions()
 	{
+		if (Auth::user()->isBlocked())
+			return abort(403);
+
 		$user = Auth::user();
 		$myQuestions = $user->questionsCreated;
 
@@ -98,6 +104,9 @@ class QuestionController extends Controller
 		if (!Auth::check())
 			return redirect('/');
 
+		if (Auth::user()->isBlocked())
+			return abort(403);
+
 		$tags = Tag::all();
 
 		return view('questions.create', ['tags' => $tags]);
@@ -108,6 +117,9 @@ class QuestionController extends Controller
 	 */
 	public function show(string $id)
 	{
+		if (Auth::check() && Auth::user()->isBlocked())
+			return abort(403);
+
 		$question = Question::with(['answers' => function ($query) {
 			$query->join('posts', 'posts.id', '=', 'answers.id')
 				  ->orderBy('answers.correct', 'desc')

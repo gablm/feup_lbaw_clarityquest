@@ -26,6 +26,9 @@ class NotificationController extends Controller
      */
     public function index()
     {
+		if (Auth::user()->isBlocked())
+			return abort(403);
+
         $notifications = Notification::where('receiver', Auth::id())
             ->orderBy('sent_at', 'desc')
             ->get();
