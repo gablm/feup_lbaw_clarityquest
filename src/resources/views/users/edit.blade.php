@@ -6,31 +6,39 @@
 
 @section('content')
 @php
-    $crumbs = [
-        ['name' => 'Home', 'url' => route('home')],
-        ['name' => 'Profile', 'url' => route('profile')],
+	$crumbs = [
+		['name' => 'Home', 'url' => route('home')],
+		['name' => 'Profile', 'url' => route('profile')],
 		['name' => 'Edit Profile', 'url' => route('profile.edit')]
-    ];
+	];
+
+	$crumbsAdmin = [
+		['name' => 'Admin', 'url' => route('admin')],
+		['name' => 'Edit Profile', 'url' => route('users.edit', $user->id)]
+	];
 @endphp
-<div class="container mx-auto p-4 flex flex-col space-y-6">
-	{!! breadcrumbs($crumbs) !!}
+<div class="container mx-auto p-4 flex flex-col {{ Auth::user()->id == $user->id ? 'space-y-6' : 'space-y-0' }}">
 	@if (Auth::user()->id == $user->id)
-		
-		<div class="bg-white shadow-md rounded-lg p-6">
-			<h2 class="text-2xl font-semibold mb-4">
-				Social Connections
-				@include('partials.tip', ['tip' => "You can edit the social network accounts connected to your account here."])
-			</h2>
-			<div class="flex flex-row space-x-6">
-				@include('partials.google-btn', ['linked' => $user->google_token ? 2 : 1])
-				@include('partials.x-btn', ['linked' => $user->x_token ? 2 : 1])
+		<div>
+			{!! breadcrumbs($crumbs) !!}
+			<div class="bg-white shadow-md rounded-lg p-6">
+				<h2 class="text-2xl font-semibold mt-4 mb-4">
+					Social Connections
+					@include('partials.tip', ['tip' => "You can edit the social network accounts connected to your account here."])
+				</h2>
+				<div class="flex flex-row space-x-6">
+					@include('partials.google-btn', ['linked' => $user->google_token ? 2 : 1])
+					@include('partials.x-btn', ['linked' => $user->x_token ? 2 : 1])
+				</div>
+				@if ($errors->has('connection'))
+					<span class="auth-error bold">
+						{{ $errors->first('connection') }}
+					</span>
+				@endif
 			</div>
-			@if ($errors->has('connection'))
-			<span class="auth-error bold">
-				{{ $errors->first('connection') }}
-			</span>
-		@endif
 		</div>
+	@else
+	{!! breadcrumbs($crumbsAdmin) !!}
 	@endif
 	<div class="bg-white shadow-md rounded-lg p-6">
 		@if (Auth::user()->id == $user->id)
@@ -39,8 +47,8 @@
 				@include('partials.tip', ['tip' => "You can edit your profile information here."])
 			</h2>
 		@else
-			<div class="flex space-x-2">
-				<h2 class="text-2xl font-semibold mb-4">Edit Profile</h2>
+			<div class="flex items-center space-x-2 mb-4">
+				<h2 class="text-2xl font-semibold">Edit Profile</h2>
 				<a class="tool-link" href="{{ $user ? url('/users/' . $user->id) : '/' }}">
 					<div class="flex flex-row items-center">
 						<img src="{{ $profile_pic }}" alt="Profile Picture" class="w-6 h-6 rounded-full object-cover">
@@ -90,8 +98,8 @@
 
 			<div class="mb-4">
 				<label for="bio" class="block text-gray-700">Bio</label>
-				<textarea onkeyup="charCounter(this, this, 1000)" onkeydown="charCounter(this, this, 1000)"
-					name="bio" id="bio" placeholder="Tell others about yourself"
+				<textarea onkeyup="charCounter(this, this, 1000)" onkeydown="charCounter(this, this, 1000)" name="bio"
+					id="bio" placeholder="Tell others about yourself"
 					class="w-full px-3 py-2 border rounded-md">{{ old('bio', $user->bio) }}</textarea>
 				<span class="counter mt-2">{{ strlen(old('bio', $user->bio)) }}/1000 characters</span>
 			</div>

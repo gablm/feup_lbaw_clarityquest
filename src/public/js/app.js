@@ -592,15 +592,15 @@ function showReportPostModal(type, id, content) {
 
 function closeReportPostModal() {
 	let modal = document.querySelector('#report-post');
-	let text = modal.querySelector('#report-text');
-	
 	let title = modal.querySelector('#report-edit-title');
+	let reason = modal.querySelector('#report-reason');
+	let text = modal.querySelector('#report-text');
 	let error = modal.querySelector("#report-error");
 
 	modal.removeAttribute('data-id');
 
-	text.value = "";
 	reason.value = "";
+	text.value = "";
 	
 	title.textContent = "Report ??";
 	error.classList.add('hidden');
