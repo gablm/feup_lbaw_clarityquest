@@ -58,28 +58,32 @@
 					<div class="modal-container modal-cont">
 						<div class="modal-content py-4 text-left px-6">
 							<p class="text-2xl font-bold mb-4">Create User</p>
-							<div class="mb-4">
+							<div class="flex flex-col mb-4">
 								<label class="auth" for="name">Name</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-name" type="text"
 									name="name">
+								<span id="err-uc-name" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
-							<div class="mb-4">
+							<div class="flex flex-col mb-4">
 								<label class="auth" for="username">Handle</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-username" type="text"
 									name="username">
+								<span id="err-uc-username" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
-							<div class="mb-4">
+							<div class="flex flex-col mb-4">
 								<label class="auth" for="email">E-Mail Address</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-email" type="email"
 									name="email">
+								<span id="err-uc-email" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
-							<div class="mb-4">
+							<div class="flex flex-col mb-4">
 								<label class="auth" for="password">Password</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-password"
 									type="password" name="password">
+								<span id="err-uc-password" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="mb-4">
@@ -92,6 +96,7 @@
 									@endforeach
 								</select>
 							</div>
+							<span id="err-uc-gen" class="err hidden auth-error bold mt-1"></span>
 							<div class="mt-4 flex space-x-2 justify-end">
 								<button class="modal-close tool-link" onclick="closeCreateUserModal()">Cancel</button>
 								<button class="nav-main" onclick="sendCreateUserRequest()">Create</button>

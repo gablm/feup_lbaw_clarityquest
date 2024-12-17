@@ -947,13 +947,20 @@ function sendEditQuestionRequest() {
 	sendAjaxRequest('PATCH', '/questions/' + id, { title: title.value, description: description.value },
 		(request) => {
 			if (request.readyState != 4) return;
-			if (request.status == 302)
+			if (request.status == 404)
 			{
 				error.classList.remove('hidden');
-				error.textContent = "Error: Invalid text contents.";
+				error.textContent = "Error: This question does not exist (anymore).";
 				return;
 			}
-		
+					
+			if (request.status == 405)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field submitted to the server.";
+				return;
+			}
+			
 			if (request.status != 200)
 			{
 				error.classList.remove('hidden');
@@ -969,44 +976,104 @@ function sendEditQuestionRequest() {
 }
 //#endregion
 
+//#region Create User
 function showCreateUserModal() {
 	let modal = document.querySelector('#user-create');
 
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
+
+	let error = modal.querySelectorAll('.err');
+	error.forEach((elem) => {
+		elem.classList.add('hidden');
+	});
 }
 
 function closeCreateUserModal() {
 	let modal = document.querySelector('#user-create');
-	let name = document.querySelector('#user-name');
-	let handle = document.querySelector('#user-username');
-	let email = document.querySelector('#user-email');
-	let password = document.querySelector('#user-password');
-	let role = document.querySelector('#user-role');
+	let error = modal.querySelectorAll('.err');
+	error.forEach((elem) => {
+		elem.classList.add('hidden');
+	});
+
+	let inputs = modal.querySelectorAll("input");
+	inputs.forEach((elem) => {
+		elem.value = "";
+	});
 
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
-	name.value = "";
-	handle.value = "";
-	email.value = "";
-	password.value = "";
-	role.value = "";
 }
 
 function sendCreateUserRequest() {
     let userList = document.querySelector('#user-list');
-    let name = document.querySelector('#user-name');
+	let modal = document.querySelector('#user-create');
+	let errors = modal.querySelectorAll('.err');
+	errors.forEach((elem) => {
+		elem.classList.add('hidden');
+	});
+
+	let failedValidation = false;
+
+	let name = document.querySelector('#user-name');
+	let errorName = modal.querySelector('.err#err-uc-name');
+	if (name.value == "")
+	{
+		errorName.classList.remove('hidden');
+		errorName.textContent = `Name can't be empty.`;
+		failedValidation = true;
+	}
+
 	let handle = document.querySelector('#user-username');
+	let errorHandle = modal.querySelector('.err#err-uc-username');
+	if (handle.value == "")
+	{
+		errorHandle.classList.remove('hidden');
+		errorHandle.textContent = `Handle can't be empty.`;
+		failedValidation = true;
+	}
+
 	let email = document.querySelector('#user-email');
+	let errorEmail = modal.querySelector('.err#err-uc-email');
+	if (email.value.includes("@") == false || email.value == "")
+	{
+		errorEmail.classList.remove('hidden');
+		errorEmail.textContent = `Email is not valid.`;
+		failedValidation = true;
+	}
+
 	let password = document.querySelector('#user-password');
+	let errorPassword = modal.querySelector('.err#err-uc-password');
+	if (password.value.length < 8)
+	{
+		errorPassword.classList.remove('hidden');
+		errorPassword.textContent = `Password must be longer than 8 characters.`;
+		failedValidation = true;
+	}
+
+	if (failedValidation == true) return;
+	
 	let role = document.querySelector('#user-role');
+	let error = modal.querySelector('.err#err-eq-gen');
 
     sendAjaxRequest('POST', '/users', { name: name.value, username: handle.value,
 										email: email.value, password: password.value,
 										role: role.value },
         (request) => {
             if (request.readyState != 4) return;
-            if (request.status != 200) return;
+            if (request.status == 302)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field contents.";
+				return;
+			}
+		
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
 
             let user = createElemFromRequest(request);
 			userList.prepend(user);
