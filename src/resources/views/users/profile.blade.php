@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6" onload="showProfileTab('questions')">
+<section class="container mx-auto p-6" onload="showProfileTab('questions')">
 	<div class="p-8">
 		<div class="flex items-center justify-between mb-8">
 			<div class="flex items-center space-x-6">
@@ -113,6 +113,7 @@
 		<div id="medals-section" class="tab-content hidden">
 				@include('partials.medals', ['medals' => $medals])
 		</div>
-</div>
+	</div>
+</section>
 @endsection
 
