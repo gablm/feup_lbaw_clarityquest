@@ -46,8 +46,8 @@ class QuestionController extends Controller
 			return abort(403);
 
 		$request->validate([
-			'title' => 'required|string|max:64',
-			'description' => 'required|string|max:1000',
+			'title' => 'required|string|max:250',
+			'description' => 'required|string|max:3000',
 			'tags' => 'required'
 		]);
 
