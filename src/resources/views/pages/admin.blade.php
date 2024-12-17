@@ -122,7 +122,7 @@
 					<div class="modal-container modal-cont">
 						<div class="modal-content py-4 text-left px-6">
 							<p class="text-2xl font-bold mb-4">Create Tag</p>
-							<div class="mb-4">
+							<div class="flex flex-col mb-4">
 								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
 									class="auth focus:outline-none focus:shadow-outline" type="text"
 									id="tag-name" name="name" maxlength="24" required>
@@ -141,9 +141,12 @@
 					<div class="modal-container modal-cont">
 						<div class="modal-content py-4 text-left px-6">
 							<p id="edit-title" class="text-2xl font-bold mb-4">Edit Tag</p>
-							<div class="mb-4">
-								<input class="auth focus:outline-none focus:shadow-outline resize-none" id="text"
-									type="textarea" name="text" required>
+							<div class="flex flex-col mb-4">
+								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
+									class="auth focus:outline-none focus:shadow-outline resize-none" id="tag-text"
+									type="textarea" name="text" maxlength="24" required>
+								<span class="counter my-2">0/24 characters</span>
+								<span class="err hidden auth-error bold mt-1"></span>
 							</div>
 							<div class="mt-4 flex space-x-2 justify-end">
 								<button class="modal-close tool-link" onclick="closeEditTagModal()">Cancel</button>

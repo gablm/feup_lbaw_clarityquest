@@ -389,6 +389,7 @@ function blockUser(id) {
 //#endregion
 
 //#region Admin Panel - Tags
+//#region Tag Create
 function showCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
 	let text = modal.querySelector('#tag-name');
@@ -450,6 +451,82 @@ function sendCreateTagRequest() {
 			closeCreateTagModal();
 		});
 }
+//#endregion
+
+//#region Tag Edit
+function showEditTagModal(id, content) {
+	let modal = document.querySelector('#edit-tag');
+	modal.setAttribute('data-id', id);
+
+	let text = modal.querySelector('#tag-text');
+	text.value = content;
+	charCounter(modal.firstChild, text, 24);
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+
+	let error = modal.querySelector('.err');
+	error.classList.add('hidden');
+}
+
+function closeEditTagModal() {
+	let modal = document.querySelector('#edit-tag');
+	let text = modal.querySelector('#tag-text');
+	let error = modal.querySelector('.err');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	error.classList.add('hidden');
+	text.value = "";
+}
+
+function sendEditTagRequest() {
+	let modal = document.querySelector('#edit-tag');
+	let text = modal.querySelector('#tag-text');
+	let id = modal.getAttribute('data-id');
+	let tag = document.querySelector('#tag[data-id="' + id + '"]');
+	let error = modal.querySelector('.err');
+
+	if (text.value == "")
+	{
+		error.classList.remove('hidden');
+		error.textContent = "Error: Tag name can't be empty.";
+		return;
+	}
+
+	sendAjaxRequest('PATCH', '/tags/' + id, { name: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This tag does not exist (anymore).";
+				return;
+			}
+			
+			if (request.status == 405)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field submitted to the server.";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(request.responseText, 'text/html');
+
+			tag.parentElement.replaceChild(doc.body.firstChild, tag);
+			closeEditTagModal();
+		});
+}
+//#endregion
 //#endregion
 
 //#region Question Page - Report
@@ -734,46 +811,6 @@ function sendVoteRequest(id, positive) {
 
 			voteStatus.parentElement.replaceChild(doc.body.firstChild, voteStatus);	
     });
-}
-
-function showEditTagModal(id, content) {
-	let modal = document.querySelector('#edit-tag');
-	modal.setAttribute('data-id', id);
-
-	let text = modal.querySelector('#text');
-	text.value = content;
-
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-
-function closeEditTagModal() {
-	let modal = document.querySelector('#edit-tag');
-	let text = modal.querySelector('#text');
-
-	modal.removeAttribute('data-id');
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-	text.value = "";
-}
-
-function sendEditTagRequest() {
-	let modal = document.querySelector('#edit-tag');
-	let text = modal.querySelector('#text');
-	let id = modal.getAttribute('data-id');
-	let tag = document.querySelector('#tag[data-id="' + id + '"]');
-
-	sendAjaxRequest('PATCH', '/tags/' + id, { name: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let parser = new DOMParser();
-			let doc = parser.parseFromString(request.responseText, 'text/html');
-
-			tag.parentElement.replaceChild(doc.body.firstChild, tag);
-			closeEditTagModal();
-		});
 }
 
 function showTagModal() {
