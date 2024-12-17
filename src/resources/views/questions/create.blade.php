@@ -11,9 +11,13 @@
         <form method="POST" action="{{ route('questions-create') }}">
             {{ csrf_field() }}
 
-            <div class="mb-4">
+            <div class="flex flex-col mb-4">
                 <label class="auth" for="title">Title</label>
-                <input class="auth focus:outline-none focus:shadow-outline" id="title" type="text" name="title" value="{{ old('title') }}" required placeholder="Enter the title">
+                <input onkeyup="charCounter(this, this, 64)" onkeydown="charCounter(this, this, 64)"
+					class="auth focus:outline-none focus:shadow-outline" id="title" type="text"
+					name="title" value="{{ old('title') }}" maxlength="64" required
+					placeholder="Enter the title">
+				<span class="counter mt-2">0/64 characters</span>
                 @if ($errors->has('title'))
                 <span class="auth-error bold">
                     {{ $errors->first('title') }}
@@ -23,8 +27,12 @@
 
             <div class="mb-4">
                 <label class="auth" for="description">Description</label>
-                <textarea class="auth focus:outline-none focus:shadow-outline resize-none" cols="50" rows="10" id="description" type="textarea" name="description" required placeholder="Enter the description">{{ old('description') }}</textarea>
-                @if ($errors->has('description'))
+                <textarea onkeyup="charCounter(this, this, 10000)" onkeydown="charCounter(this, this, 10000)"
+					class="auth focus:outline-none focus:shadow-outline resize-none"
+					cols="50" rows="10" id="description" type="textarea" name="description"
+					required placeholder="Enter the description" maxlength="10000">{{ old('description') }}</textarea>
+                <span class="counter mt-2">0/10000 characters</span>
+				@if ($errors->has('description'))
                 <span class="auth-error bold">
                     {{ $errors->first('description') }}
                 </span>
