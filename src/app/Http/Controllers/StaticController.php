@@ -41,6 +41,11 @@ class StaticController extends Controller
 		return view('pages.contacts');
 	}
 
+	public function faq()
+	{
+		return view('pages.faq');
+	}
+
 	public function search(Request $request)
 	{
 		$query = $request->input('search');

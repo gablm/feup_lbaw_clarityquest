@@ -38,6 +38,7 @@ Route::controller(StaticController::class)->group(function () {
 	Route::get('/search', 'search')->name('search'); 
 	Route::get('/admin', 'admin')->name('admin');
 	Route::get('/main-features','mainFeatures')->name('main-features');
+	Route::get('/faq','faq')->name('faq');
 });
 
 // Comments
