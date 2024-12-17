@@ -72,7 +72,7 @@
 					<div class="flex flex-col mb-4">
 						<textarea onkeyup="charCounter(this, this, 500)"
 							onkeydown="charCounter(this, this, 500)"
-							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
+							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="edit-text"
 							type="textarea" name="text" maxlength="500" required placeholder="Edit your content here..."></textarea>
 						<span class="counter my-1">0/500 characters</span>
 						<span class="err hidden auth-error bold mt-1"></span>

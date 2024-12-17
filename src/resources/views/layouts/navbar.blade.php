@@ -16,7 +16,7 @@ $notifications = $user ? $user->notifications()->orderBy('sent_at', 'desc')->tak
 		</a>
 		<form class="flex items-center w-[30vw] space-x-1" action="{{ route('search') }}" method="GET">
 			<input type="search" name='search' placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}">
-			<button type="submit" class="nav-search">
+			<button type="submit" class="nav-search" title="Search">
 				<i class="fa-solid fa-magnifying-glass"></i>
 			</button>
 		</form>

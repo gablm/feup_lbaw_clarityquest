@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => 'Search', 'url' => route('search')]
+    ];
+@endphp
+
 @section('content')
 <div class="flex flex-row flex-grow">
     <!-- Sidebar -->
@@ -7,6 +14,7 @@
 
     <!-- Main Content -->
     <div class="container mx-auto p-4">
+	{!! breadcrumbs($crumbs) !!}
         <h2 class="text-2xl font-semibold mb-4">Search Results</h2>
         
         <div class="flex justify-between items-center mb-4">
@@ -18,8 +26,8 @@
 
                     <!-- Filter Dropdown -->
                     <div class="flex flex-col">
-                        <label class="font-bold text-gray-700 mb-1">Filter by</label>
-                        <select name="filter" class="border rounded px-2 py-1">
+                        <label class="font-bold text-gray-700 mb-1" for="filter">Filter by</label>
+                        <select title="Search Filter" id="filter" name="filter" class="border rounded px-2 py-1">
                             <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All</option>
                             <option value="questions" {{ request('filter') === 'questions' ? 'selected' : '' }}>Questions</option>
                             <option value="users" {{ request('filter') === 'users' ? 'selected' : '' }}>Users</option>
@@ -29,8 +37,8 @@
 
                     <!-- Sort Dropdown -->
                     <div class="flex flex-col">
-                        <label class="font-bold text-gray-700 mb-1">Sort by</label>
-                        <select name="sort" class="border rounded px-2 py-1">
+                        <label class="font-bold text-gray-700 mb-1" for="sort">Sort by</label>
+                        <select title="Search Sorting" id="sort" name="sort" class="border rounded px-2 py-1">
                             <option value="none" {{ request('sort') === 'none' ? 'selected' : '' }}>None</option>
                             <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Newest</option>
                             <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
