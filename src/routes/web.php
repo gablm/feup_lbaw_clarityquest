@@ -71,7 +71,7 @@ Route::controller(AnswerController::class)->group(function () {
 	Route::post('/answers/{id}/correct', 'markAsCorrect')->name('answers.markAsCorrect')->middleware('auth');
 });
 
-// Questions
+// Questionsss
 Route::controller(QuestionController::class)->group(function () {
 	Route::get('/followed-questions', 'followedQuestions')->name('followed-questions')->middleware('auth');
 	Route::get('/my-questions', 'myQuestions')->name('my-questions')->middleware('auth');

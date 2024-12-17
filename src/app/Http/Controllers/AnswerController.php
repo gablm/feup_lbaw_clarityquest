@@ -17,7 +17,7 @@ class AnswerController extends Controller
 	/**
 	 * Display a listing of the user's answers.
 	 *
-	 * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\View\View\Illuminate\Http\RedirectResponse
 	 */
 	public function myAnswers()
 	{

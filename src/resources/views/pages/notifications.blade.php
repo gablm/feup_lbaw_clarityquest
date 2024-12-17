@@ -1,12 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => 'Notifications', 'url' => route('pages.notifications')]
+    ];
+@endphp
 <div class="flex flex-row flex-grow">
-	<!-- Sidebar -->
 	@include('partials.sidebar')
 
-	<!-- Main Content -->
 	<div class="container mx-auto p-4">
+		{!! breadcrumbs($crumbs) !!}
 		<h2 class="text-2xl font-semibold mb-4">Notifications</h2>
 		@forelse ($notifications as $notification)
 		@include('partials.notification-card', ['notification' => $notification])

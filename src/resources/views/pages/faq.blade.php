@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => 'FAQ', 'url' => route('faq')]
+    ];
+@endphp
+
 <div class="container mx-auto p-4">
+    
+    {!! breadcrumbs($crumbs) !!}
+    
     <h1 class="text-4xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

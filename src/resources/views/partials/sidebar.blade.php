@@ -16,5 +16,10 @@
 				Followed Tags
 			</a>
 		</li>
+		<li>
+			<a href="/notifications" class="side-link">
+				Notifications
+			</a>
+		</li>
 	</ul>
 </aside>

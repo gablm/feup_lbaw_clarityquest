@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => 'Profile', 'url' => route('profile')]
+    ];
+@endphp
 <section class="container mx-auto p-6" onload="showProfileTab('questions')">
+	{!! breadcrumbs($crumbs) !!}
 	<div class="p-8">
 		<div class="flex items-center justify-between mb-8">
 			<div class="flex items-center space-x-6">

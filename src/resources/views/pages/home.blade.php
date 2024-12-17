@@ -1,9 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')]
+    ];
+@endphp
+    
 <div class="flex flex-row">
     @include('partials.sidebar')
+    
     <div class="container mx-auto flex flex-col p-4">
+        {!! breadcrumbs($crumbs) !!}
         <div class="mb-4">
             <h3 class="text-xl font-semibold mb-2">
                 Top Questions

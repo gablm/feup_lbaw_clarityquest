@@ -1,9 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => 'Followed Tags', 'url' => route('followed-tags')],
+    ];
+@endphp
 <div class="flex flex-row flex-grow">
+	
 	@include('partials.sidebar')
 	<div class="container mx-auto p-4">
+		{!! breadcrumbs($crumbs) !!}
 		<h2 class="text-2xl font-semibold mb-4">
             Followed Tags
             @include('partials.tip', ['tip' => "Here are the tags you follow."])
