@@ -65,7 +65,7 @@ class AnswerController extends Controller
 			return abort(403);
 
 		$request->validate([
-			'text' => 'required|string|max:5000',
+			'text' => 'required|string|max:500',
 			'id' => 'required|integer|exists:questions,id',
 		]);
 
@@ -142,7 +142,7 @@ class AnswerController extends Controller
 		$this->authorize('update', $answer);
 
 		$request->validate([
-			'text' => 'required|string|max:10000'
+			'text' => 'required|string|max:500'
 		]);
 
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');

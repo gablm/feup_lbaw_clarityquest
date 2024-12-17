@@ -27,11 +27,11 @@
 
             <div class="mb-4">
                 <label class="auth" for="description">Description</label>
-                <textarea onkeyup="charCounter(this, this, 10000)" onkeydown="charCounter(this, this, 10000)"
+                <textarea onkeyup="charCounter(this, this, 1000)" onkeydown="charCounter(this, this, 1000)"
 					class="auth focus:outline-none focus:shadow-outline resize-none"
 					cols="50" rows="10" id="description" type="textarea" name="description"
 					required placeholder="Enter the description" maxlength="10000">{{ old('description') }}</textarea>
-                <span class="counter mt-2">0/10000 characters</span>
+                <span class="counter mt-2">0/1000 characters</span>
 				@if ($errors->has('description'))
                 <span class="auth-error bold">
                     {{ $errors->first('description') }}

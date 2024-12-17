@@ -47,7 +47,7 @@ class QuestionController extends Controller
 
 		$request->validate([
 			'title' => 'required|string|max:64',
-			'description' => 'required|string|max:10000',
+			'description' => 'required|string|max:1000',
 			'tags' => 'required'
 		]);
 

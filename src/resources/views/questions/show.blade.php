@@ -22,16 +22,16 @@
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
 			<div class="flex flex-row space-x-2 mt-2">
-				<textarea onkeyup="charCounter(this.parentElement, this, 5000)"
-					onkeydown="charCounter(this.parentElement, this, 5000)"
+				<textarea onkeyup="charCounter(this.parentElement, this, 500)"
+					onkeydown="charCounter(this.parentElement, this, 500)"
 					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text" type="textarea"
-					name="text" maxlength="5000" required placeholder="Enter your answer here..."></textarea>
+					name="text" maxlength="500" required placeholder="Enter your answer here..."></textarea>
 				<button type="submit" class="nav-main text-blue-700" onclick="sendCreateAnswerRequest({{ $question->id }})">
 					<i class="fa-solid fa-plus"></i>
 					<span class="max-sm:hidden ml-1">Add Answer</span>
 				</button>
 			</div>
-			<span class="counter my-2">0/5000 characters</span>
+			<span class="counter my-2">0/500 characters</span>
 			<div class="flex flex-col">
 				<span class="ml-2 mb-4 add-err hidden text-sm text-red-500"></span>
 			</div>
@@ -42,8 +42,15 @@
 			<div class="modal-container modal-cont">
 				<div class="modal-content py-4 text-left px-6">
 					<p class="text-2xl font-bold mb-4">Add Comment</p>
-					<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
-						type="textarea" name="text" required placeholder="Enter your comment here..."></textarea>
+					<div class="flex flex-col mb-4">
+						<textarea onkeyup="charCounter(this, this, 500)"
+							onkeydown="charCounter(this, this, 500)"
+							class="auth focus:outline-none focus:shadow-outline resize-none"
+							rows="3" id="text" maxlength="500" type="textarea" name="text"
+							required placeholder="Enter your comment here..."></textarea>
+						<span class="counter my-1">0/500 characters</span>
+						<span class="err hidden auth-error bold mt-1"></span>
+					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
 						<button class="modal-close tool-link" onclick="closeCreateCommentModal()">Cancel</button>
 						<button class="nav-main" onclick="sendCreateCommentRequest()">Comment</button>
@@ -56,9 +63,13 @@
 			<div class="modal-container modal-cont">
 				<div class="modal-content py-4 text-left px-6">
 					<p id="edit-title" class="text-2xl font-bold mb-4">Edit ??</p>
-					<div class="mb-4">
-						<textarea class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
-							type="textarea" name="text" required placeholder="Edit your content here..."></textarea>
+					<div class="flex flex-col mb-4">
+						<textarea onkeyup="charCounter(this, this, 500)"
+							onkeydown="charCounter(this, this, 500)"
+							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
+							type="textarea" name="text" maxlength="500" required placeholder="Edit your content here..."></textarea>
+						<span class="counter my-1">0/500 characters</span>
+						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
 						<button class="modal-close tool-link" onclick="closeEditPostModal()">Cancel</button>

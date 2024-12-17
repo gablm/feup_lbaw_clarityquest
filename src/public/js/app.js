@@ -404,9 +404,25 @@ function markAsCorrect(answerId) {
 			answerList.parentElement.replaceChild(answer, answerList);	
     });
 }
+
+function sendVoteRequest(id, positive) {
+	let voteStatus = document.querySelector('#vote-status-' + id);
+
+	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
+		(request) => { 
+            if (request.readyState != 4) return;
+			if (request.status != 200)
+			{
+				showInfoModal("This action failed, please try again.");
+				return;
+			}
+
+			let vote = createElemFromRequest(request);
+			voteStatus.parentElement.replaceChild(vote, voteStatus);	
+    });
+}
 //#endregion
 
-//#region Admin Panel - Tags
 //#region Tag Create
 function showCreateTagModal() {
 	let modal = document.querySelector('#tag-create');
@@ -543,9 +559,8 @@ function sendEditTagRequest() {
 		});
 }
 //#endregion
-//#endregion
 
-//#region Question Page - Report
+//#region Report Create
 function showReportPostModal(type, id, content) {
 	let modal = document.querySelector('#report-post');
 	modal.setAttribute('data-id', id);
@@ -583,12 +598,15 @@ function closeReportPostModal() {
 	let error = modal.querySelector("#report-error");
 
 	modal.removeAttribute('data-id');
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
+
 	text.value = "";
 	reason.value = "";
+	
 	title.textContent = "Report ??";
 	error.classList.add('hidden');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
 }
 
 function sendReportPostRequest() {
@@ -635,6 +653,7 @@ function sendReportPostRequest() {
 }
 //#endregion
 
+//#region Answer Create
 function sendCreateAnswerRequest(id) {
 	let answerList = document.querySelector('#answer-list');
 	let text = document.querySelector('#answer-text');
@@ -670,12 +689,187 @@ function sendCreateAnswerRequest(id) {
 			answerList.prepend(answer);
 
 			text.value = "";
-			charCounter(text.parentElement, text, 5000);
+			charCounter(text.parentElement, text, 500);
 			
 			errorBox.classList.add('hidden');
 			answerCount.textContent = Number(answerCount.textContent) + 1;
 		});
 }
+//#endregion
+
+//#region Comment Create
+function showCreateCommentModal(id) {
+	let modal = document.querySelector('#add-comment');
+	modal.setAttribute('data-id', id);
+
+	let error = modal.querySelector('.err');
+	error.classList.add('hidden');
+
+	let text = modal.querySelector('#text');
+	text.value = "";
+	charCounter(modal.firstChild, text, 250);
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeCreateCommentModal() {
+	let modal = document.querySelector('#add-comment');
+	let text = modal.querySelector('#text');
+	let error = modal.querySelector('.err');
+
+	modal.removeAttribute('data-id');
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+	error.classList.add('hidden');
+	text.value = "";
+}
+
+function sendCreateCommentRequest() {
+	let modal = document.querySelector('#add-comment');
+	let text = modal.querySelector('#text');
+
+	let id = modal.getAttribute('data-id');
+	let list = document.querySelector(`#comment-list-${id}`);
+	let error = modal.querySelector('.err');
+
+	if (text.value == "")
+	{
+		error.classList.remove('hidden');
+		error.textContent = "Error: Comment content can't be empty.";
+		return;
+	}
+
+	sendAjaxRequest('POST', '/comments/', { id: id, text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status == 302)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid text contents.";
+				return;
+			}
+	
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			let comment = createElemFromRequest(request)
+			list.prepend(comment);
+
+			closeCreateCommentModal();
+		});
+}
+//#endregion
+
+//#region Post Edit
+function showEditPostModal(type, id, content) {
+	let modal = document.querySelector('#edit-post');
+	modal.setAttribute('data-id', id);
+	modal.setAttribute('data-type', type);
+
+	let text = modal.querySelector('#text');
+	text.value = content;
+	charCounter(modal.firstChild, text, 250);
+
+	let error = modal.querySelector('.err');
+	error.classList.add('hidden');
+
+	let title = modal.querySelector('#edit-title');
+	switch (type) {
+		case 'comment':
+			title.textContent = 'Edit Comment';
+			break;
+		case 'answer':
+			title.textContent = 'Edit Answer';
+			break;
+	}
+
+	modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeEditPostModal() {
+	let modal = document.querySelector('#edit-post');
+	modal.removeAttribute('data-id');
+	modal.removeAttribute('data-type');
+
+	let text = modal.querySelector('#text');
+	text.value = "";
+
+	let title = modal.querySelector('#edit-title');
+	title.textContent = "Edit ??";
+
+	let error = modal.querySelector('.err');
+	error.classList.add('hidden');
+
+	modal.classList.add('hidden');
+	modal.classList.remove('flex');
+}
+
+function sendEditPostRequest() {
+	let modal = document.querySelector('#edit-post');
+	let error = modal.querySelector('.err');
+	let text = modal.querySelector('#text');
+
+	let id = modal.getAttribute('data-id');
+	let type = modal.getAttribute('data-type');
+	let route, post, typeName;
+
+	switch (type) {
+		case 'comment':
+			post = document.querySelector('.comment[data-id="' + id + '"]');
+			route = '/comments/';
+			typeName = "Comment";
+			break;
+		case 'answer':
+			post = document.querySelector('.answer[data-id="' + id + '"]');
+			route = '/answers/';
+			typeName = "Answer";
+			break;
+	}
+
+	if (text.value == "")
+	{
+		error.classList.remove('hidden');
+		error.textContent = `Error: ${typeName} content can't be empty.`;
+		return;
+	}
+
+	sendAjaxRequest('PATCH', route + id, { text: text.value },
+		(request) => {
+			if (request.readyState != 4) return;
+			if (request.status == 404)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: This tag does not exist (anymore).";
+				return;
+			}
+				
+			if (request.status == 405)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Invalid field submitted to the server.";
+				return;
+			}
+		
+			if (request.status != 200)
+			{
+				error.classList.remove('hidden');
+				error.textContent = "Error: Internal server error. Try again later.";
+				return;
+			}
+
+			let p = createElemFromRequest(request);
+			post.parentElement.replaceChild(p, post);
+
+			closeEditPostModal();
+		});
+}
+//#endregion
 
 function sendEditQuestionRequest() {
 	let question = document.querySelector('.question');
@@ -709,119 +903,6 @@ function closeEditQuestionModal() {
 
 	modal.classList.add('hidden');
 	modal.classList.remove('flex');
-}
-
-function showEditPostModal(type, id, content) {
-	let modal = document.querySelector('#edit-post');
-	modal.setAttribute('data-id', id);
-	modal.setAttribute('data-type', type);
-
-	let text = modal.querySelector('#text');
-	text.value = content;
-
-	let title = modal.querySelector('#edit-title');
-	switch (type) {
-		case 'comment':
-			title.textContent = 'Edit Comment';
-			break;
-		case 'answer':
-			title.textContent = 'Edit Answer';
-			break;
-	}
-
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-
-function closeEditPostModal() {
-	let modal = document.querySelector('#edit-post');
-	let text = modal.querySelector('#text');
-	let title = modal.querySelector('#edit-title');
-
-	modal.removeAttribute('data-id');
-	modal.removeAttribute('data-type');
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-	text.value = "";
-	title.textContent = "Edit ??";
-}
-
-function sendEditPostRequest() {
-	let modal = document.querySelector('#edit-post');
-	let text = modal.querySelector('#text');
-	let id = modal.getAttribute('data-id');
-	let type = modal.getAttribute('data-type');
-	let route, post;
-
-	switch (type) {
-		case 'comment':
-			post = document.querySelector('.comment[data-id="' + id + '"]');
-			route = '/comments/';
-			break;
-		case 'answer':
-			post = document.querySelector('.answer[data-id="' + id + '"]');
-			route = '/answers/';
-			break;
-	}
-
-	sendAjaxRequest('PATCH', route + id, { text: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let p = createElemFromRequest(request);
-			post.parentElement.replaceChild(p, post);
-
-			closeEditPostModal();
-		});
-}
-
-function showCreateCommentModal(id) {
-	let modal = document.querySelector('#add-comment');
-	modal.setAttribute('data-id', id);
-
-	modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-
-function closeCreateCommentModal() {
-	let modal = document.querySelector('#add-comment');
-
-	modal.removeAttribute('data-id');
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-	text.value = "";
-}
-
-function sendCreateCommentRequest() {
-	let modal = document.querySelector('#add-comment');
-	let text = modal.querySelector('#text');
-
-	let id = modal.getAttribute('data-id');
-	let list = document.querySelector(`#comment-list-${id}`);
-
-	sendAjaxRequest('POST', '/comments/', { id: id, text: text.value },
-		(request) => {
-			if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let comment = createElemFromRequest(request)
-			list.prepend(comment);
-
-			closeCreateCommentModal();
-		});
-}
-
-function sendVoteRequest(id, positive) {
-	let voteStatus = document.querySelector('#vote-status-' + id);
-	sendAjaxRequest('POST', '/posts/' + id, { positive: positive ? "true" : "false" },
-		(request) => { 
-            if (request.readyState != 4) return;
-			if (request.status != 200) return;
-
-			let vote = createElemFromRequest(request);
-			voteStatus.parentElement.replaceChild(vote, voteStatus);	
-    });
 }
 
 function showTagModal() {

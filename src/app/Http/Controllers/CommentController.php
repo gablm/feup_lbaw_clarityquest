@@ -67,7 +67,7 @@ class CommentController extends Controller
 		$this->authorize('update', $comment);
 
 		$request->validate([
-			'text' => 'required|string|max:10000'
+			'text' => 'required|string|max:500'
 		]);
 
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
@@ -103,7 +103,7 @@ class CommentController extends Controller
 			return abort(403);
 
 		$request->validate([
-			'text' => 'required|string|max:1000',
+			'text' => 'required|string|max:500',
 			'id' => 'required|integer|exists:posts,id',
 		]);
 
