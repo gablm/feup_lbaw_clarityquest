@@ -1,4 +1,4 @@
-<div class="container mx-auto p-4">
+<section class="container mx-auto p-4">
     <div class="medals-section">
         @if ($medals)
             <article class="w-full bg-white shadow-md rounded-lg mb-4">
@@ -22,4 +22,4 @@
             <p class="text-gray-700">No medals available.</p>
         @endif
     </div>
-</div>
+</section>

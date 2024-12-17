@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex flex-row flex-grow">
+<article class="flex flex-row flex-grow">
     @include('partials.sidebar')
     <div class="container mx-auto p-6">
         <h2 class="text-2xl font-semibold mb-4">
@@ -61,5 +61,5 @@
             </div>
         </form>
     </div>
-</div>
+</article>
 @endsection
