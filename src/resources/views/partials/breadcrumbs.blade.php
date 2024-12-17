@@ -8,7 +8,7 @@
             @else
                 <li class="breadcrumb-item flex items-center">
                     <a href="{{ $crumb['url'] }}" class="text-blue-600 hover:underline">{{ $crumb['name'] }}</a>
-                    <span class="mx-2">></span>
+                    <span class="mx-2"> > </span>
                 </li>
             @endif
         @endforeach
