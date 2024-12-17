@@ -93,7 +93,7 @@ class AnswerController extends Controller
 			foreach ($question->follows as $follower) {
 				$notification = Notification::create([
 					'receiver' => $follower->id,
-					'description' => "The question titled '{$question->title}' you follow just received a comment by '{$user->username}'.",
+					'description' => "The question titled '{$question->title}' you follow just received a answer by '{$user->username}'.",
 					'type' => 'RESPONSE',
 				]);
 
@@ -184,6 +184,19 @@ class AnswerController extends Controller
 
 			$answer->correct = true;
 			$answer->save();
+
+			if ($answer->post->user_id != null) {
+				$notification = Notification::create([
+					'receiver' => $answer->post->user_id,
+					'description' => "Your answer on question '{$question->title}' has been marked as correct!",
+					'type' => 'RESPONSE',
+				]);
+
+				DB::table('notificationpost')->insert([
+					'notification_id' => $notification->id,
+					'post_id' => $question->id
+				]);
+			}
 		});
 
 		return view('partials.answer-list', [

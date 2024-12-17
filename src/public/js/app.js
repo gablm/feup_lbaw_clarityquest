@@ -871,6 +871,22 @@ function sendEditPostRequest() {
 }
 //#endregion
 
+//#region Edit Tags
+function showTagModal() {
+    let modal = document.querySelector('#tag-modal');
+
+    modal.classList.remove('hidden');
+	modal.classList.add('flex');
+}
+
+function closeTagModal() {
+    let modal = document.querySelector('#tag-modal');
+	
+    modal.classList.add('hidden');
+	modal.classList.remove('flex');
+}
+//#endregion
+
 function sendEditQuestionRequest() {
 	let question = document.querySelector('.question');
 	let id = question.getAttribute('data-id');
@@ -902,20 +918,6 @@ function closeEditQuestionModal() {
 	let modal = question.querySelector('#edit-question');
 
 	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-}
-
-function showTagModal() {
-    let modal = document.querySelector('#tag-modal');
-
-    modal.classList.remove('hidden');
-	modal.classList.add('flex');
-}
-
-function closeTagModal() {
-    let modal = document.querySelector('#tag-modal');
-	
-    modal.classList.add('hidden');
 	modal.classList.remove('flex');
 }
 
