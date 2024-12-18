@@ -16,7 +16,7 @@
 		</p>
 	@endif
 
-	<fieldset class="mb-4">
+	<fieldset>
 		<legend class="text-2xl font-semibold mb-4">Login</legend>
 
 		<div class="mb-4">

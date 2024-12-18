@@ -4,7 +4,7 @@
 <form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
 
-    <fieldset class="mb-4">
+    <fieldset>
         <legend class="text-2xl font-semibold mb-4">Register</legend>
 
         <div class="mb-4">
@@ -36,11 +36,7 @@
                 </span>
             @endif
         </div>
-    </fieldset>
-
-    <fieldset class="mb-4">
-        <legend class="text-lg font-semibold mb-4">Password</legend>
-
+   
         <div class="mb-4">
             <label class="auth" for="password">Password</label>
             <input class="auth focus:outline-none focus:shadow-outline" id="password" type="password" name="password" required placeholder="Enter your password">
