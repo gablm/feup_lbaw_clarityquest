@@ -591,23 +591,17 @@ function showReportPostModal(type, id, content) {
 }
 
 function closeReportPostModal() {
-	let modal = document.querySelector('#report-post');
-	let title = modal.querySelector('#report-edit-title');
-	let reason = modal.querySelector('#report-reason');
-	let text = modal.querySelector('#report-text');
-	let error = modal.querySelector("#report-error");
 
-	modal.removeAttribute('data-id');
-
-	reason.value = "";
-	text.value = "";
+		let modal = document.querySelector('#report-post');
+		let text = modal.querySelector('#text');
+		let error = modal.querySelector('.err');
 	
-	title.textContent = "Report ??";
-	error.classList.add('hidden');
-
-	modal.classList.add('hidden');
-	modal.classList.remove('flex');
-}
+		modal.removeAttribute('data-id');
+		modal.classList.add('hidden');
+		modal.classList.remove('flex');
+		error.classList.add('hidden');
+		text.value = "";
+	}
 
 function sendReportPostRequest() {
 	let modal = document.querySelector('#report-post');
