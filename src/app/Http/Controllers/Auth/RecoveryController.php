@@ -71,6 +71,13 @@ class RecoveryController extends Controller
 				'token' => $request->token
 			])->first();
 		
+		if ($reset == null)
+		{
+			return redirect('/login')->withErrors([
+				'recover' => 'Invalid recovery token.'
+			]);
+		}
+		
 		$creation = strtotime($reset->created_at);
 		$now = time();
 		if (($now - $creation) / 60 > 15)
