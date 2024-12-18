@@ -61,7 +61,7 @@
 		<form method="POST" action="{{ url('/users/' . $user->id) }}" enctype="multipart/form-data">
 			@csrf
 			@method('PATCH')
-
+	
 			@if ($errors->any() && !$errors->has('connection'))
 				<div class="mb-4">
 					<ul class="list-disc list-inside text-red-500">
@@ -71,63 +71,75 @@
 					</ul>
 				</div>
 			@endif
-
-			<div class="mb-4">
-				<label for="name" class="block text-gray-700">Name*</label>
-				<input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
-					placeholder="Enter your name" class="w-full px-3 py-2 border rounded-md">
-			</div>
-
-			<div class="mb-4">
-				<label for="email" class="block text-gray-700">Email*</label>
-				<input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
-					placeholder="Enter your email" class="w-full px-3 py-2 border rounded-md">
-			</div>
-
-			<div class="mb-4">
-				<label for="profile_pic" class="block text-gray-700">Profile Picture </label>
-				<input type="file" name="profile_pic" id="profile_pic" accept="image/jpeg,image/png,image/jpg,image/gif"
-					class="w-full px-3 py-2 border rounded-md">
-				@if ($user->profile_pic)
-					<div class="mt-2">
-						<input type="checkbox" name="remove_profile_pic" id="remove_profile_pic" value="1">
-						<label for="remove_profile_pic" class="text-gray-700">Remove current profile picture</label>
-					</div>
-				@endif
-			</div>
-
-			<div class="mb-4">
-				<label for="bio" class="block text-gray-700">Bio</label>
-				<textarea onkeyup="charCounter(this, this, 1000)" onkeydown="charCounter(this, this, 1000)" name="bio"
-					id="bio" placeholder="Tell others about yourself"
-					class="w-full px-3 py-2 border rounded-md">{{ old('bio', $user->bio) }}</textarea>
-				<span class="counter mt-2">{{ strlen(old('bio', $user->bio)) }}/1000 characters</span>
-			</div>
-
-			<div class="mb-4">
-				<label for="password" class="block text-gray-700">New Password</label>
-				<input type="password" name="password" id="password" placeholder="Enter a new password"
-					class="w-full px-3 py-2 border rounded-md">
-			</div>
-
-			<div class="mb-4">
-				<label for="password_confirmation" class="block text-gray-700">Confirm New Password</label>
-				<input type="password" name="password_confirmation" id="password_confirmation"
-					placeholder="Confirm your new password" class="w-full px-3 py-2 border rounded-md">
-			</div>
-
-			@if (Auth::user()->isAdmin() && $user->id != Auth::user()->id)
+	
+			<fieldset class="mb-4">
+				<legend class="text-2xl font-semibold mb-4">Personal Information</legend>
+	
 				<div class="mb-4">
-					<label class="auth" for="role">Role</label>
-					<select name="role" id="role" class="auth focus:outline-none focus:shadow-outline">
-						@foreach (\App\Enum\User\Permission::cases() as $role)
-							<option value="{{ $role->value }}" @if ($role == $user->role) selected @endif>{{ $role->name }}
-							</option>
-						@endforeach
-					</select>
+					<label for="name" class="block text-gray-700">Name*</label>
+					<input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
+						placeholder="Enter your name" class="w-full px-3 py-2 border rounded-md">
 				</div>
+	
+				<div class="mb-4">
+					<label for="email" class="block text-gray-700">Email*</label>
+					<input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+						placeholder="Enter your email" class="w-full px-3 py-2 border rounded-md">
+				</div>
+	
+				<div class="mb-4">
+					<label for="profile_pic" class="block text-gray-700">Profile Picture </label>
+					<input type="file" name="profile_pic" id="profile_pic" accept="image/jpeg,image/png,image/jpg,image/gif"
+						class="w-full px-3 py-2 border rounded-md">
+					@if ($user->profile_pic)
+						<div class="mt-2">
+							<input type="checkbox" name="remove_profile_pic" id="remove_profile_pic" value="1">
+							<label for="remove_profile_pic" class="text-gray-700">Remove current profile picture</label>
+						</div>
+					@endif
+				</div>
+	
+				<div class="mb-4">
+					<label for="bio" class="block text-gray-700">Bio</label>
+					<textarea onkeyup="charCounter(this, this, 1000)" onkeydown="charCounter(this, this, 1000)" name="bio"
+						id="bio" placeholder="Tell others about yourself"
+						class="w-full px-3 py-2 border rounded-md">{{ old('bio', $user->bio) }}</textarea>
+					<span class="counter mt-2">{{ strlen(old('bio', $user->bio)) }}/1000 characters</span>
+				</div>
+			</fieldset>
+	
+			<fieldset class="mb-4">
+				<legend class="text-2xl font-semibold mb-4">Password Information</legend>
+	
+				<div class="mb-4">
+					<label for="password" class="block text-gray-700">New Password</label>
+					<input type="password" name="password" id="password" placeholder="Enter a new password"
+						class="w-full px-3 py-2 border rounded-md">
+				</div>
+	
+				<div class="mb-4">
+					<label for="password_confirmation" class="block text-gray-700">Confirm New Password</label>
+					<input type="password" name="password_confirmation" id="password_confirmation"
+						placeholder="Confirm your new password" class="w-full px-3 py-2 border rounded-md">
+				</div>
+			</fieldset>
+	
+			@if (Auth::user()->isAdmin() && $user->id != Auth::user()->id)
+				<fieldset class="mb-4">
+					<legend class="text-2xl font-semibold mb-4">Role Information</legend>
+	
+					<div class="mb-4">
+						<label class="auth" for="role">Role</label>
+						<select name="role" id="role" class="auth focus:outline-none focus:shadow-outline">
+							@foreach (\App\Enum\User\Permission::cases() as $role)
+								<option value="{{ $role->value }}" @if ($role == $user->role) selected @endif>{{ $role->name }}
+								</option>
+							@endforeach
+						</select>
+					</div>
+				</fieldset>
 			@endif
-
+	
 			<div class="flex justify-end">
 				<button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Update
 					Profile</button>

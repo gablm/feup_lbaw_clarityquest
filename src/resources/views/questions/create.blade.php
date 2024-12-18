@@ -1,23 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<article class="flex flex-row flex-grow">
-    @include('partials.sidebar')
-    <div class="container mx-auto p-6">
-        <h2 class="text-2xl font-semibold mb-4">
-            Create Question
-            @include('partials.tip', ['tip' => "Through this form you can upload a question and add a tag to it."])
-        </h2>
-        <form method="POST" action="{{ route('questions-create') }}">
-            {{ csrf_field() }}
+<div class="container mx-auto p-4">
+    <h1 class="text-4xl font-bold mb-8 text-center">Create a New Question</h1>
+
+    <form method="POST" action="{{ route('questions-create') }}">
+        {{ csrf_field() }}
+
+        <fieldset class="mb-4">
+            <legend class="text-2xl font-semibold mb-4">Question Details</legend>
 
             <div class="flex flex-col mb-4">
                 <label class="auth" for="title">Title*</label>
                 <input onkeyup="charCounter(this, this, 250)" onkeydown="charCounter(this, this, 250)"
-					class="auth focus:outline-none focus:shadow-outline" id="title" type="text"
-					name="title" value="{{ old('title') }}" maxlength="259" required
-					placeholder="Enter the title">
-				<span class="counter mt-2">{{ strlen(old('title')) }}/250 characters</span>
+                    class="auth focus:outline-none focus:shadow-outline" id="title" type="text"
+                    name="title" value="{{ old('title') }}" maxlength="250" required
+                    placeholder="Enter the title">
+                <span class="counter mt-2">{{ strlen(old('title')) }}/250 characters</span>
                 @if ($errors->has('title'))
                 <span class="auth-error bold">
                     {{ $errors->first('title') }}
@@ -28,11 +27,11 @@
             <div class="mb-4">
                 <label class="auth" for="description">Description*</label>
                 <textarea onkeyup="charCounter(this, this, 3000)" onkeydown="charCounter(this, this, 3000)"
-					class="auth focus:outline-none focus:shadow-outline resize-none"
-					cols="50" rows="10" id="description" type="textarea" name="description"
-					required placeholder="Enter the description" maxlength="3000">{{ old('description') }}</textarea>
-                <span class="counter mt-2">{{ strlen( old('description')) }}/3000 characters</span>
-				@if ($errors->has('description'))
+                    class="auth focus:outline-none focus:shadow-outline resize-none"
+                    cols="50" rows="10" id="description" type="textarea" name="description"
+                    required placeholder="Enter the description" maxlength="3000">{{ old('description') }}</textarea>
+                <span class="counter mt-2">{{ strlen(old('description')) }}/3000 characters</span>
+                @if ($errors->has('description'))
                 <span class="auth-error bold">
                     {{ $errors->first('description') }}
                 </span>
@@ -53,13 +52,13 @@
                 </span>
                 @endif
             </div>
+        </fieldset>
 
-            <div class="flex items-center justify-between">
-                <button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
-                    Create
-                </button>
-            </div>
-        </form>
-    </div>
-</article>
+        <div class="flex items-center justify-between">
+            <button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
+                Create
+            </button>
+        </div>
+    </form>
+</div>
 @endsection

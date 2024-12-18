@@ -15,11 +15,14 @@ $notifications = $user ? $user->notifications()->orderBy('sent_at', 'desc')->tak
 			<img src="{{ url('img/logo.png') }}" alt="Logo" class="h-20 w-auto">
 		</a>
 		<form class="flex items-center w-[30vw] space-x-1" action="{{ route('search') }}" method="GET">
-			<input type="search" name='search' placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}">
-			<button type="submit" class="nav-search" title="Search">
-				<i class="fa-solid fa-magnifying-glass"></i>
-			</button>
-		</form>
+            <fieldset class="flex items-center w-full">
+                <legend class="sr-only">Search</legend>
+                <input type="search" name="search" placeholder="Search" aria-label="Search" class="nav" value="{{ request('search') }}">
+                <button type="submit" class="nav-search" title="Search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </fieldset>
+        </form>
 		<ul class="flex items-center space-x-3">
 			<li>
 				<a href="{{ url('/') }}">

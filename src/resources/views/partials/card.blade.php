@@ -7,6 +7,9 @@
         @each('partials.item', $card->items()->orderBy('id')->get(), 'item')
     </ul>
     <form class="new_item">
-        <input type="text" name="description" placeholder="new item">
+        <fieldset>
+            <legend class="sr-only">New Item</legend>
+            <input type="text" name="description" placeholder="new item" class="border rounded px-2 py-1">
+        </fieldset>
     </form>
 </article>
