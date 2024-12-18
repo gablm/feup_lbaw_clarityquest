@@ -39,8 +39,8 @@
 	</div>
 
 	<div class="mb-6">
-		<label>
-			<input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+		<label for="remember">
+			<input id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
 		</label>
 	</div>
 

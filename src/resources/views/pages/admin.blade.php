@@ -59,35 +59,35 @@
 						<div class="modal-content py-4 text-left px-6">
 							<p class="text-2xl font-bold mb-4">Create User</p>
 							<div class="flex flex-col mb-4">
-								<label class="auth" for="name">Name</label>
+								<label class="auth" for="user-name">Name</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-name" type="text"
 									name="name">
 								<span id="err-uc-name" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
-								<label class="auth" for="username">Handle</label>
+								<label class="auth" for="user-username">Handle</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-username" type="text"
 									name="username">
 								<span id="err-uc-username" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
-								<label class="auth" for="email">E-Mail Address</label>
+								<label class="auth" for="user-email">E-Mail Address</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-email" type="email"
 									name="email">
 								<span id="err-uc-email" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
-								<label class="auth" for="password">Password</label>
+								<label class="auth" for="user-password">Password</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-password"
 									type="password" name="password">
 								<span id="err-uc-password" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="mb-4">
-								<label class="auth" for="role">Role</label>
+								<label class="auth" for="user-role">Role</label>
 								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
 									@foreach (\App\Enum\User\Permission::cases() as $role)
 										<option value="{{ $role->value }}" @if($role->value == 'REGULAR') selected @endif>
@@ -130,7 +130,7 @@
 							<div class="flex flex-col mb-4">
 								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
 									class="auth focus:outline-none focus:shadow-outline" type="text"
-									id="tag-name" name="name" maxlength="24" required>
+									id="tag-name" placeholder="Tag Name" aria-label="Tag Name" name="name" maxlength="24" required>
 								<span class="counter my-2">0/24 characters</span>
 								<span class="err hidden auth-error bold mt-1"></span>
 							</div>

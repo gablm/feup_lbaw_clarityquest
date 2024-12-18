@@ -55,7 +55,7 @@
             </div>
 
             <div class="flex items-center justify-between">
-                <button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
+                <button aria-label="Create Question" class="auth-main focus:outline-none focus:shadow-outline" type="submit">
                     Create
                 </button>
             </div>

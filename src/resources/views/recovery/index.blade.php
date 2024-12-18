@@ -22,7 +22,7 @@
 	</div>
 
 	<div class="flex items-center space-x-4">
-        <button class="auth-main focus:outline-none focus:shadow-outline" type="submit">
+        <button aria-label="Send Recovery Email" class="auth-main focus:outline-none focus:shadow-outline" type="submit">
             Send Recovery Email
         </button>
         <a class="auth-link" href="{{ route('login') }}">

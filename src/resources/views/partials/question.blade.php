@@ -80,8 +80,8 @@
 								<span>{{ $tag->name }}</span>
 								<form method="POST" action="{{ url('/questions/' . $question->id . '/tags/remove') }}">
 									@csrf
-									<input type="hidden" name="tag" value="{{ $tag->name }}">
-									<button type="submit" class="text-red-500 hover:text-red-700">Remove</button>
+									<input aria-label="Tag to remove" type="hidden" name="tag" value="{{ $tag->name }}">
+									<button aria-label="Remove tag" type="submit" class="text-red-500 hover:text-red-700">Remove</button>
 								</form>
 							</li>
 						@endforeach

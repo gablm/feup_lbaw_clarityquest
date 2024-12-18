@@ -14,12 +14,12 @@
 
             <div class="flex space-x-2">
                 <form method="GET" action="{{ route('search') }}" class="flex space-x-2">
-                    <input type="hidden" name="search" value="{{ $query }}">
+                    <input type="hidden" aria-label="Search" name="search" value="{{ $query }}">
 
                     <!-- Filter Dropdown -->
                     <div class="flex flex-col">
-                        <label class="font-bold text-gray-700 mb-1">Filter by</label>
-                        <select name="filter" class="border rounded px-2 py-1">
+                        <label for="filter" class="font-bold text-gray-700 mb-1">Filter by</label>
+                        <select name="filter" id="filter" class="border rounded px-2 py-1">
                             <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All</option>
                             <option value="questions" {{ request('filter') === 'questions' ? 'selected' : '' }}>Questions</option>
                             <option value="users" {{ request('filter') === 'users' ? 'selected' : '' }}>Users</option>
@@ -29,8 +29,8 @@
 
                     <!-- Sort Dropdown -->
                     <div class="flex flex-col">
-                        <label class="font-bold text-gray-700 mb-1">Sort by</label>
-                        <select name="sort" class="border rounded px-2 py-1">
+                        <label for="sort" class="font-bold text-gray-700 mb-1">Sort by</label>
+                        <select id="sort" name="sort" class="border rounded px-2 py-1">
                             <option value="none" {{ request('sort') === 'none' ? 'selected' : '' }}>None</option>
                             <option value="newest" {{ request('sort') === 'newest' ? 'selected' : '' }}>Newest</option>
                             <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="flex items-end">
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded">Apply</button>
+                        <button type="submit" aria-label="Filter and Sort Search results" class="bg-blue-500 text-white px-4 py-1 rounded">Apply</button>
                     </div>
                 </form>
             </div>
