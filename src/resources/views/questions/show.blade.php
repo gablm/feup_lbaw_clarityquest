@@ -9,10 +9,10 @@
 	$comment_count = $question->comments->count();
 @endphp
 @php
-    $crumbs = [
-        ['name' => 'Home', 'url' => route('home')],
-        ['name' => "Question #$question->id", 'url' => route('profile')]
-    ];
+	$crumbs = [
+		['name' => 'Home', 'url' => route('home')],
+		['name' => "Question #$question->id", 'url' => route('profile')]
+	];
 @endphp
 <div class="flex flex-row flex-grow">
 	@include('partials.sidebar')
@@ -49,11 +49,10 @@
 				<div class="modal-content py-4 text-left px-6">
 					<p class="text-2xl font-bold mb-4">Add Comment</p>
 					<div class="flex flex-col mb-4">
-						<textarea onkeyup="charCounter(this, this, 500)"
-							onkeydown="charCounter(this, this, 500)"
-							class="auth focus:outline-none focus:shadow-outline resize-none"
-							rows="3" id="text" maxlength="500" type="textarea" name="text"
-							required placeholder="Enter your comment here..."></textarea>
+						<textarea onkeyup="charCounter(this, this, 500)" onkeydown="charCounter(this, this, 500)"
+							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
+							maxlength="500" type="textarea" name="text" required
+							placeholder="Enter your comment here..."></textarea>
 						<span class="counter my-1">0/500 characters</span>
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
@@ -70,10 +69,10 @@
 				<div class="modal-content py-4 text-left px-6">
 					<p id="edit-title" class="text-2xl font-bold mb-4">Edit ??</p>
 					<div class="flex flex-col mb-4">
-						<textarea onkeyup="charCounter(this, this, 500)"
-							onkeydown="charCounter(this, this, 500)"
+						<textarea onkeyup="charCounter(this, this, 500)" onkeydown="charCounter(this, this, 500)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="edit-text"
-							type="textarea" name="text" maxlength="500" required placeholder="Edit your content here..."></textarea>
+							type="textarea" name="text" maxlength="500" required
+							placeholder="Edit your content here..."></textarea>
 						<span class="counter my-1">0/500 characters</span>
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
