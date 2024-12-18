@@ -17,7 +17,7 @@
 	@endif
 
 	<fieldset class="mb-4">
-		<legend class="text-2xl font-semibold mb-4">Login Information</legend>
+		<legend class="text-2xl font-semibold mb-4">Login</legend>
 
 		<div class="mb-4">
 			<label class="auth" for="email">E-mail</label>
