@@ -11,7 +11,7 @@
 	@endif
 
 	<fieldset>
-		<legend class="text-2xl font-semibold mb-4">Recovery Information</legend>
+		<legend class="text-2xl font-semibold mb-4">Recovery</legend>
 
 		<div class="mb-4">
 			<label class="auth" for="email">E-mail</label>

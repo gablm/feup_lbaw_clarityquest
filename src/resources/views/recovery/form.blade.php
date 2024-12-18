@@ -7,7 +7,7 @@
     <input class="hidden" name="token" value="{{ $token }}">
 
     <fieldset>
-        <legend class="text-2xl font-semibold mb-4">Password Reset</legend>
+        <legend class="text-2xl font-semibold mb-4">Recovery - Reset Password</legend>
 
         <div class="mb-4">
             <label class="auth" for="password">New Password</label>
