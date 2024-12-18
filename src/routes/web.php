@@ -52,7 +52,7 @@ Route::controller(CommentController::class)->group(function () {
 // Tags
 Route::controller(TagController::class)->group(function () {
 	Route::get('/followed-tags', 'followedTags')->name('followed-tags')->middleware('auth');
-	Route::get('/tags/{id}', 'show')->middleware('auth');
+	Route::get('/tags/{id}', 'show');
 
 	Route::post('/tags', 'create')->middleware('auth');
 	Route::delete('/tags/{id}', 'delete')->middleware('auth');
