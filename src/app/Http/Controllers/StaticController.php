@@ -48,6 +48,9 @@ class StaticController extends Controller
 
 	public function search(Request $request)
 	{
+		if (Auth::check() && Auth::user()->isBlocked())
+			return abort(403);
+
 		$query = $request->input('search');
 		$filter = $request->input('filter', 'all'); 
 		$sort = $request->input('sort', 'none'); 

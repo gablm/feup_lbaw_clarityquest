@@ -22,7 +22,7 @@ $profile_pic = $user->profile_pic ? asset($user->profile_pic) : url('img/default
 				</div>
 			</a>
 			@if ($panel && Auth::user()->id != $user->id)
-			<div>
+			<div class="flex flex-row">
 				<button onclick="blockUser({{ $user->id }})" class="tool-link">
 					@if ($user->isBlocked())
 					<i class="fa-solid fa-unlock"></i>

@@ -592,15 +592,15 @@ function showReportPostModal(type, id, content) {
 
 function closeReportPostModal() {
 	let modal = document.querySelector('#report-post');
-	let text = modal.querySelector('#report-text');
-	
 	let title = modal.querySelector('#report-edit-title');
+	let reason = modal.querySelector('#report-reason');
+	let text = modal.querySelector('#report-text');
 	let error = modal.querySelector("#report-error");
 
 	modal.removeAttribute('data-id');
 
-	text.value = "";
 	reason.value = "";
+	text.value = "";
 	
 	title.textContent = "Report ??";
 	error.classList.add('hidden');
@@ -771,7 +771,7 @@ function showEditPostModal(type, id, content) {
 	modal.setAttribute('data-id', id);
 	modal.setAttribute('data-type', type);
 
-	let text = modal.querySelector('#text');
+	let text = modal.querySelector('#edit-text');
 	text.value = content;
 	charCounter(modal.firstChild, text, 250);
 
@@ -797,7 +797,7 @@ function closeEditPostModal() {
 	modal.removeAttribute('data-id');
 	modal.removeAttribute('data-type');
 
-	let text = modal.querySelector('#text');
+	let text = modal.querySelector('#edit-text');
 	text.value = "";
 
 	let title = modal.querySelector('#edit-title');
@@ -813,7 +813,7 @@ function closeEditPostModal() {
 function sendEditPostRequest() {
 	let modal = document.querySelector('#edit-post');
 	let error = modal.querySelector('.err');
-	let text = modal.querySelector('#text');
+	let text = modal.querySelector('#edit-text');
 
 	let id = modal.getAttribute('data-id');
 	let type = modal.getAttribute('data-type');

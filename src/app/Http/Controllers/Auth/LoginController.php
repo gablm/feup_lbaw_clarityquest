@@ -37,9 +37,19 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
  
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
+        if (Auth::attempt($credentials, $request->filled('remember')))
+		{
+			if (Auth::user()->isBlocked())
+			{
+				Auth::logout();
+        		$request->session()->invalidate();
+        		$request->session()->regenerateToken();
+				return back()->withErrors([
+					'email' => 'The provided account is blocked.',
+				])->onlyInput('email');
+			}
  
+			$request->session()->regenerate();
             return redirect()->intended('/');
         }
  

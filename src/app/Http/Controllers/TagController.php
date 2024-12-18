@@ -14,6 +14,9 @@ class TagController extends Controller
      */
     public function followedTags()
     {
+		if (Auth::user()->isBlocked())
+			return abort(403);
+
         $user = Auth::user();
         $followedTags = $user->followedTags()->with(['posts.user', 'posts.comments'])->get();
 
@@ -25,6 +28,9 @@ class TagController extends Controller
      */
     public function show(string $id)
     {
+		if (Auth::check() && Auth::user()->isBlocked())
+			return abort(403);
+
         $tag = Tag::findOrFail($id);
 
 		return view('tags.show', [

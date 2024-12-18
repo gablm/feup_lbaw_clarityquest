@@ -61,34 +61,38 @@
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-name">Name</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-name" type="text"
-									name="name">
+									name="name" placeholder="John Doe">
 								<span id="err-uc-name" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-username">Handle</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-username" type="text"
-									name="username">
+									name="username" placeholder="@JohnDoe">
 								<span id="err-uc-username" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-email">E-Mail Address</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-email" type="email"
-									name="email">
+									name="email" placeholder="john.doe@example.com">
 								<span id="err-uc-email" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-password">Password</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-password"
-									type="password" name="password">
+									type="password" name="password" title="User Password">
 								<span id="err-uc-password" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="mb-4">
 								<label class="auth" for="user-role">Role</label>
+<<<<<<< HEAD
 								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
+=======
+								<select title="role" name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
+>>>>>>> 238b011230cc144c5111f1b0548088810c47264e
 									@foreach (\App\Enum\User\Permission::cases() as $role)
 										<option value="{{ $role->value }}" @if($role->value == 'REGULAR') selected @endif>
 											{{ $role->name }}
@@ -149,7 +153,7 @@
 							<div class="flex flex-col mb-4">
 								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
 									class="auth focus:outline-none focus:shadow-outline resize-none" id="tag-text"
-									type="textarea" name="text" maxlength="24" required>
+									type="textarea" name="text" title="Tag Name" maxlength="24" required>
 								<span class="counter my-2">0/24 characters</span>
 								<span class="err hidden auth-error bold mt-1"></span>
 							</div>

@@ -30,7 +30,7 @@ class RecoveryController extends Controller
 
 		$token = Str::random(128);
 
-		DB::table('password_resets')->insert([
+		DB::table('passwordresets')->insert([
 			'email' => $request->email, 
 			'token' => $token
 		]);
@@ -66,10 +66,17 @@ class RecoveryController extends Controller
 
 	function showResetPasswordForm(Request $request, string $token)
 	{
-		$reset = DB::table('password_resets')
+		$reset = DB::table('passwordresets')
 			->where([
 				'token' => $request->token
 			])->first();
+		
+		if ($reset == null)
+		{
+			return redirect('/login')->withErrors([
+				'recover' => 'Invalid recovery token.'
+			]);
+		}
 		
 		$creation = strtotime($reset->created_at);
 		$now = time();
@@ -90,7 +97,7 @@ class RecoveryController extends Controller
 			'password' => 'required|min:8|confirmed',
 		]);
 
-		$reset = DB::table('PasswordResets')
+		$reset = DB::table('passwordresets')
 			->where([
 				'token' => $request->token
 			])->first();
@@ -112,7 +119,7 @@ class RecoveryController extends Controller
 				'password' => Hash::make($request->password)
 			]);
 
-		DB::table('PasswordResets')
+		DB::table('passwordresets')
 			->where([
 				'email' => $request->token
 			])->delete();

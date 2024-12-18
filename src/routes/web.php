@@ -52,7 +52,7 @@ Route::controller(CommentController::class)->group(function () {
 // Tags
 Route::controller(TagController::class)->group(function () {
 	Route::get('/followed-tags', 'followedTags')->name('followed-tags')->middleware('auth');
-	Route::get('/tags/{id}', 'show')->middleware('auth');
+	Route::get('/tags/{id}', 'show');
 
 	Route::post('/tags', 'create')->middleware('auth');
 	Route::delete('/tags/{id}', 'delete')->middleware('auth');
@@ -102,7 +102,7 @@ Route::controller(UserController::class)->group(function () {
 	Route::post('/users', 'create')->middleware('auth');
 	Route::get('/users/{id}', 'showPublicProfile')->name('public.profile');
 	Route::patch('/users/{id}', 'update')->middleware('auth');
-	Route::get('/users/{id}/edit', 'editOther')->middleware('auth');
+	Route::get('/users/{id}/edit', 'editOther')->middleware('auth')->name('users.edit');
 	Route::delete('/users/{id}', 'delete')->middleware('auth');
 	
 	Route::patch('/users/{id}/block', 'block')->middleware('auth');

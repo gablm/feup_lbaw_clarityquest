@@ -8,10 +8,16 @@
 	$answers_count = $question->answers->count();
 	$comment_count = $question->comments->count();
 @endphp
-
+@php
+    $crumbs = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => "Question #$question->id", 'url' => route('profile')]
+    ];
+@endphp
 <div class="flex flex-row flex-grow">
 	@include('partials.sidebar')
 	<div data-id="{{ $question->id }}" class="flex flex-col container mx-auto p-8">
+		{!! breadcrumbs($crumbs) !!}
 		@include('partials.question', $question)
 
 		<div id="comment-list-{{ $question->id }}" class="pt-2 pl-4">
@@ -66,7 +72,7 @@
 					<div class="flex flex-col mb-4">
 						<textarea onkeyup="charCounter(this, this, 500)"
 							onkeydown="charCounter(this, this, 500)"
-							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
+							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="edit-text"
 							type="textarea" name="text" maxlength="500" required placeholder="Edit your content here..."></textarea>
 						<span class="counter my-1">0/500 characters</span>
 						<span class="err hidden auth-error bold mt-1"></span>
@@ -87,7 +93,7 @@
 						<p id="report-text">????</p>
 					</div>
 					<div class="flex flex-col mb-4">
-						<label class="auth" for="report-reason">Reason</label>
+						<label class="auth" for="report-reason">Reason*</label>
 						<textarea onkeyup="charCounter(this, this, 100)" onkeydown="charCounter(this, this, 100)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="report-reason"
 							maxlength="100" type="textarea" name="report-reason" required

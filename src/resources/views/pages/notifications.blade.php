@@ -12,7 +12,10 @@
 
 	<div class="container mx-auto p-4">
 		{!! breadcrumbs($crumbs) !!}
-		<h2 class="text-2xl font-semibold mb-4">Notifications</h2>
+		<h2 class="text-2xl font-semibold mb-4">
+			Notifications
+			@include('partials.tip', ['tip' => "Here you can see your notifications. To delete a notification, click on the cross icon."])
+		</h2>
 		@forelse ($notifications as $notification)
 		@include('partials.notification-card', ['notification' => $notification])
 		@empty

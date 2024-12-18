@@ -5,9 +5,9 @@
 	{{ csrf_field() }}
 
 	@if ($errors->has('recover'))
-			<span class="auth-error bold">
-				{{ $errors->first('recover') }}
-			</span>
+		<span class="auth-error bold">
+			{{ $errors->first('recover') }}
+		</span>
 	@endif
 
 	@if (session('success'))
@@ -16,33 +16,38 @@
 		</p>
 	@endif
 
-	<div class="mb-4">
-		<label class="auth" for="email">E-mail</label>
-		<input class="auth focus:outline-none focus:shadow-outline" id="email" type="email" name="email"
-			value="{{ old('email') }}" required placeholder="Enter your email">
-		@if ($errors->has('email'))
-			<span class="auth-error bold">
-				{{ $errors->first('email') }}
-			</span>
-		@endif
-	</div>
+	<fieldset>
+		<legend class="text-2xl font-semibold mb-4">Login</legend>
 
-	<div class="mb-4">
-		<label class="auth" for="password">Password</label>
-		<input class="auth focus:outline-none focus:shadow-outline" id="password" type="password" name="password"
-			required placeholder="Enter your password">
-		@if ($errors->has('password'))
-			<span class="auth-error bold">
-				{{ $errors->first('password') }}
-			</span>
-		@endif
-	</div>
+		<div class="mb-4">
+			<label class="auth" for="email">E-mail</label>
+			<input class="auth focus:outline-none focus:shadow-outline" id="email" type="email" name="email"
+				value="{{ old('email') }}" required autocomplete="true" placeholder="Enter your email">
+			@if ($errors->has('email'))
+				<span class="auth-error bold">
+					{{ $errors->first('email') }}
+				</span>
+			@endif
+		</div>
 
-	<div class="mb-6">
+	
+		<div class="mb-4">
+			<label class="auth" for="password">Password</label>
+			<input class="auth focus:outline-none focus:shadow-outline" id="password" type="password" name="password"
+				required placeholder="Enter your password">
+			@if ($errors->has('password'))
+				<span class="auth-error bold">
+					{{ $errors->first('password') }}
+				</span>
+			@endif
+		</div>
+
+		<div class="mb-6">
 		<label for="remember">
 			<input id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
 		</label>
 	</div>
+	</fieldset>
 
 	<div class="flex items-center justify-between">
 		<div class="flex space-x-4 items-center">
