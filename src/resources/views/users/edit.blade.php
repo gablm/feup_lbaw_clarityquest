@@ -73,7 +73,7 @@
 			@endif
 	
 			<fieldset class="mb-4">
-				<legend class="text-lg font-semibold mb-4">About you</legend>
+				<legend class="text-2xl font-semibold mb-4">Personal Information</legend>
 	
 				<div class="mb-4">
 					<label for="name" class="block text-gray-700">Name*</label>
@@ -109,7 +109,7 @@
 			</fieldset>
 	
 			<fieldset class="mb-4">
-				<legend class="text-lg font-semibold mb-4">Password</legend>
+				<legend class="text-2xl font-semibold mb-4">Password Information</legend>
 	
 				<div class="mb-4">
 					<label for="password" class="block text-gray-700">New Password</label>
