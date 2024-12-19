@@ -34,11 +34,7 @@
 	<main class="grid h-screen place-items-center">
 		<div class="flex flex-col items-center">
 			<a href="{{ url('/') }}">
-<<<<<<< HEAD
 				<img alt="Clarity Quest logo" class="h-32" src={{ url('img/logo.png') }}>
-=======
-				<img class="h-32" src={{ url('img/logo.png') }} alt="logo">
->>>>>>> 238b011230cc144c5111f1b0548088810c47264e
 			</a>
 			<section id="content" class="min-w-[40vw] lg:min-w-[25vw] mt-4 p-[1em] shadow-lg border border-gray-200 rounded">
 				@yield('content')
