@@ -4,6 +4,10 @@
 $questions = $tag->questions;
 @endphp
 
+@section('title')
+    #{{$tag->name}}
+@endsection
+
 @section('content')
 <div class="flex flex-row flex-grow">
     @include('partials.sidebar')

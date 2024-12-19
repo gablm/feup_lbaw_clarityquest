@@ -7,6 +7,10 @@
     ];
 @endphp
 
+@section('title')
+    {{$query}} - Search
+@endsection
+
 @section('content')
 <div class="flex flex-row flex-grow">
     <!-- Sidebar -->

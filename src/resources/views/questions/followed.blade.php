@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Followed Questions
+@endsection
+
 @section('content')
 @php
     $crumbs = [

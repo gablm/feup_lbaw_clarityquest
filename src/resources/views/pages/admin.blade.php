@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Admin Panel
+@endsection
+
 @section('content')
 <div class="container mx-auto p-6" onload="showAdminTab('tags')">
 	<div class="p-4 pt-4">
@@ -88,11 +92,7 @@
 
 							<div class="mb-4">
 								<label class="auth" for="user-role">Role</label>
-<<<<<<< HEAD
 								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
-=======
-								<select title="role" name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
->>>>>>> 238b011230cc144c5111f1b0548088810c47264e
 									@foreach (\App\Enum\User\Permission::cases() as $role)
 										<option value="{{ $role->value }}" @if($role->value == 'REGULAR') selected @endif>
 											{{ $role->name }}

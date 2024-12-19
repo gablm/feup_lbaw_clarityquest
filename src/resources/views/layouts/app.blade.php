@@ -8,7 +8,7 @@
 
 	<!-- CSRF Token -->
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>{{ config('app.name', 'Laravel') }}</title>
+	<title>@yield('title', 'Clarity Quest')</title>
 	<link rel="icon" type="image/x-icon" href={{ url('favicon.ico') }}>
 
 	<meta property="og:title" content="{{ config('app.name', 'Laravel') }}" />

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    User Profile
+@endsection
+
 @php
 	$profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
 @endphp
