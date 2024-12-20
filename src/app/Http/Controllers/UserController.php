@@ -67,7 +67,7 @@ class UserController extends Controller
 			'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 			'bio' => 'nullable|string|max:1000',
 			'password' => 'nullable|string|min:8|confirmed',
-			'role' => 'string|in:REGULAR,ADMIN,MODERATOR'
+			'role' => 'string|in:BLOCKED,REGULAR,ADMIN,MODERATOR'
 		]);
 
 		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');

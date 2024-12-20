@@ -509,6 +509,24 @@ VALUES
     	NULL,
     	'Freelance photographer specializing in landscapes.',
     	'REGULAR'
+	),
+	(
+		'blocked',
+		'blocked@clarityquest.com',
+		'Rufus Blocked',
+		'$2y$10$/2QAbg9J2fAOUuc3xSUYS.ozGgl2NQUj4IzLxyCq48qaJNRmL32ra',
+		NULL,
+		'I tend to say the truth, and some people can''t handle it.',
+		'BLOCKED'
+	),
+	(
+		'user',
+		'user@clarityquest.com',
+		'Gloria User',
+		'$2y$10$nzwtE34LON0vfSFMehBeWOLeNXuS0HDmoEZSWkmIi2SLzVMDUjMai',
+		NULL,
+		'Just your average gal, nothing much to see around.',
+		'REGULAR'
 	);
 
 INSERT INTO "tags" (name) VALUES 
