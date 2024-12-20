@@ -1,5 +1,7 @@
 @extends('layouts.auth')
 
+@section('title', 'Recovery - Reset Password')
+
 @section('content')
 <form method="POST" action="{{ route('recover.action') }}">
     {{ csrf_field() }}

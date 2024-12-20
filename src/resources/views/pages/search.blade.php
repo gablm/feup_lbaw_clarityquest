@@ -7,9 +7,7 @@
     ];
 @endphp
 
-@section('title')
-    {{$query}} - Search
-@endsection
+@section('title', "Search - {$query}")
 
 @section('content')
 <div class="flex flex-row flex-grow">

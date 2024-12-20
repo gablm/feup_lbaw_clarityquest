@@ -4,9 +4,7 @@
 $questions = $tag->questions;
 @endphp
 
-@section('title')
-    #{{$tag->name}}
-@endsection
+@section('title', "Tag - #{$tag->name}")
 
 @section('content')
 <div class="flex flex-row flex-grow">

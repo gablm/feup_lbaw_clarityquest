@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
-@section('title')
-    Admin Panel
-@endsection
+@section('title', 'Admin Panel')
 
 @section('content')
 <div class="container mx-auto p-6" onload="showAdminTab('tags')">

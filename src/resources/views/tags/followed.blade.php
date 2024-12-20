@@ -1,16 +1,15 @@
 @extends('layouts.app')
 
-@section('title')
-    Followed Tags
-@endsection
+@section('title', 'Followed Tags')
 
-@section('content')
 @php
     $crumbs = [
         ['name' => 'Home', 'url' => route('home')],
         ['name' => 'Followed Tags', 'url' => route('followed-tags')],
     ];
 @endphp
+
+@section('content')
 <div class="flex flex-row flex-grow">
 	
 	@include('partials.sidebar')

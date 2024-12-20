@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
-@section('title')
-    About Us
-@endsection
+@section('title', 'About Us')
 
-@section('content')
 @php
     $crumbs = [
         ['name' => 'Home', 'url' => route('home')],
@@ -12,7 +9,7 @@
     ];
 @endphp
 
-
+@section('content')
 <div class="container mx-auto p-4">
     {!! breadcrumbs($crumbs) !!}
     <div class="bg-white shadow-md rounded-lg p-6">

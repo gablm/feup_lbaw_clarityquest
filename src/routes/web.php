@@ -62,8 +62,6 @@ Route::controller(TagController::class)->group(function () {
 
 // Answers
 Route::controller(AnswerController::class)->group(function () {
-	Route::get('/my-answers', 'myAnswers')->name('my-answers')->middleware('auth');
-
 	Route::post('/answers', 'create')->middleware('auth');
 	Route::delete('/answers/{id}', 'delete')->middleware('auth');
 	Route::patch('/answers/{id}', 'update')->middleware('auth');
@@ -74,7 +72,6 @@ Route::controller(AnswerController::class)->group(function () {
 // Questionsss
 Route::controller(QuestionController::class)->group(function () {
 	Route::get('/followed-questions', 'followedQuestions')->name('followed-questions')->middleware('auth');
-	Route::get('/my-questions', 'myQuestions')->name('my-questions')->middleware('auth');
 
     Route::get('/questions/create', 'showCreateForm')->middleware('auth');
 	Route::post('/questions/create', 'create')->name('questions-create')->middleware('auth');

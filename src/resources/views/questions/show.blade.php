@@ -1,19 +1,18 @@
 @extends('layouts.app')
 
-@section('title', $question->title)
-
-@section('content')
+@section('title', "Question - {$question->title}")
 
 @php
 	$answers_count = $question->answers->count();
 	$comment_count = $question->comments->count();
-@endphp
-@php
+
 	$crumbs = [
 		['name' => 'Home', 'url' => route('home')],
 		['name' => "Question #$question->id", 'url' => route('profile')]
 	];
 @endphp
+
+@section('content')
 <div class="flex flex-row flex-grow">
 	@include('partials.sidebar')
 	<div data-id="{{ $question->id }}" class="flex flex-col container mx-auto p-8">

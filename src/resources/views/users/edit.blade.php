@@ -1,15 +1,8 @@
 @extends('layouts.app')
 
-@section('title')
-    User Profile
-@endsection
-
 @php
 	$profile_pic = $user && $user->profile_pic ? asset($user->profile_pic) : url('img/default_pic.png');
-@endphp
 
-@section('content')
-@php
 	$crumbs = [
 		['name' => 'Home', 'url' => route('home')],
 		['name' => 'Profile', 'url' => route('profile')],
@@ -20,7 +13,13 @@
 		['name' => 'Admin', 'url' => route('admin')],
 		['name' => 'Edit Profile', 'url' => route('users.edit', $user->id)]
 	];
+
+	$title = Auth::user()->id == $user->id ? "Edit Profile" : "Edit User - {$user->name}";
 @endphp
+
+@section('title', $title)
+
+@section('content')
 <div class="container mx-auto p-4 flex flex-col {{ Auth::user()->id == $user->id ? 'space-y-6' : 'space-y-0' }}">
 	@if (Auth::user()->id == $user->id)
 		<div>

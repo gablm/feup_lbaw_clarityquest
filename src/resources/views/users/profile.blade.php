@@ -1,16 +1,15 @@
 @extends('layouts.app')
 
-@section('title')
-    User Profile
-@endsection
+@section('title', "Profile - {$user->name}")
 
-@section('content')
 @php
     $crumbs = [
         ['name' => 'Home', 'url' => route('home')],
         ['name' => 'Profile', 'url' => route('profile')]
     ];
 @endphp
+
+@section('content')
 <section class="container mx-auto p-6" onload="showProfileTab('questions')">
 	{!! breadcrumbs($crumbs) !!}
 	<div class="p-8">
@@ -134,4 +133,3 @@
 	</div>
 </section>
 @endsection
-

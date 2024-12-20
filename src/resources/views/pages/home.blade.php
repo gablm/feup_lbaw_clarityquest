@@ -1,16 +1,14 @@
 @extends('layouts.app')
 
-@section('title')
-    Home
-@endsection
+@section('title', 'Home')
 
-@section('content')
 @php
     $crumbs = [
         ['name' => 'Home', 'url' => route('home')]
     ];
 @endphp
-    
+
+@section('content')
 <div class="flex flex-row">
     @include('partials.sidebar')
     
