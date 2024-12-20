@@ -6,7 +6,7 @@
 	<div class="flex flex-col p-4">
 		<div class="flex flex-row justify-between items-center text-gray-500 text-sm mb-1">
 			<span>{{ $notification->sent_at->diffForHumans() }}</span>
-			<button class="tool-link text-red-500" onclick="deleteNotification({{ $notification->id }})"
+			<button class="tool-link text-red-500 print:hidden" onclick="deleteNotification({{ $notification->id }})"
 				title="Delete Notification">
 				<i class="fa-solid fa-xmark"></i>
 			</button>

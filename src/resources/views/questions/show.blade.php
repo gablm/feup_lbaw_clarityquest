@@ -26,7 +26,7 @@
 		</div>
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
-			<form class="flex flex-row space-x-2 mt-2" onsubmit="sendCreateAnswerRequest({{ $question->id }}); return false;">
+			<form class="flex flex-row space-x-2 mt-2 print:hidden" onsubmit="sendCreateAnswerRequest({{ $question->id }}); return false;">
 				<textarea onkeyup="charCounter(this.parentElement, this, 500)"
 					onkeydown="charCounter(this.parentElement, this, 500)"
 					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text" type="textarea"

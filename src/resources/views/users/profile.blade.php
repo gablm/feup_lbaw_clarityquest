@@ -35,7 +35,7 @@
 					@endif
 				</div>
 			</div>
-			<div class="flex flex-col space-y-2 items-end">
+			<div class="flex flex-col space-y-2 items-end print:hidden">
 				@if (Auth::check() && Auth::user()->id == $user->id)
 				<a href="{{ route('profile.edit') }}" class="mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 					Edit Profile
