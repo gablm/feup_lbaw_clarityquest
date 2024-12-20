@@ -707,7 +707,7 @@ function showCreateCommentModal(id) {
 
 	let text = modal.querySelector('#text');
 	text.value = "";
-	charCounter(modal.firstChild, text, 250);
+	charCounter(modal.firstChild, text, 500);
 
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
@@ -773,7 +773,7 @@ function showEditPostModal(type, id, content) {
 
 	let text = modal.querySelector('#edit-text');
 	text.value = content;
-	charCounter(modal.firstChild, text, 250);
+	charCounter(modal.firstChild, text, 500);
 
 	let error = modal.querySelector('.err');
 	error.classList.add('hidden');

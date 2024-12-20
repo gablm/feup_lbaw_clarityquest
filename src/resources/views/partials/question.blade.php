@@ -22,7 +22,7 @@
 				</div>
 			</a>
 		</div>
-		<span>{{ $post->creationFTime() }} {{ $is_edited }}</span>
+		<span>{{ $post->creationFTime() }}<span class="max-md:hidden">{{ $is_edited }}</span></span>
 		<div>
 			@if ($question->tags->count())
 				@foreach($question->tags as $tag)

@@ -49,17 +49,6 @@
 						</button>
 					</fieldset>
 				</form>
-			
-				<form method="POST" action="{{ url('/users/' . Auth::user()->id) }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
-					@csrf
-					@method('DELETE')
-					<fieldset>
-						<legend class="sr-only">Delete Account</legend>
-						<button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
-							Delete Account
-						</button>
-					</fieldset>
-				</form>
 				@elseif (Auth::check() && Auth::user()->isAdmin())
 				<a href="{{ url('/users/' . $user->id . '/edit') }}" class="mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 					Edit Profile

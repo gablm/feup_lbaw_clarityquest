@@ -66,7 +66,7 @@
 	</div>
 </form>
 <h1 class="mt-5 mb-3 font-bold">Login in with external accounts</h1>
-<div class="flex items-center justify-between space-x-2">
+<div class="flex items-center space-x-2">
 	@include('partials.google-btn', ['linked' => 0])
 	@include('partials.x-btn', ['linked' => 0])
 </div>
