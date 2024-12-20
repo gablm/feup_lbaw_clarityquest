@@ -64,7 +64,9 @@
                                 <label for="tag" class="block text-gray-700">Add a Tag from the Tag List</label>
                                 <select name="tag" id="tag" class="w-full px-3 py-2 border rounded-md">
                                     @foreach($tags as $tag)
+										@if ($question->tags->contains($tag) == false)
                                         <option value="{{ $tag->name }}">{{ $tag->name }}</option>
+										@endif
                                     @endforeach
                                 </select>
                             </div>
@@ -113,7 +115,7 @@
 	<div id="edit-question" class="hidden modal modal-style">
 		<div class="modal-overlay modal-bg"></div>
 		<div class="modal-container modal-cont">
-			<div class="modal-content py-4 text-left px-6">
+			<form class="modal-content py-4 text-left px-6" onsubmit="sendEditQuestionRequest(); return false;">
 				<p class="text-2xl font-bold mb-4">Edit</p>
 				<div class="flex flex-col mb-4">
 					<label class="auth" for="title">Title</label>
@@ -135,9 +137,9 @@
 				<span id="err-eq-gen" class="err hidden auth-error bold mt-1"></span>
 				<div class="mt-4 flex space-x-2 justify-end">
 					<button class="modal-close tool-link" onclick="closeEditQuestionModal()">Cancel</button>
-					<button class="nav-main" onclick="sendEditQuestionRequest()">Save</button>
+					<button class="nav-main" type="submit">Save</button>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </article> 

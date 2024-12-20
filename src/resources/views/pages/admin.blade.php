@@ -58,39 +58,39 @@
 				<div id="user-create" class="hidden modal modal-style">
 					<div class="modal-overlay modal-bg"></div>
 					<div class="modal-container modal-cont">
-						<div class="modal-content py-4 text-left px-6">
+						<form class="modal-content py-4 text-left px-6" onsubmit="sendCreateUserRequest(); return false;">
 							<p class="text-2xl font-bold mb-4">Create User</p>
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-name">Name</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-name" type="text"
-									name="name" placeholder="John Doe">
+									name="name" placeholder="John Doe" required>
 								<span id="err-uc-name" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-username">Handle</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-username" type="text"
-									name="username" placeholder="@JohnDoe">
+									name="username" placeholder="@JohnDoe" required>
 								<span id="err-uc-username" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-email">E-Mail Address</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-email" type="email"
-									name="email" placeholder="john.doe@example.com">
+									name="email" placeholder="john.doe@example.com" required>
 								<span id="err-uc-email" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="flex flex-col mb-4">
 								<label class="auth" for="user-password">Password</label>
 								<input class="auth focus:outline-none focus:shadow-outline" id="user-password"
-									type="password" name="password" title="User Password">
+									type="password" name="password" title="User Password" required>
 								<span id="err-uc-password" class="err hidden auth-error bold mt-1"></span>
 							</div>
 
 							<div class="mb-4">
 								<label class="auth" for="user-role">Role</label>
-								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline">
+								<select name="role" id="user-role" class="auth focus:outline-none focus:shadow-outline" required>
 									@foreach (\App\Enum\User\Permission::cases() as $role)
 										<option value="{{ $role->value }}" @if($role->value == 'REGULAR') selected @endif>
 											{{ $role->name }}
@@ -101,9 +101,9 @@
 							<span id="err-uc-gen" class="err hidden auth-error bold mt-1"></span>
 							<div class="mt-4 flex space-x-2 justify-end">
 								<button class="modal-close tool-link" onclick="closeCreateUserModal()">Cancel</button>
-								<button class="nav-main" onclick="sendCreateUserRequest()">Create</button>
+								<button type="submit" class="nav-main">Create</button>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 			@endif
@@ -127,39 +127,39 @@
 				<div id="tag-create" class="hidden modal modal-style">
 					<div class="modal-overlay modal-bg"></div>
 					<div class="modal-container modal-cont">
-						<div class="modal-content py-4 text-left px-6">
+						<form class="modal-content py-4 text-left px-6" onsubmit="sendCreateTagRequest(); return false;">
 							<p class="text-2xl font-bold mb-4">Create Tag</p>
 							<div class="flex flex-col mb-4">
 								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
 									class="auth focus:outline-none focus:shadow-outline" type="text"
-									id="tag-name" placeholder="Tag Name" aria-label="Tag Name" name="name" maxlength="24" required>
+									id="tag-name" placeholder="Tag Name" required aria-label="Tag Name" name="name" maxlength="24" required>
 								<span class="counter my-2">0/24 characters</span>
 								<span class="err hidden auth-error bold mt-1"></span>
 							</div>
 							<div class="mt-4 flex space-x-2 justify-end">
 								<button class="modal-close tool-link" onclick="closeCreateTagModal()">Cancel</button>
-								<button class="nav-main" onclick="sendCreateTagRequest()">Create</button>
+								<button class="nav-main" type="submit">Create</button>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 				<div id="edit-tag" class="hidden modal modal-style">
 					<div class="modal-overlay modal-bg"></div>
 					<div class="modal-container modal-cont">
-						<div class="modal-content py-4 text-left px-6">
+						<form class="modal-content py-4 text-left px-6" onsubmit="sendEditTagRequest(); return false;">
 							<p id="edit-title" class="text-2xl font-bold mb-4">Edit Tag</p>
 							<div class="flex flex-col mb-4">
 								<input onkeyup="charCounter(this, this, 24)" onkeydown="charCounter(this, this, 24)"
 									class="auth focus:outline-none focus:shadow-outline resize-none" id="tag-text"
-									type="textarea" name="text" title="Tag Name" maxlength="24" required>
+									type="textarea" name="text" title="Tag Name" required maxlength="24" required>
 								<span class="counter my-2">0/24 characters</span>
 								<span class="err hidden auth-error bold mt-1"></span>
 							</div>
 							<div class="mt-4 flex space-x-2 justify-end">
 								<button class="modal-close tool-link" onclick="closeEditTagModal()">Cancel</button>
-								<button class="nav-main" onclick="sendEditTagRequest()">Save</button>
+								<button class="nav-main" type="submit">Save</button>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 				<div id="tag-list" class="space-y-4">

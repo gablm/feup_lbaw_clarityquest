@@ -22,7 +22,7 @@
 		@if($followedTags->isEmpty())
 		<p class="text-gray-700">You are not following any tags.</p>
 		@else
-		<div class="flex flex-col space-y-4">
+		<div class="flex flex-col space-y-2">
 			@foreach($followedTags as $tag)
 			@include('partials.tag-card', ['tag' => $tag, 'panel' => false])
 			@endforeach

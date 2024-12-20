@@ -79,19 +79,19 @@
 				<legend class="text-2xl font-semibold mb-4">Personal Information</legend>
 	
 				<div class="mb-4">
-					<label for="name" class="block text-gray-700">Name*</label>
+					<label for="name" class="block text-gray-700">Name<span class="font-bold text-red-600">*</span></label>
 					<input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
 						placeholder="Enter your name" class="w-full px-3 py-2 border rounded-md">
 				</div>
 	
 				<div class="mb-4">
-					<label for="email" class="block text-gray-700">Email*</label>
+					<label for="email" class="block text-gray-700">Email<span class="font-bold text-red-600">*</span></label>
 					<input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
 						placeholder="Enter your email" class="w-full px-3 py-2 border rounded-md">
 				</div>
 	
 				<div class="mb-4">
-					<label for="profile_pic" class="block text-gray-700">Profile Picture </label>
+					<label for="profile_pic" class="block text-gray-700">Profile Picture</label>
 					<input type="file" name="profile_pic" id="profile_pic" accept="image/jpeg,image/png,image/jpg,image/gif"
 						class="w-full px-3 py-2 border rounded-md">
 					@if ($user->profile_pic)

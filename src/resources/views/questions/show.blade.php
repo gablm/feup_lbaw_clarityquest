@@ -26,18 +26,18 @@
 		</div>
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
-			<div class="flex flex-row space-x-2 mt-2">
+			<form class="flex flex-row space-x-2 mt-2" onsubmit="sendCreateAnswerRequest({{ $question->id }}); return false;">
 				<textarea onkeyup="charCounter(this.parentElement, this, 500)"
 					onkeydown="charCounter(this.parentElement, this, 500)"
 					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text" type="textarea"
 					name="text" maxlength="500" required placeholder="Enter your answer here..."></textarea>
-				<button type="submit" class="nav-main text-blue-700" onclick="sendCreateAnswerRequest({{ $question->id }})">
+				<button type="submit" class="nav-main text-blue-700">
 					<i class="fa-solid fa-plus"></i>
 					<span class="max-sm:hidden ml-1">Add Answer</span>
 				</button>
-			</div>
+			</form>
 			<span class="counter my-2">0/500 characters</span>
-			<div class="flex flex-col">
+			<div class="flex flex-col mb-4">
 				<span class="ml-2 mb-4 add-err hidden text-sm text-red-500"></span>
 			</div>
 		@endif
@@ -45,7 +45,7 @@
 		<div id="add-comment" class="hidden modal modal-style">
 			<div class="modal-overlay modal-bg"></div>
 			<div class="modal-container modal-cont">
-				<div class="modal-content py-4 text-left px-6">
+				<form class="modal-content py-4 text-left px-6" onsubmit="sendCreateCommentRequest(); return false;">
 					<p class="text-2xl font-bold mb-4">Add Comment</p>
 					<div class="flex flex-col mb-4">
 						<textarea onkeyup="charCounter(this, this, 500)" onkeydown="charCounter(this, this, 500)"
@@ -57,15 +57,15 @@
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
 						<button class="modal-close tool-link" onclick="closeCreateCommentModal()">Cancel</button>
-						<button class="nav-main" onclick="sendCreateCommentRequest()">Comment</button>
+						<button class="nav-main" type="submit">Comment</button>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 		<div id="edit-post" class="hidden modal modal-style">
 			<div class="modal-overlay modal-bg"></div>
 			<div class="modal-container modal-cont">
-				<div class="modal-content py-4 text-left px-6">
+				<form class="modal-content py-4 text-left px-6" onsubmit="sendEditPostRequest(); return false;">
 					<p id="edit-title" class="text-2xl font-bold mb-4">Edit ??</p>
 					<div class="flex flex-col mb-4">
 						<textarea onkeyup="charCounter(this, this, 500)" onkeydown="charCounter(this, this, 500)"
@@ -77,21 +77,21 @@
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
 						<button class="modal-close tool-link" onclick="closeEditPostModal()">Cancel</button>
-						<button class="nav-main" onclick="sendEditPostRequest()">Save</button>
+						<button class="nav-main" type="submit">Save</button>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 		<div id="report-post" class="hidden modal modal-style">
 			<div class="modal-overlay modal-bg"></div>
 			<div class="modal-container modal-cont">
-				<div class="modal-content py-4 text-left px-6">
+				<form class="modal-content py-4 text-left px-6" onsubmit="sendReportPostRequest(); return false;">
 					<p id="report-edit-title" class="text-2xl font-bold mb-4">Report ??</p>
 					<div class="mb-4">
 						<p id="report-text">????</p>
 					</div>
 					<div class="flex flex-col mb-4">
-						<label class="auth" for="report-reason">Reason*</label>
+						<label class="auth" for="report-reason">Reason<span class="font-bold text-red-600">*</span></label>
 						<textarea onkeyup="charCounter(this, this, 100)" onkeydown="charCounter(this, this, 100)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="report-reason"
 							maxlength="100" type="textarea" name="report-reason" required
@@ -101,9 +101,9 @@
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
 						<button class="modal-close tool-link" onclick="closeReportPostModal()">Cancel</button>
-						<button class="nav-main" onclick="sendReportPostRequest()">Report</button>
+						<button class="nav-main" type="submit">Report</button>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>
