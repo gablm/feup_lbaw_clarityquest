@@ -23,6 +23,7 @@ $profile_pic = $user->profile_pic ? asset($user->profile_pic) : url('img/default
 			</a>
 			@if ($panel && Auth::user()->id != $user->id)
 			<div class="flex flex-row">
+				@if ($user->isElevated() == false || ($user->isElevated() && Auth::user()->isAdmin()))
 				<button onclick="blockUser({{ $user->id }})" class="tool-link">
 					@if ($user->isBlocked())
 					<i class="fa-solid fa-unlock"></i>
@@ -32,6 +33,7 @@ $profile_pic = $user->profile_pic ? asset($user->profile_pic) : url('img/default
 					<span class="max-md:hidden ml-1">Block</span>
 					@endif
 				</button>
+				@endif
 				@if (Auth::user()->isAdmin())
 				<a href="{{ url('/users/' . $user->id . '/edit') }}" class="tool-link">
 					<i class="fa-solid fa-pencil"></i>

@@ -151,6 +151,7 @@
 			</div>
 		</form>
 	</div>
+	@if (Auth::user()->id == $user->id)
 	<div class="bg-white shadow-md rounded-lg p-6">
 		<h2 class="text-2xl font-semibold mt-4 mb-4">
 			Danger Zone
@@ -168,5 +169,6 @@
 			</fieldset>
 		</form>
 	</div>
+	@endif
 </div>
 @endsection
