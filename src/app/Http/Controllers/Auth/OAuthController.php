@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +18,7 @@ class OAuthController extends Controller
 		if ($actualUser && $actualUser->google_token)
 		{
 			$actualUser->google_token = null;
-			$actualUser->save(); 
+			$actualUser->save();
 
 			return redirect()->route('profile.edit');
 		}
@@ -32,7 +31,12 @@ class OAuthController extends Controller
 		$user = Socialite::driver('google')->user();
 		$actualUser = User::where('google_token', $user->id)->first();
 		
-		if ($actualUser && Auth::check() == false) {
+		if ($actualUser && Auth::check() == false)
+		{
+			if ($actualUser->isBlocked())
+				return back()->withErrors([
+					'email' => 'The provided account is blocked.',
+				])->onlyInput('email');
 
 			Auth::login($actualUser);
 			$request->session()->regenerate();
@@ -82,7 +86,12 @@ class OAuthController extends Controller
 		$user = Socialite::driver('twitter')->user();
 		$actualUser = User::where('x_token', $user->id)->first();
 		
-		if ($actualUser && Auth::check() == false) {
+		if ($actualUser && Auth::check() == false)
+		{
+			if ($actualUser->isBlocked())
+				return back()->withErrors([
+					'email' => 'The provided account is blocked.',
+				])->onlyInput('email');
 
 			Auth::login($actualUser);
 			$request->session()->regenerate();
