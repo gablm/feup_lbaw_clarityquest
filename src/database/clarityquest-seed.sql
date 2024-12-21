@@ -79,9 +79,9 @@ CREATE TABLE "users"(
     email TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
     password TEXT,
-	google_token TEXT,
-	x_token TEXT,
-	remember_token TEXT,
+    google_token TEXT,
+    x_token TEXT,
+    remember_token TEXT,
     profile_pic TEXT,
     bio TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -213,10 +213,10 @@ CREATE TABLE "editions"(
 );
 
 CREATE TABLE PasswordResets(
-	id SERIAL PRIMARY KEY,
-	email TEXT NOT NULL,
-	token TEXT NOT NULL,
-	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    id SERIAL PRIMARY KEY,
+    email TEXT NOT NULL,
+    token TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 -------------
