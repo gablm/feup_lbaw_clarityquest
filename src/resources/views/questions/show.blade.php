@@ -58,7 +58,7 @@
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" type="button" onclick="closeCreateCommentModal()">Cancel</button>
+						<a class="modal-close tool-link cursor-pointer" onclick="closeCreateCommentModal()">Cancel</a>
 						<button class="nav-main" type="submit">Comment</button>
 					</div>
 				</form>
@@ -78,7 +78,7 @@
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" type="button" onclick="closeEditPostModal()">Cancel</button>
+						<a class="modal-close tool-link cursor-pointer" onclick="closeEditPostModal()">Cancel</a>
 						<button class="nav-main" type="submit">Save</button>
 					</div>
 				</form>
@@ -102,7 +102,7 @@
 						<span id="report-error" class="hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" type="button" onclick="closeReportPostModal()">Cancel</button>
+						<a class="modal-close tool-link cursor-pointer" onclick="closeReportPostModal()">Cancel</a>
 						<button class="nav-main" type="submit">Report</button>
 					</div>
 				</form>

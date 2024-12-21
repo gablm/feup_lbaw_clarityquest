@@ -71,7 +71,7 @@
                                 </select>
                             </div>
                             <div class="flex justify-end">
-                                <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 mr-2" onclick="closeTagModal()">Cancel</button>
+                                <a class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 mr-2 cursor-pointer" onclick="closeTagModal()">Cancel</a>
                                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add</button>
                             </div>
                         </fieldset>
@@ -136,7 +136,7 @@
 				</div>
 				<span id="err-eq-gen" class="err hidden auth-error bold mt-1"></span>
 				<div class="mt-4 flex space-x-2 justify-end">
-					<button class="modal-close tool-link" type="button" onclick="closeEditQuestionModal()">Cancel</button>
+					<a class="modal-close tool-link cursor-pointer" onclick="closeEditQuestionModal()">Cancel</a>
 					<button class="nav-main" type="submit">Save</button>
 				</div>
 			</form>

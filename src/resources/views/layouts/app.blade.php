@@ -59,7 +59,7 @@
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" type="button" onclick="closeDeleteModal()">Cancel</button>
+						<a class="modal-close tool-link cursor-pointer" onclick="closeDeleteModal()">Cancel</a>
 						<button class="nav-warn" onclick="sendDeleteRequest()">Delete</button>
 					</div>
 				</div>

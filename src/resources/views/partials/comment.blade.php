@@ -22,7 +22,7 @@
 		</a>
 		<span>{{ $post->creationFTime() }}{{$is_edited}}</span>
 	</div>
-	<p class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</p>
+	<h2 class="text-gray-700 py-2 pl-3 break-words">{{ $post->text }}</h2>
 	<div class="flex items-center">
 		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes,'voteStatus' => Auth::check() ? $comment->post->voteStatus(Auth::id()) : null])	
 		
