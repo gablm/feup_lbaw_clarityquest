@@ -129,14 +129,14 @@
 					<label class="auth" for="description">Description</label>
 					<textarea onkeyup="charCounter(this, this, 3000)" onkeydown="charCounter(this, this, 3000)"
 						class="auth focus:outline-none focus:shadow-outline resize-none" rows="10"
-						tyoid="description" maxlength="3000" name="description" required
+						id="description" maxlength="3000" name="description" required
 						placeholder="Enter the description">{{ $question->post->text }}</textarea>
 					<span class="counter my-1">{{ strlen($question->post->text) }}/3000 characters</span>
 					<span id="err-eq-desc" class="err hidden auth-error bold mt-1"></span>
 				</div>
 				<span id="err-eq-gen" class="err hidden auth-error bold mt-1"></span>
 				<div class="mt-4 flex space-x-2 justify-end">
-					<button class="modal-close tool-link" onclick="closeEditQuestionModal()">Cancel</button>
+					<button class="modal-close tool-link" type="button" onclick="closeEditQuestionModal()">Cancel</button>
 					<button class="nav-main" type="submit">Save</button>
 				</div>
 			</form>

@@ -100,7 +100,7 @@
 							</div>
 							<span id="err-uc-gen" class="err hidden auth-error bold mt-1"></span>
 							<div class="mt-4 flex space-x-2 justify-end">
-								<button class="modal-close tool-link" onclick="closeCreateUserModal()">Cancel</button>
+								<button class="modal-close tool-link" type="button" onclick="closeCreateUserModal()">Cancel</button>
 								<button type="submit" class="nav-main">Create</button>
 							</div>
 						</form>
@@ -137,7 +137,7 @@
 								<span class="err hidden auth-error bold mt-1"></span>
 							</div>
 							<div class="mt-4 flex space-x-2 justify-end">
-								<button class="modal-close tool-link" onclick="closeCreateTagModal()">Cancel</button>
+								<button class="modal-close tool-link" type="button" onclick="closeCreateTagModal()">Cancel</button>
 								<button class="nav-main" type="submit">Create</button>
 							</div>
 						</form>
@@ -156,7 +156,7 @@
 								<span class="err hidden auth-error bold mt-1"></span>
 							</div>
 							<div class="mt-4 flex space-x-2 justify-end">
-								<button class="modal-close tool-link" onclick="closeEditTagModal()">Cancel</button>
+								<button class="modal-close tool-link" type="button" onclick="closeEditTagModal()">Cancel</button>
 								<button class="nav-main" type="submit">Save</button>
 							</div>
 						</form>

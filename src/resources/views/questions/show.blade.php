@@ -26,12 +26,13 @@
 		</div>
 		<h2 class="text-1xl mt-2 mb-2"><span id="question-answer-count">{{ $answers_count }}</span> answer(s)</h2>
 		@if (Auth::check())
+		<div>
 			<form class="flex flex-row space-x-2 mt-2 print:hidden" onsubmit="sendCreateAnswerRequest({{ $question->id }}); return false;">
 				<textarea onkeyup="charCounter(this.parentElement, this, 500)"
 					onkeydown="charCounter(this.parentElement, this, 500)"
 					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text"
 					name="text" maxlength="500" required placeholder="Enter your answer here..."></textarea>
-				<button type="submit" class="nav-main text-blue-700">
+				<button type="submit" class="nav-main">
 					<i class="fa-solid fa-plus"></i>
 					<span class="max-sm:hidden ml-1">Add Answer</span>
 				</button>
@@ -40,6 +41,7 @@
 			<div class="flex flex-col mb-4">
 				<span class="ml-2 mb-4 add-err hidden text-sm text-red-500"></span>
 			</div>
+		</div>
 		@endif
 		@include('partials.answer-list', ['answerList' => $question->answers])
 		<div id="add-comment" class="hidden modal modal-style">
@@ -56,7 +58,7 @@
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" onclick="closeCreateCommentModal()">Cancel</button>
+						<button class="modal-close tool-link" type="button" onclick="closeCreateCommentModal()">Cancel</button>
 						<button class="nav-main" type="submit">Comment</button>
 					</div>
 				</form>
@@ -76,7 +78,7 @@
 						<span class="err hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" onclick="closeEditPostModal()">Cancel</button>
+						<button class="modal-close tool-link" type="button" onclick="closeEditPostModal()">Cancel</button>
 						<button class="nav-main" type="submit">Save</button>
 					</div>
 				</form>
@@ -100,7 +102,7 @@
 						<span id="report-error" class="hidden auth-error bold mt-1"></span>
 					</div>
 					<div class="mt-4 flex space-x-2 justify-end">
-						<button class="modal-close tool-link" onclick="closeReportPostModal()">Cancel</button>
+						<button class="modal-close tool-link" type="button" onclick="closeReportPostModal()">Cancel</button>
 						<button class="nav-main" type="submit">Report</button>
 					</div>
 				</form>
