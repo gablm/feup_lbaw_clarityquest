@@ -68,4 +68,3 @@
 		@endforeach
 	</div>
 </article>
-</a>
