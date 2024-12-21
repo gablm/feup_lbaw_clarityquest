@@ -429,10 +429,7 @@ AFTER INSERT ON "answers"
 FOR EACH ROW
 EXECUTE FUNCTION update_medals_answers_posted();
 
-
--- DB MUST BE UPDATED
--- New function to handle vote removal
-
+-- Posts(votes) Delete
 CREATE OR REPLACE FUNCTION update_post_votes_on_delete()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -444,7 +441,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- New trigger for vote removal
 CREATE TRIGGER trigger_update_post_votes_on_delete
 AFTER DELETE ON votes
 FOR EACH ROW
@@ -484,31 +480,31 @@ VALUES
 		'REGULAR'
 	),
 	(
-    	'sarah1984',
-    	'sarah.connor1984@gmail.com',
-    	'Sarah Connor',
-    	'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
-    	NULL,
-    	'Cybersecurity expert and technology enthusiast.',
-    	'REGULAR'
+        'sarah1984',
+        'sarah.connor1984@gmail.com',
+        'Sarah Connor',
+        '$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
+        NULL,
+        'Cybersecurity expert and technology enthusiast.',
+        'REGULAR'
 	),
 	(
-    	'mikejo',
-    	'mike.jones@example.com',
-    	'Mike Jones',
-    	'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
-    	NULL,
-    	'Aspiring chef, food blogger, and recipe creator.',
-    	'REGULAR'
+        'mikejo',
+        'mike.jones@example.com',
+        'Mike Jones',
+        '$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
+        NULL,
+        'Aspiring chef, food blogger, and recipe creator.',
+        'REGULAR'
 	),
 	(
-    	'lenachez',
-    	'elena.sanchez@outlook.com',
-    	'Elena Sanchez',
-    	'$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
-    	NULL,
-    	'Freelance photographer specializing in landscapes.',
-    	'REGULAR'
+        'lenachez',
+        'elena.sanchez@outlook.com',
+        'Elena Sanchez',
+        '$2y$10$2lDQ1w4tLD8ZyMRmKUuO/.P9pO8TQR5cL5d76CWGc7PhZv.gG1hy.',
+        NULL,
+        'Freelance photographer specializing in landscapes.',
+        'REGULAR'
 	),
 	(
 		'blocked',
