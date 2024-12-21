@@ -76,6 +76,16 @@ paths:
       responses:
         "200":
           description: Ok. Main features page displayed successfully.
+  /faq:
+    get:
+      operationId: R606
+      summary: "R606: FAQ Page"
+      description: "Display frequently asked questions page. Access: PUB"
+      tags:
+        - "M06: Static Pages"
+      responses:
+        "200":
+          description: Ok. FAQ page displayed successfully.
   /admin:
     get:
       operationId: R501
@@ -86,6 +96,62 @@ paths:
       responses:
         "200":
           description: Ok. Admin dashboard displayed successfully.
+        "403":
+          description: Forbidden. Admin access required.
+  
+  /reports:
+    post:
+      operationId: R501
+      summary: "R501: Create Report"
+      description: "Create a new report. Access: REG"
+      tags:
+        - "M05: User Administration"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                reported_id:
+                  type: integer
+                reported_type:
+                  type: string
+                  enum:
+                    - question
+                    - answer
+                    - comment
+                    - user
+              required:
+                - content
+                - reported_id
+                - reported_type
+      responses:
+        "201":
+          description: Report created successfully.
+        "401":
+          description: Unauthorized. Authentication required.
+
+  "/reports/{id}":
+    delete:
+      operationId: R502
+      summary: "R502: Delete Report"
+      description: "Delete a specific report. Access: ADMIN"
+      tags:
+        - "M05: User Administration"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Report deleted successfully.
+        "401":
+          description: Unauthorized. Authentication required.
         "403":
           description: Forbidden. Admin access required.
   /login:
@@ -204,6 +270,20 @@ paths:
       responses:
         "200":
           description: Ok. Show Profile Edit UI
+  /users:
+    post:
+      operationId: R302
+      summary: "R302: Create User"
+      description: "Create a new user (by admin). Access: ADMIN"
+      tags:
+        - "M03: Profiles"
+      responses:
+        "201":
+          description: User created successfully.
+        "401":
+          description: Unauthorized. Authentication required.
+        "403":
+          description: Forbidden. Admin access required.
   "/users/{id}":
     get:
       operationId: R301
@@ -267,7 +347,144 @@ paths:
       responses:
         "204":
           description: User account deleted successfully
-  
+  "/users/{id}/block":
+    patch:
+      operationId: R304
+      summary: "R304: Block User"
+      description: "Block/unblock a user. Access: ADMIN"
+      tags:
+        - "M03: Profiles"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User block status updated successfully.
+        "401":
+          description: Unauthorized. Authentication required.
+        "403":
+          description: Forbidden. Admin access required.
+  /google:
+    get:
+      operationId: R110
+      summary: "R110: Google OAuth Redirect"
+      description: "Redirect to Google OAuth. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "302":
+          description: Redirect to Google OAuth
+  /google/callback:
+    get:
+      operationId: R111
+      summary: "R111: Handle Google OAuth Callback"
+      description: "Process Google OAuth callback. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "302":
+          description: Redirect after OAuth processing
+
+  /x:
+    get:
+      operationId: R112
+      summary: "R112: X/Twitter OAuth Redirect"
+      description: "Redirect to X/Twitter OAuth. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "302":
+          description: Redirect to X/Twitter OAuth
+
+  /x/callback:
+    get:
+      operationId: R113
+      summary: "R113: Handle X/Twitter OAuth Callback"
+      description: "Process X/Twitter OAuth callback. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "302":
+          description: Redirect after OAuth processing
+
+  /recover:
+    get:
+      operationId: R114
+      summary: "R114: Show Password Recovery Form"
+      description: "Display password recovery form. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "200":
+          description: Ok. Recovery form displayed successfully.
+    post:
+      operationId: R115
+      summary: "R115: Send Recovery Email"
+      description: "Send password recovery email. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "302":
+          description: Redirect after sending recovery email
+
+  /recover/sent:
+    get:
+      operationId: R116
+      summary: "R116: Show Recovery Email Sent Page"
+      description: "Display confirmation page for sent recovery email. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      responses:
+        "200":
+          description: Ok. Confirmation page displayed successfully.
+
+  "/recover/{token}":
+    get:
+      operationId: R117
+      summary: "R117: Show Reset Password Form"
+      description: "Display reset password form. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok. Reset password form displayed successfully.
+
+  /recover/reset:
+    post:
+      operationId: R118
+      summary: "R118: Reset Password"
+      description: "Process password reset. Access: PUB"
+      tags:
+        - "M01: Authentication and Individual Profile"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+                - token
+                - password
+                - password_confirmation
+      responses:
+        "302":
+          description: Redirect after password reset
   "/posts/{id}":
     post:
       operationId: R201
