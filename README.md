@@ -15,7 +15,16 @@ The artefacts checklist is available at: [Checklists [lbaw2405]](https://docs.go
 
 ## Running the project
 
-A detailed guide on how to run this project can be found [here](./src/README.md).
+The project can be run inside FEUP's network or using VPN by downloading an pre-built image from GitLab's registry. `docker` is required to run the project.
+
+Running the command below will download the latest version of ClarityQuest's image and start it on the background.
+```
+docker run -d --name lbaw2425 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24125
+```
+
+After starting the image, the website can be accessed via http://localhost:8001.
+
+A more detailed guide on how to run this project locally can be found [here](./src/README.md).
 
 ## Team
 
