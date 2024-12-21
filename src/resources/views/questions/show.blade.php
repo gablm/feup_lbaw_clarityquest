@@ -29,7 +29,7 @@
 			<form class="flex flex-row space-x-2 mt-2 print:hidden" onsubmit="sendCreateAnswerRequest({{ $question->id }}); return false;">
 				<textarea onkeyup="charCounter(this.parentElement, this, 500)"
 					onkeydown="charCounter(this.parentElement, this, 500)"
-					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text" type="textarea"
+					class="auth focus:outline-none focus:shadow-outline resize-y" id="answer-text"
 					name="text" maxlength="500" required placeholder="Enter your answer here..."></textarea>
 				<button type="submit" class="nav-main text-blue-700">
 					<i class="fa-solid fa-plus"></i>
@@ -50,7 +50,7 @@
 					<div class="flex flex-col mb-4">
 						<textarea onkeyup="charCounter(this, this, 500)" onkeydown="charCounter(this, this, 500)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="text"
-							maxlength="500" type="textarea" name="text" required
+							maxlength="500" name="text" required
 							placeholder="Enter your comment here..."></textarea>
 						<span class="counter my-1">0/500 characters</span>
 						<span class="err hidden auth-error bold mt-1"></span>
@@ -70,7 +70,7 @@
 					<div class="flex flex-col mb-4">
 						<textarea onkeyup="charCounter(this, this, 500)" onkeydown="charCounter(this, this, 500)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="edit-text"
-							type="textarea" name="text" maxlength="500" required
+							name="text" maxlength="500" required
 							placeholder="Edit your content here..."></textarea>
 						<span class="counter my-1">0/500 characters</span>
 						<span class="err hidden auth-error bold mt-1"></span>
@@ -94,7 +94,7 @@
 						<label class="auth" for="report-reason">Reason<span class="font-bold text-red-600">*</span></label>
 						<textarea onkeyup="charCounter(this, this, 100)" onkeydown="charCounter(this, this, 100)"
 							class="auth focus:outline-none focus:shadow-outline resize-none" rows="3" id="report-reason"
-							maxlength="100" type="textarea" name="report-reason" required
+							maxlength="100" name="report-reason" required
 							placeholder="Enter the reason here..."></textarea>
 						<span class="counter my-1">0/100 characters</span>
 						<span id="report-error" class="hidden auth-error bold mt-1"></span>

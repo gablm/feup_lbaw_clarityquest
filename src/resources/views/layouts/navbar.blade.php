@@ -25,8 +25,8 @@ $notifications = $user ? $user->notifications()->orderBy('sent_at', 'desc')->tak
         </form>
 		<ul class="flex items-center space-x-3">
 			<li>
-				<a href="{{ url('/') }}">
-					<button class="nav-secondary">Home</button>
+				<a href="{{ url('/') }}" class="nav-secondary inline-block text-center px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600">
+					Home
 				</a>
 			</li>
 			@if (Auth::check())

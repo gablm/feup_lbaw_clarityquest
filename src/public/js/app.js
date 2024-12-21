@@ -691,7 +691,7 @@ function sendCreateAnswerRequest(id) {
 			text.value = "";
 			charCounter(text.parentElement, text, 500);
 			
-			error.classList.add('hidden');
+			errorBox.classList.add('hidden');
 			answerCount.textContent = Number(answerCount.textContent) + 1;
 		});
 }
@@ -707,7 +707,7 @@ function showCreateCommentModal(id) {
 
 	let text = modal.querySelector('#text');
 	text.value = "";
-	charCounter(modal.firstChild, text, 500);
+	charCounter(modal.firstChild, text, 250);
 
 	modal.classList.remove('hidden');
 	modal.classList.add('flex');
@@ -773,7 +773,7 @@ function showEditPostModal(type, id, content) {
 
 	let text = modal.querySelector('#edit-text');
 	text.value = content;
-	charCounter(modal.firstChild, text, 500);
+	charCounter(modal.firstChild, text, 250);
 
 	let error = modal.querySelector('.err');
 	error.classList.add('hidden');
@@ -1079,4 +1079,13 @@ function sendCreateUserRequest() {
 			userList.prepend(user);
 			closeCreateUserModal();
 		});
+}
+
+function displayError(element, message) {
+	let icon = document.createElement('i');
+	icon.classList.add('fa-solid', 'fa-exclamation-circle', 'mr-2'); // Add Font Awesome classes and margin-right
+	let text = document.createTextNode(message);
+	element.appendChild(icon);
+	element.appendChild(text);
+	element.classList.remove('hidden');
 }

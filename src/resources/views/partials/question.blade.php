@@ -42,7 +42,7 @@
 			</button>
 			@include('partials.follow-btn', $question)
 			@if ($owner == false && $post->user)
-				<button href=# class="tool-link" onclick="showReportPostModal('question', {{ $question->id }}, '{{ $question->title }}')">
+				<button class="tool-link" onclick="showReportPostModal('question', {{ $question->id }}, '{{ $question->title }}')">
 					<i class="fa-solid fa-flag"></i>
 					<span class="max-lg:hidden ml-1">Report</span>
 				</button>
@@ -129,7 +129,7 @@
 					<label class="auth" for="description">Description</label>
 					<textarea onkeyup="charCounter(this, this, 3000)" onkeydown="charCounter(this, this, 3000)"
 						class="auth focus:outline-none focus:shadow-outline resize-none" rows="10"
-						id="description" type="textarea" maxlength="3000" name="description" required
+						tyoid="description" maxlength="3000" name="description" required
 						placeholder="Enter the description">{{ $question->post->text }}</textarea>
 					<span class="counter my-1">{{ strlen($question->post->text) }}/3000 characters</span>
 					<span id="err-eq-desc" class="err hidden auth-error bold mt-1"></span>

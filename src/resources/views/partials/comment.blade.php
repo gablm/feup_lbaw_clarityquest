@@ -27,7 +27,7 @@
 		@include('partials.vote', ['id' => $comment->id, 'votes' => $comment->post->votes,'voteStatus' => Auth::check() ? $comment->post->voteStatus(Auth::id()) : null])	
 		
 		@if ($owner == false && $post->user && Auth::check())
-			<button href=# class="tool-link" onclick="showReportPostModal('comment', {{ $comment->id }}, '{{ $post->text }}')">
+			<button class="tool-link" onclick="showReportPostModal('comment', {{ $comment->id }}, '{{ $post->text }}')">
 				<i class="fa-solid fa-flag"></i>
 				<span class="max-md:hidden ml-1">Report</span>
 			</button>
