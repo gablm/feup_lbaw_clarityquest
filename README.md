@@ -26,6 +26,35 @@ After starting the image, the website can be accessed via http://localhost:8001.
 
 A more detailed guide on how to run this project locally can be found [here](./src/README.md).
 
+#### 2.2. Running the project
+
+The project can be run inside FEUP's network or using VPN by downloading an pre-built image from GitLab's registry. Note that `docker` is required to run the project.
+
+Running the command below will download the latest version of ClarityQuest's image and start it on the background.
+
+```
+docker run -d --name lbaw2425 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24125
+```
+
+After starting the image, the website can be accessed via [http://localhost:8001](http://localhost:8001).
+
+
+#### 2.3. Administration Credentials
+
+* Administration URL: [https://localhost:8001/admin](https://localhost:8001/admin)
+
+| Email | Password | Username |
+|-------|----------|----------|
+| admin@clarityquest.com | admin-clarityquest | admin |
+
+#### 2.4. User Credentials
+
+| Type | Email | Password | Username |
+|------|-------|----------|----------|
+| Basic Account | user@clarityquest.com | user-clarityquest | user |
+| Moderator | mod@clarityquest.com | mod-clarityquest | mod |
+
+
 ## Team
 
 * Beatriz Ferreira, up202205612@up.pt
