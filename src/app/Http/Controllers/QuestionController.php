@@ -14,249 +14,312 @@ use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
-	/**
-	 * Display a listing of the followed questions.
-	 *
-	 * @return \Illuminate\View\View
-	 */
-	public function followedQuestions()
-	{
-		if (Auth::user()->isBlocked())
-			return abort(403);
+    /**
+     * Display a listing of the followed questions.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function followedQuestions()
+    {
+        // Check if the user is blocked
+        if (Auth::user()->isBlocked())
+            return abort(403);
 
-		$user = Auth::user();
-		$followedQuestions = $user->followedQuestions;
+        // Get the authenticated user
+        $user = Auth::user();
+        // Get the questions followed by the user
+        $followedQuestions = $user->followedQuestions;
 
-		return view('questions.followed', compact('followedQuestions'));
-	}
+        // Return the view with the followed questions
+        return view('questions.followed', compact('followedQuestions'));
+    }
 
-	public function myQuestions()
-	{
-		if (Auth::user()->isBlocked())
-			return abort(403);
+    public function myQuestions()
+    {
+        // Check if the user is blocked
+        if (Auth::user()->isBlocked())
+            return abort(403);
 
-		$user = Auth::user();
-		$myQuestions = $user->questionsCreated;
+        // Get the authenticated user
+        $user = Auth::user();
+        // Get the questions created by the user
+        $myQuestions = $user->questionsCreated;
 
-		return view('questions.mine', compact('myQuestions'));
-	}
+        // Return the view with the user's questions
+        return view('questions.mine', compact('myQuestions'));
+    }
 
-	/**
-	 * Creates a new question.
-	 */
-	public function create(Request $request)
-	{
-		$user = Auth::user();
+    /**
+     * Creates a new question.
+     */
+    public function create(Request $request)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
 
-		if ($user->isBlocked())
-			return abort(403);
+        // Check if the user is blocked
+        if ($user->isBlocked())
+            return abort(403);
 
-		$request->validate([
-			'title' => 'required|string|max:250',
-			'description' => 'required|string|max:3000',
-			'tags' => 'required'
-		]);
+        // Validate the request data
+        $request->validate([
+            'title' => 'required|string|max:250',
+            'description' => 'required|string|max:3000',
+            'tags' => 'required'
+        ]);
 
-		$question = DB::transaction(function () use ($request, $user) {
-			$post = Post::create([
-				'text' => $request->description,
-				'user_id' => $user->id
-			]);
-			$question = Question::create([
-				'title' => $request->title,
-				'id' => $post->id
-			]);
+        // Create the question within a database transaction
+        $question = DB::transaction(function () use ($request, $user) {
+            // Create a new post
+            $post = Post::create([
+                'text' => $request->description,
+                'user_id' => $user->id
+            ]);
+            // Create a new question
+            $question = Question::create([
+                'title' => $request->title,
+                'id' => $post->id
+            ]);
 
-			foreach ($request->tags as $tag_id) {
-				$tag = Tag::find($tag_id);
-				if ($tag == null) continue;
+            // Attach tags to the question
+            foreach ($request->tags as $tag_id) {
+                $tag = Tag::find($tag_id);
+                if ($tag == null) continue;
 
-				DB::table('posttag')->insert([
-					'post_id' => $post->id,
-					'tag_id' => $tag->id
-				]);
+                DB::table('posttag')->insert([
+                    'post_id' => $post->id,
+                    'tag_id' => $tag->id
+                ]);
 
-				foreach ($tag->follows as $follower) {
-					$notification = Notification::create([
-						'receiver' => $follower->id,
-						'description' => "A new question titled '{$question->title}' by '{$user->username}' was asked with the tag '{$tag->name}'.",
-						'type' => 'RESPONSE',
-					]);
+                // Notify followers of the tag
+                foreach ($tag->follows as $follower) {
+                    $notification = Notification::create([
+                        'receiver' => $follower->id,
+                        'description' => "A new question titled '{$question->title}' by '{$user->username}' was asked with the tag '{$tag->name}'.",
+                        'type' => 'RESPONSE',
+                    ]);
 
-					DB::table('notificationpost')->insert([
-						'notification_id' => $notification->id,
-						'post_id' => $question->id
-					]);
-				}
-			}
+                    DB::table('notificationpost')->insert([
+                        'notification_id' => $notification->id,
+                        'post_id' => $question->id
+                    ]);
+                }
+            }
 
-			return $question;
-		});
+            return $question;
+        });
 
-		return redirect("/questions/{$question->id}")
-			->withSuccess('Question created!');
-	}
-	/**
-	 * Display a create form.
-	 */
-	public function showCreateForm()
-	{
-		if (!Auth::check())
-			return redirect('/');
+        // Redirect to the newly created question with a success message
+        return redirect("/questions/{$question->id}")
+            ->withSuccess('Question created!');
+    }
 
-		if (Auth::user()->isBlocked())
-			return abort(403);
+    /**
+     * Display a create form.
+     */
+    public function showCreateForm()
+    {
+        // Check if the user is authenticated
+        if (!Auth::check())
+            return redirect('/');
 
-		$tags = Tag::all();
+        // Check if the user is blocked
+        if (Auth::user()->isBlocked())
+            return abort(403);
 
-		return view('questions.create', ['tags' => $tags]);
-	}
+        // Get all tags
+        $tags = Tag::all();
 
-	/**
-	 * Display a question.
-	 */
-	public function show(string $id)
-	{
-		if (Auth::check() && Auth::user()->isBlocked())
-			return abort(403);
+        // Return the view with the tags
+        return view('questions.create', ['tags' => $tags]);
+    }
 
-		$question = Question::with(['answers' => function ($query) {
-			$query->join('posts', 'posts.id', '=', 'answers.id')
-				  ->orderBy('answers.correct', 'desc')
-				  ->orderBy('posts.votes', 'desc')
-				  ->select('answers.*');
-		}])->findOrFail($id);
-	
-		$tags = Tag::orderBy('name')->get();
-	
-		$user = Auth::user();
-		$voteStatus = null;
-	
-		if ($user) {
-			$vote = $question->post->votes()->where('user_id', $user->id)->first();
-			$voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
-		}
-	
-		return view('questions.show', [
-			'question' => $question,
-			'tags' => $tags,
-			'voteStatus' => $voteStatus
-		]);
-	}
+    /**
+     * Display a question.
+     */
+    public function show(string $id)
+    {
+        // Check if the user is authenticated and blocked
+        if (Auth::check() && Auth::user()->isBlocked())
+            return abort(403);
 
-	/**
-	 * Delete a question.
-	 */
-	public function delete(string $id)
-	{
-		$question = Question::findOrFail($id);
-		$this->authorize('delete', $question);
+        // Find the question with its answers, ordered by correctness and votes
+        $question = Question::with(['answers' => function ($query) {
+            $query->join('posts', 'posts.id', '=', 'answers.id')
+                  ->orderBy('answers.correct', 'desc')
+                  ->orderBy('posts.votes', 'desc')
+                  ->select('answers.*');
+        }])->findOrFail($id);
+    
+        // Get all tags
+        $tags = Tag::orderBy('name')->get();
+    
+        // Get the authenticated user
+        $user = Auth::user();
+        $voteStatus = null;
+    
+        // Determine the vote status of the user on the question
+        if ($user) {
+            $vote = $question->post->votes()->where('user_id', $user->id)->first();
+            $voteStatus = $vote ? ($vote->positive ? 'positive' : 'negative') : null;
+        }
+    
+        // Return the view with the question, tags, and vote status
+        return view('questions.show', [
+            'question' => $question,
+            'tags' => $tags,
+            'voteStatus' => $voteStatus
+        ]);
+    }
 
-		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-		DB::transaction(function () use ($question) {
-			$question->post->delete();
-			$question->delete();
-		});
+    /**
+     * Delete a question.
+     */
+    public function delete(string $id)
+    {
+        // Find the question by ID or fail if not found
+        $question = Question::findOrFail($id);
+        // Authorize the user to delete the question
+        $this->authorize('delete', $question);
 
-		return redirect('/')->withSucess('Question deleted!');
-	}
+        // Set the transaction isolation level to REPEATABLE READ
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Start a database transaction
+        DB::transaction(function () use ($question) {
+            // Delete the post and the question
+            $question->post->delete();
+            $question->delete();
+        });
 
-	/**
-	 * Update a question.
-	 */
-	public function update(Request $request, string $id)
-	{
-		$question = Question::findOrFail($id);
-		$post = $question->post;
+        // Redirect to the home page with a success message
+        return redirect('/')->withSuccess('Question deleted!');
+    }
+
+    /**
+     * Update a question.
+     */
+    public function update(Request $request, string $id)
+    {
+        // Find the question by ID or fail if not found
+        $question = Question::findOrFail($id);
+        // Get the associated post
+        $post = $question->post;
+        // Get all tags
         $tags = Tag::orderBy('name')->get();
 
-		$this->authorize('update', $question);
+        // Authorize the user to update the question
+        $this->authorize('update', $question);
 
-		$request->validate([
-			'title' => 'required|string|max:64',
-			'description' => 'required|string|max:10000'
-		]);
+        // Validate the request data
+        $request->validate([
+            'title' => 'required|string|max:64',
+            'description' => 'required|string|max:10000'
+        ]);
 
-		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Set the transaction isolation level to REPEATABLE READ
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-		DB::transaction(function () use ($request, $post, $question) {
-			$old_title = $question->title;
-			$question->title = $request->title;
-			$old_text = $post->text;
-			$post->text = $request->description;
+        // Start a database transaction
+        DB::transaction(function () use ($request, $post, $question) {
+            // Store the old title and text
+            $old_title = $question->title;
+            $question->title = $request->title;
+            $old_text = $post->text;
+            $post->text = $request->description;
 
-			$question->save();
-			$post->save();
+            // Save the updated question and post
+            $question->save();
+            $post->save();
 
-			Edition::create([
-				'post_id' => $question->id,
-				'old_title' => $old_title,
-				'new_title' => $question->title,
-				'old' => $old_text,
-				'new' => $request->description,
-			]);
-		});
+            // Create a new edition record
+            Edition::create([
+                'post_id' => $question->id,
+                'old_title' => $old_title,
+                'new_title' => $question->title,
+                'old' => $old_text,
+                'new' => $request->description,
+            ]);
+        });
 
-		return view('partials.question', [
-			'question' => $question,
+        // Return the updated question partial view
+        return view('partials.question', [
+            'question' => $question,
             'tags' => $tags,
-		]);
-	}
+        ]);
+    }
 
-	public function follow(string $id)
-	{
-		$user = Auth::user();
+    public function follow(string $id)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
 
-		$question = Question::findOrFail($id);
-		$this->authorize('show', $question);
+        // Find the question by ID or fail if not found
+        $question = Question::findOrFail($id);
+        // Authorize the user to view the question
+        $this->authorize('show', $question);
 
-		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-		DB::transaction(function () use ($user, $question) {
-			$exists = DB::table('followquestion')
-				->where('user_id', $user->id)
-				->where('question_id', $question->id)
-				->exists();
+        // Set the transaction isolation level to REPEATABLE READ
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Start a database transaction
+        DB::transaction(function () use ($user, $question) {
+            // Check if the user already follows the question
+            $exists = DB::table('followquestion')
+                ->where('user_id', $user->id)
+                ->where('question_id', $question->id)
+                ->exists();
 
-			if ($exists) {
-				DB::table('followquestion')
-					->where('user_id', $user->id)
-					->where('question_id', $question->id)
-					->delete();
-				return;
-			}
+            // If the user already follows the question, unfollow it
+            if ($exists) {
+                DB::table('followquestion')
+                    ->where('user_id', $user->id)
+                    ->where('question_id', $question->id)
+                    ->delete();
+                return;
+            }
 
-			DB::table('followquestion')->insert([
-				'user_id' => $user->id,
-				'question_id' => $question->id
-			]);
-		});
+            // Otherwise, follow the question
+            DB::table('followquestion')->insert([
+                'user_id' => $user->id,
+                'question_id' => $question->id
+            ]);
+        });
 
-		return view('partials.follow-btn', [
-			'question' => $question
-		]);
-	}
+        // Return the updated follow button partial view
+        return view('partials.follow-btn', [
+            'question' => $question
+        ]);
+    }
 
     /**
      * Add a tag to a question.
      */
     public function addTag(Request $request, $id)
     {
+        // Validate the request data
         $request->validate([
             'tag' => 'required|string',
         ]);
 
+        // Find the question by ID or fail if not found
         $question = Question::findOrFail($id);
-		$this->authorize('tags', $question);
+        // Authorize the user to modify the tags of the question
+        $this->authorize('tags', $question);
 
+        // Get the tag name from the request
         $tagName = trim($request->tag);
-		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Set the transaction isolation level to REPEATABLE READ
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Start a database transaction
         DB::transaction(function () use ($question, $tagName) {
+            // Find the tag by name or fail if not found
             $tag = Tag::where('name', $tagName)->firstOrFail();
-			
-			if (!$question->tags->contains($tag->id))
-            	$question->tags()->attach($tag->id);
+            
+            // Attach the tag to the question if not already attached
+            if (!$question->tags->contains($tag->id))
+                $question->tags()->attach($tag->id);
         });
 
+        // Redirect back with a success message
         return redirect()->back()->with('success', 'Tag added successfully.');
     }
 
@@ -265,22 +328,31 @@ class QuestionController extends Controller
      */
     public function removeTag(Request $request, $id)
     {
+        // Validate the request data
         $request->validate([
             'tag' => 'required|string',
         ]);
 
+        // Find the question by ID or fail if not found
         $question = Question::findOrFail($id);
-		$this->authorize('tags', $question);
+        // Authorize the user to modify the tags of the question
+        $this->authorize('tags', $question);
 
+        // Get the tag name from the request
         $tagName = trim($request->tag);
-		DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Set the transaction isolation level to REPEATABLE READ
+        DB::statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        // Start a database transaction
         DB::transaction(function () use ($question, $tagName) {
+            // Find the tag by name
             $tag = Tag::where('name', $tagName)->first();
+            // Detach the tag from the question if it exists
             if ($tag) {
                 $question->tags()->detach($tag->id);
             }
         });
 
+        // Redirect back with a success message
         return redirect()->back()->with('success', 'Tag removed successfully.');
     }
 }

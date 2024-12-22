@@ -11,31 +11,39 @@ class ReportController extends Controller
 {
     public function create(Request $request)
     {
-		$request->validate([
-			'reason' => 'required|string|max:100',
-			'id' => 'required|integer|exists:posts,id'
+        // Validate the request to ensure 'reason' is present and is a string, and 'id' is a valid post ID
+        $request->validate([
+            'reason' => 'required|string|max:100',
+            'id' => 'required|integer|exists:posts,id'
         ]);
 
-		if (Auth::user()->isBlocked())
-			return abort(403);
+        // Check if the user is blocked
+        if (Auth::user()->isBlocked())
+            return abort(403);
 
-		$post = Post::findOrFail($request->id);
+        // Find the post by ID or fail if not found
+        $post = Post::findOrFail($request->id);
 
-		Report::create([
-			'reason' => $request->reason,
-			'user_id' => Auth::user()->id,
-			'post_id' => $post->id
-		]);
+        // Create a new report with the provided reason, user ID, and post ID
+        Report::create([
+            'reason' => $request->reason,
+            'user_id' => Auth::user()->id,
+            'post_id' => $post->id
+        ]);
 
-		return response()->json(['success' => true]);
+        // Return a JSON response indicating success
+        return response()->json(['success' => true]);
     }
 
     public function delete(Request $request, string $id)
     {
-		$report = Report::findOrFail($id);
+        // Find the report by ID or fail if not found
+        $report = Report::findOrFail($id);
 
+        // Authorize the user to delete the report
         $this->authorize('delete', $report);
 
-		$report->delete();
+        // Delete the report
+        $report->delete();
     }
 }
