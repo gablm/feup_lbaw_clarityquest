@@ -811,7 +811,7 @@ function sendCreateAnswerRequest(id) {
             // Reset form and update UI
             text.value = "";
             charCounter(text.parentElement, text, 500);
-            errorBox.classList.add('hidden');
+            error.classList.add('hidden');
             answerCount.textContent = Number(answerCount.textContent) + 1;
         });
 }
