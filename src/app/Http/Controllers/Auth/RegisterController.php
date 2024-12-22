@@ -29,7 +29,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        
+		// Validate the register request according to the requirements
         $request->validate([
             'username' => [
                 'required',
@@ -54,6 +54,7 @@ class RegisterController extends Controller
             'password' => 'required|min:8|confirmed'
         ]);
 
+		// Create User and Medals
         DB::transaction(function () use ($request) {
             $user = User::create([
                 'username' => $request->username,
@@ -65,6 +66,7 @@ class RegisterController extends Controller
             Medals::create(['user_id' => $user->id]);
         });
 
+		// Login and regenerate session
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();

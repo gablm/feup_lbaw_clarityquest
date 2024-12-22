@@ -22,19 +22,24 @@ class RecoveryController extends Controller
 			'email' => ['required', 'email']
 		]);
 
+		// Find user that has the provided email
 		$user = User::where('email', $request->email)
 			->first();
 
+		// If the user does not exist, pretend the email was succesfully sent.
 		if ($user == null)
 			return redirect()->route('recover.sent');
 
+		// Generate a new reset token
 		$token = Str::random(128);
 
+		// Add token to database
 		DB::table('passwordresets')->insert([
 			'email' => $request->email, 
 			'token' => $token
 		]);
 
+		// Fill email data with required parameters
         $mailData = [
 			'view' => 'recovery.email',
 			'subject' => 'Password Recovery',
@@ -45,6 +50,7 @@ class RecoveryController extends Controller
 			'token' => $token
         ];
 
+		// Send the email
         Mail::to($request->email)
 			->send(new MailModel($mailData));
 		
@@ -71,6 +77,7 @@ class RecoveryController extends Controller
 				'token' => $request->token
 			])->first();
 		
+		// Check if there is a row in the resets table that contains the token
 		if ($reset == null)
 		{
 			return redirect('/login')->withErrors([
@@ -80,6 +87,8 @@ class RecoveryController extends Controller
 		
 		$creation = strtotime($reset->created_at);
 		$now = time();
+
+		// Check if the token has not expired (15 minutes have not elapsed)
 		if (($now - $creation) / 60 > 15)
 			return redirect('/login')->withErrors([
 				'recover' => 'Expired recovery token.'
@@ -102,6 +111,7 @@ class RecoveryController extends Controller
 				'token' => $request->token
 			])->first();
 
+		// Check if there is a row in the resets table that contains the token
 		if ($reset == null)
 			return redirect('/login')->withErrors([
 					'recover' => 'Invalid recovery token.'
@@ -109,16 +119,20 @@ class RecoveryController extends Controller
 		
 		$creation = strtotime($reset->created_at);
 		$now = time();
+
+		// Check if the token has not expired (15 minutes have not elapsed)
 		if (($now - $creation) / 60 > 15)
 			return redirect('/login')->withErrors([
 				'recover' => 'Expired recovery token.'
 			]);
 
+		// Update user password
 		User::where('email', $reset->email)
 			->update([
 				'password' => Hash::make($request->password)
 			]);
 
+		// Remove row from reset table
 		DB::table('passwordresets')
 			->where([
 				'email' => $request->token

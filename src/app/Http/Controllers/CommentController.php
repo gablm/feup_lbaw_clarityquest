@@ -107,6 +107,7 @@ class CommentController extends Controller
 			'id' => 'required|integer|exists:posts,id',
 		]);
 
+		// Find the post that will "own" the comment.
 		$ownerPost = Post::findOrFail($request->id);
 
 		$comment = DB::transaction(function () use ($request, $user, $ownerPost) {
@@ -115,11 +116,13 @@ class CommentController extends Controller
 				'user_id' => $user->id
 			]);
 
+			// Find if the onwer post is an question or answer
 			$question = Question::find($ownerPost->id);
 			$answer = Answer::find($ownerPost->id);
 
 			$content = $question ? "question titled '{$question->title}'" : "answer to '{$answer->question->title}'";
 
+			// Send notification to post creator
 			$notification = Notification::create([
 				'receiver' => $post->user_id,
 				'description' => "Your {$content} received a comment by '{$user->username}'.",
@@ -131,6 +134,7 @@ class CommentController extends Controller
 				'post_id' => $question ? $question->id : $answer->question->id
 			]);
 
+			// If question, send notification to every follower
 			if ($question) {
 				foreach ($question->follows as $follower)
 				{
@@ -147,6 +151,7 @@ class CommentController extends Controller
 				}
 			}
 
+			// Create comment
 			return Comment::create([
 				'id' => $post->id,
 				'post_id' => $ownerPost->id

@@ -15,6 +15,7 @@ class OAuthController extends Controller
 	public function redirectToGoogle()
 	{
 		$actualUser = Auth::user();
+		// If the user already has a token, remove it and redirect back.
 		if ($actualUser && $actualUser->google_token)
 		{
 			$actualUser->google_token = null;
@@ -23,6 +24,7 @@ class OAuthController extends Controller
 			return redirect()->route('profile.edit');
 		}
 
+		// Redirect to OAuth Provider
 		return Socialite::driver('google')->redirect();
 	}
 
@@ -31,8 +33,10 @@ class OAuthController extends Controller
 		$user = Socialite::driver('google')->user();
 		$actualUser = User::where('google_token', $user->id)->first();
 		
+		// Check if a user with the token exists and if there is not account logged in
 		if ($actualUser && Auth::check() == false)
 		{
+			// Check if the user is blocked
 			if ($actualUser->isBlocked())
 				return back()->withErrors([
 					'email' => 'The provided account is blocked.',
@@ -44,10 +48,12 @@ class OAuthController extends Controller
 			return redirect()->intended('/');
 		}
 
+		// Check if the user if logged in and is linking the account
 		if (Auth::check())
 		{
 			$curr = Auth::user();
 			
+			// Check if the account already is connected to other account
 			if ($actualUser && $actualUser->id != $curr->id)
 			{
 				return redirect()->route('profile.edit')
@@ -70,6 +76,7 @@ class OAuthController extends Controller
 	public function redirectToX()
 	{
 		$actualUser = Auth::user();
+		// If the user already has a token, remove it and redirect back.
 		if ($actualUser && $actualUser->x_token)
 		{
 			$actualUser->x_token = null;
@@ -78,6 +85,7 @@ class OAuthController extends Controller
 			return redirect()->route('profile.edit');
 		}
 
+		// Redirect to OAuth Provider
 		return Socialite::driver('twitter')->redirect();
 	}
 
@@ -86,6 +94,7 @@ class OAuthController extends Controller
 		$user = Socialite::driver('twitter')->user();
 		$actualUser = User::where('x_token', $user->id)->first();
 		
+		// Check if a user with the token exists and if there is not account logged in
 		if ($actualUser && Auth::check() == false)
 		{
 			if ($actualUser->isBlocked())
@@ -99,10 +108,12 @@ class OAuthController extends Controller
 			return redirect()->intended('/');
 		}
 
+		// Check if the user if logged in and is linking the account
 		if (Auth::check())
 		{
 			$curr = Auth::user();
 			
+			// Check if the account already is connected to other account
 			if ($actualUser && $actualUser->id != $curr->id)
 			{
 				return redirect()->route('profile.edit')

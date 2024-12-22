@@ -32,15 +32,19 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request): RedirectResponse
     {
+		// Validate rquest credentials
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
  
+		// Attempt to login using such credentials
         if (Auth::attempt($credentials, $request->filled('remember')))
 		{
+			// Check if the user is blocked
 			if (Auth::user()->isBlocked())
 			{
+				// Logout and invalidate session
 				Auth::logout();
         		$request->session()->invalidate();
         		$request->session()->regenerateToken();
@@ -63,6 +67,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+		// Logout and invalidate session
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

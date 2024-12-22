@@ -69,14 +69,17 @@ class AnswerController extends Controller
 			'id' => 'required|integer|exists:questions,id',
 		]);
 
+		// Find the question that will "own" the answer.
 		$question = Question::findOrFail($request->id);
 
 		$answer = DB::transaction(function () use ($request, $user, $question) {
+			// Create the post associated with the answer
 			$post = Post::create([
 				'text' => $request->text,
 				'user_id' => $user->id,
 			]);
 
+			// Send notification to the owner of the question if not null (account was not deleted)
 			if ($question->post->user_id != null) {
 				$notification = Notification::create([
 					'receiver' => $question->post->user_id,
@@ -90,6 +93,7 @@ class AnswerController extends Controller
 				]);
 			}
 
+			// Send notification to all question followers
 			foreach ($question->follows as $follower) {
 				$notification = Notification::create([
 					'receiver' => $follower->id,
@@ -103,6 +107,7 @@ class AnswerController extends Controller
 				]);
 			}
 
+			// Create answer
 			return Answer::create([
 				'id' => $post->id,
 				'question_id' => $question->id,
@@ -184,7 +189,8 @@ class AnswerController extends Controller
 
 			$answer->correct = true;
 			$answer->save();
-
+			
+			// Send notification to the owner of the answer if not null (account was not deleted)
 			if ($answer->post->user_id != null) {
 				$notification = Notification::create([
 					'receiver' => $answer->post->user_id,
