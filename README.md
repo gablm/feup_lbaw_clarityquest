@@ -26,7 +26,9 @@ After starting the image, the website can be accessed via http://localhost:8001.
 
 A more detailed guide on how to run this project locally can be found [here](./src/README.md).
 
-#### 2.1. Administration Credentials
+## Access Credentials
+
+### Administration Credentials
 
 * Administration URL: [https://localhost:8001/admin](https://localhost:8001/admin)
 
@@ -34,7 +36,7 @@ A more detailed guide on how to run this project locally can be found [here](./s
 |-------|----------|----------|
 | admin@clarityquest.com | admin-clarityquest | admin |
 
-#### 2.2. User Credentials
+### User Credentials
 
 | Type | Email | Password | Username |
 |------|-------|----------|----------|
